@@ -33,7 +33,7 @@ export default function SimulationPage() {
         href="/dashboard"
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute top-3 right-3 z-50 px-3 py-1.5 bg-gray-900/80 border border-gray-700/60 rounded text-xs text-gray-400 hover:text-white hover:bg-gray-800 transition-colors backdrop-blur-sm"
+        className="absolute bottom-3 right-3 z-50 px-3 py-1.5 bg-gray-900/80 border border-gray-700/60 rounded text-xs text-gray-400 hover:text-white hover:bg-gray-800 transition-colors backdrop-blur-sm"
       >
         Characters ↗
       </a>
