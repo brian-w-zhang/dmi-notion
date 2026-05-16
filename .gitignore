@@ -1,0 +1,54 @@
+# -----------------------------------------------
+# Dunder Mifflin Infinity — Monorepo .gitignore
+# Structure: /frontend (Next.js), /backend (Python)
+# -----------------------------------------------
+
+# --- OS ---
+.DS_Store
+*.pem
+Thumbs.db
+
+# --- Dependencies (any depth) ---
+**/node_modules/
+**/.pnp
+**/.pnp.*
+
+# --- Next.js (inside frontend/) ---
+frontend/.next/
+frontend/out/
+frontend/.vercel
+frontend/next-env.d.ts
+frontend/*.tsbuildinfo
+
+# --- Python backend ---
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+**/.venv/
+**/venv/
+**/*.egg-info/
+**/dist/
+**/.env
+**/.env.*
+
+# --- Environment files (all packages) ---
+.env
+.env.local
+.env.*.local
+
+# --- Debug logs ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# --- Reference codebase (not our code) ---
+generative_agents/
+
+# --- Build outputs ---
+frontend/build/
+backend/build/
+
+# --- Editor ---
+.vscode/
+.idea/
