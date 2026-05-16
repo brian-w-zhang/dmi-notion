@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ':*)",
+      "Edit(/.claude/skills/gen-appliances/**)"
+    ]
+  }
+}

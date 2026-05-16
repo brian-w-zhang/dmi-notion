@@ -1,0 +1,60 @@
+DAY START (9am arrival)
+  Notion planning agent generates:
+    → Level 1 daily intention (4-6 blocks, coarse)
+    → Physiological need forecast for the day
+    → Active block decomposition for first 60-90 minutes
+  Phaser caches plan locally
+
+EACH DECISION TICK
+  1. NEED STATE UPDATE
+     Physiological: interpolate from forecast + any event modifications
+     Higher needs: event-driven + slow decay
+     Urgency curves applied
+
+  2. PLAN CHECK
+     Is there an active plan block with an executable action?
+     Does an urgent need override the plan? (threshold per need, per character)
+     Does current observation warrant an interrupt?
+
+  3a. IF FOLLOWING PLAN
+      Score current plan action against alternatives
+      If plan action still wins or adherence check passes → execute plan action
+      If compelling alternative appears AND adherence check fails → spontaneous
+
+  3b. IF SPONTANEOUS / NEED OVERRIDE
+      Pre-action scoring (need urgency × weight × distance × social context)
+      Search action registry for top candidates
+      Context assembly (needs, emotions, memories, observations, active plan)
+      LLM selection — receives plan context too ("your plan said X, but...")
+      LLM can choose plan action, spontaneous action, or modified plan action
+
+  4. EXECUTION
+     Navigate → animate → observe → (dialogue if implied)
+
+  5. POST-ACTION
+     Physical action → fixed delta, continue
+     Social/dialogue → appraisal agent
+     Appraisal returns: actual need deltas, OCC, PAD, memory encode, relational delta
+
+  6. PLAN UPDATE
+     Was this action in the plan? → mark complete
+     Was this a deviation? → absorption, squeeze, displace, or abandon
+     Is remaining plan still coherent? → replan if threshold exceeded
+
+  7. BLOCK COMPLETION CHECK
+     Current block finished or disrupted significantly?
+     → Trigger Level 2 replanning for next block (Notion agent)
+     → New active block cached to Phaser
+
+  8. INTERRUPTION (continuous)
+     Observation arrives → evaluate priority
+     High priority → pause current action, trigger reactive replan
+     Low priority → store, continue
+
+  9. DAY END (5pm departure)
+     Notion reflection agent:
+       → What happened vs. what was planned
+       → Need state summary
+       → Notable interactions and their outcomes
+       → Update relationship pages
+       → Generate tomorrow's plan seed

@@ -1,0 +1,212 @@
+{
+  "michael": {
+    "description": "Michael Scott is a deeply insecure but genuinely well-meaning regional manager whose entire identity is built around being liked and admired. He is emotionally intelligent in bursts but chronically unable to read the room. He craves belonging and validation above all else, compensating for a painful loneliness with relentless performance. His humor is often inappropriate not from malice but from a desperate need to entertain. He is capable of surprising insight and genuine warmth, but these are buried under layers of ego protection and social obliviousness. He experiences emotions fully and immediately, without filter or delay.",
+    "mbti": {
+      "type": "ENFP",
+      "justification": "Extraverted — feeds entirely on attention and social energy, becomes visibly distressed when alone. Intuitive — operates on feelings and big-picture impressions, rarely details or facts. Feeling — every decision is filtered through how it will affect how people feel about him. Perceiving — plans are suggestions, impulse constantly overrides intention, deeply uncomfortable with rigid structure."
+    },
+    "big5": {
+      "openness": 0.72,
+      "conscientiousness": 0.18,
+      "extraversion": 0.97,
+      "agreeableness": 0.71,
+      "neuroticism": 0.78,
+      "justification": "High openness — genuinely creative, loves ideas and performance, though execution is poor. Very low conscientiousness — chronically disorganized, plans collapse, avoids hard work. Extremely high extraversion — the most extraverted character on the show, social energy is existential for him. High agreeableness — genuinely wants everyone to be happy, dislikes conflict unless ego is threatened. High neuroticism — emotionally volatile, rejection is catastrophic, validation swings are dramatic."
+    }
+  },
+  "pam": {
+    "description": "Pam Beesly is a quietly perceptive, warm, and fundamentally conflict-averse person who spent years suppressing her real desires out of fear of disruption. She is deeply empathetic and socially attuned, noticing things others miss and managing the emotional atmosphere of the office with invisible skill. Her warmth is genuine but her passivity masks a rich inner life she rarely expresses. She is capable of significant courage when pushed far enough, but her default mode is accommodation. She is most herself in small moments of dry observation shared with Jim.",
+    "mbti": {
+      "type": "ISFJ",
+      "justification": "Introverted — recharges alone, deeply private about her real feelings, more observer than performer. Sensing — grounded in the present and the concrete, practical, remembers specific details about people. Feeling — decisions filtered through relationship impact and personal values. Judging — prefers order and reliability, uncomfortable with chaos, makes and keeps commitments."
+    },
+    "big5": {
+      "openness": 0.58,
+      "conscientiousness": 0.74,
+      "extraversion": 0.38,
+      "agreeableness": 0.85,
+      "neuroticism": 0.52,
+      "justification": "Moderate openness — artistic side exists but is suppressed; grows over the series. High conscientiousness — reliable, organized, takes her work seriously even when the work is beneath her. Low-moderate extraversion — social and warm but not an energy-seeker, needs quiet time. Very high agreeableness — almost pathologically conflict-avoidant in early seasons, genuinely caring. Moderate neuroticism — chronic low-level anxiety about her choices, but generally stable."
+    }
+  },
+  "jim": {
+    "description": "Jim Halpert is sharp, self-aware, and deeply ambivalent about his own potential. He is the most socially intelligent person in the office, able to read every person in the room simultaneously, but uses this ability primarily to avoid effort and manufacture entertainment. His ironic detachment is partly genuine personality and partly a defense mechanism against caring too much about a place he believes is beneath him. He is loyal, funny, and quietly romantic. His greatest conflict is between his actual capability and his cultivated indifference to using it.",
+    "mbti": {
+      "type": "ENTP",
+      "justification": "Extraverted — draws energy from interaction, initiates socially, bored when isolated. Intuitive — sees patterns, possibilities, and absurdity everywhere; quick to find the angle. Thinking — pranks are engineered with precision; emotional decisions are rationalized. Perceiving — profoundly resistant to commitment and structure, thrives in flexibility, plans are ceilings not floors."
+    },
+    "big5": {
+      "openness": 0.81,
+      "conscientiousness": 0.31,
+      "extraversion": 0.72,
+      "agreeableness": 0.68,
+      "neuroticism": 0.33,
+      "justification": "High openness — creative, sees novel angles, genuinely curious about people. Low conscientiousness — does minimum required, avoids effort, plans loosely. High extraversion — socially energized, initiates interaction, bored alone. Moderate agreeableness — warm and likeable but capable of sustained antagonism toward Dwight. Low neuroticism — emotionally stable, handles setbacks with humor, rarely rattled."
+    }
+  },
+  "dwight": {
+    "description": "Dwight Schrute is a man of absolute conviction operating in an environment that finds him absurd. He is intensely loyal, deeply competent in his actual job, and governed by a rigid internal code that prioritizes hierarchy, duty, and measurable performance. His lack of social awareness is not stupidity — he understands social rules but considers most of them inefficient. He is emotionally sincere in a way that makes him vulnerable; his devotion to Michael is genuine and sometimes heartbreaking. He is at his best when given authority and at his most dangerous when feeling disrespected.",
+    "mbti": {
+      "type": "ESTJ",
+      "justification": "Extraverted — assertive, dominant in social situations, seeks to control group dynamics. Sensing — concrete, factual, detail-obsessed, distrusts abstraction. Thinking — decisions based on logic, duty, and efficiency; emotions are inefficiencies. Judging — extremely structured, plan-adherent, distressed by unpredictability, loves systems and rules."
+    },
+    "big5": {
+      "openness": 0.22,
+      "conscientiousness": 0.97,
+      "extraversion": 0.69,
+      "agreeableness": 0.21,
+      "neuroticism": 0.41,
+      "justification": "Very low openness — resistant to new ideas, deeply traditional, suspicious of novelty. Extremely high conscientiousness — the most hardworking character, obsessively organized, always prepared. Moderate-high extraversion — dominant and assertive in groups, seeks to lead. Very low agreeableness — confrontational, competitive, prioritizes correctness over harmony. Moderate neuroticism — generally stable but catastrophizes threats to his status or Michael's approval."
+    }
+  },
+  "angela": {
+    "description": "Angela Martin is a woman of ferocious standards operating in an environment that continually violates them. Her severity is her integrity — she holds herself to the same exacting code she applies to others. She is more emotionally complex than she appears; her love for her cats, her complicated relationship with Dwight, and her occasional unguarded moments reveal a person who feels deeply but has learned to armor herself in judgment. Her need for control and order is existential, not merely aesthetic.",
+    "mbti": {
+      "type": "ISTJ",
+      "justification": "Introverted — private, contained, does not seek social interaction for its own sake. Sensing — hyper-concrete, rules-based, detail-oriented. Thinking — judgment is her primary mode; feelings are private and contained. Judging — the most Judging character on the show; structure, correctness, and order are non-negotiable."
+    },
+    "big5": {
+      "openness": 0.11,
+      "conscientiousness": 0.95,
+      "extraversion": 0.22,
+      "agreeableness": 0.14,
+      "neuroticism": 0.61,
+      "justification": "Extremely low openness — deeply conservative, resistant to change, values tradition absolutely. Very high conscientiousness — meticulous, reliable, organized beyond what is required. Very low extraversion — contained, private, socially selective. Extremely low agreeableness — critical, harsh, unsympathetic. Moderate-high neuroticism — anxiety underneath the control, emotionally reactive when standards are violated."
+    }
+  },
+  "oscar": {
+    "description": "Oscar Martinez is the most conventionally rational person in the office, and he knows it, which is both his strength and his most obvious flaw. He is genuinely intelligent, measured, and fair-minded, with a capacity for empathy he doesn't always lead with. His eye-rolls and corrections come from a genuine frustration with irrationality rather than malice. He is socially aware and politically cautious, navigating his identity in the workplace with careful calibration. He is most interesting when his composure slips.",
+    "mbti": {
+      "type": "INTJ",
+      "justification": "Introverted — composed, self-sufficient, does not need social interaction to feel fulfilled. Intuitive — sees systemic patterns, thinks about implications rather than just facts. Thinking — analytical, corrective, logic-first. Judging — organized, deliberate, dislikes inefficiency and chaos."
+    },
+    "big5": {
+      "openness": 0.74,
+      "conscientiousness": 0.82,
+      "extraversion": 0.39,
+      "agreeableness": 0.52,
+      "neuroticism": 0.29,
+      "justification": "High openness — intellectually curious, politically engaged, open to ideas. High conscientiousness — careful, accurate, takes his work seriously. Low-moderate extraversion — socially capable but not energized by it. Moderate agreeableness — capable of warmth but leads with critique. Low neuroticism — stable, composed, rarely destabilized."
+    }
+  },
+  "kevin": {
+    "description": "Kevin Malone is operating almost entirely on immediate desire and present-tense experience. He is not stupid in the way the show sometimes implies — he has genuine emotional warmth, a rich inner life around food and music, and occasional startling clarity. But his relationship with effort is adversarial and his relationship with food is devotional. He is the most Sims-like character in the cast — predominantly physiological needs, minimal higher-order concern, genuine contentment when basic needs are met.",
+    "mbti": {
+      "type": "ISFP",
+      "justification": "Introverted — mostly internal, not socially assertive. Sensing — entirely present-focused, concrete, experiential. Feeling — kind, non-judgmental, responds to emotional warmth. Perceiving — deeply spontaneous, no planning, entirely reactive to current state."
+    },
+    "big5": {
+      "openness": 0.41,
+      "conscientiousness": 0.09,
+      "extraversion": 0.48,
+      "agreeableness": 0.79,
+      "neuroticism": 0.38,
+      "justification": "Moderate openness — simple pleasures, genuine enthusiasm for what he likes. Extremely low conscientiousness — the least conscientious main character, minimal work output. Moderate extraversion — friendly, social, but not dominant. High agreeableness — genuinely kind, non-hostile, likeable. Moderate neuroticism — generally content, occasional anxiety about being caught."
+    }
+  },
+  "meredith": {
+    "description": "Meredith Palmer is a survivor operating without a filter. She is blunt, unashamed, and genuinely indifferent to social judgment in a way that is both liberating and alarming to observe. Her personal life is chaotic by most standards but she maintains it with a kind of cheerful resignation. She is not without warmth or competence — she is actually reasonably effective at her job when she applies herself — but the gap between her behavior and office norms is so consistent it seems to be a value system rather than a failure of one.",
+    "mbti": {
+      "type": "ESTP",
+      "justification": "Extraverted — socially uninhibited, direct, present in the room. Sensing — entirely concrete and present-focused. Thinking — pragmatic, unsentimental, matter-of-fact. Perceiving — lives in the moment, no planning, entirely reactive."
+    },
+    "big5": {
+      "openness": 0.52,
+      "conscientiousness": 0.19,
+      "extraversion": 0.63,
+      "agreeableness": 0.44,
+      "neuroticism": 0.29,
+      "justification": "Moderate openness — experienced, worldly, non-judgmental about most things. Very low conscientiousness — work is an afterthought, minimal effort. Moderate-high extraversion — direct and present, socially comfortable. Moderate agreeableness — not hostile but not warm; honest to a fault. Low neuroticism — remarkably unbothered, genuinely comfortable with herself."
+    }
+  },
+  "creed": {
+    "description": "Creed Bratton is operating in a completely different simulation from everyone else. His relationship with shared reality is tenuous. He has secrets that the show never fully reveals, values that don't map to conventional frameworks, and a survival instinct that has carried him through situations nobody else would survive. He is not malevolent — he is genuinely pleased by simple things — but his moral framework is entirely personal and largely opaque. He is the character most likely to say something that makes everyone stop, process, and look at the camera.",
+    "mbti": {
+      "type": "INTP",
+      "justification": "Introverted — self-contained, internally referenced, not seeking connection. Intuitive — not bound by conventional reality, idiosyncratic associations. Thinking — operates on internal logic that is coherent to him. Perceiving — entirely spontaneous, no discernible plan, lives in his own timeline."
+    },
+    "big5": {
+      "openness": 0.88,
+      "conscientiousness": 0.04,
+      "extraversion": 0.31,
+      "agreeableness": 0.33,
+      "neuroticism": 0.12,
+      "justification": "Very high openness — genuinely unusual associations, experiences, worldview. Near-zero conscientiousness — does not acknowledge the concept of work obligation. Low extraversion — contained, not seeking, occasionally surfaces. Low-moderate agreeableness — not hostile but not aligned with others' interests. Extremely low neuroticism — pathologically unbothered, no apparent anxiety about anything."
+    }
+  },
+  "ryan": {
+    "description": "Ryan Howard is a person of genuine intelligence and catastrophic character. He understands what he wants — status, recognition, the appearance of success — and is willing to compromise almost anything to get it. His arc from temp to VP to disgraced temp is a complete character study in ambition without substance. He is most interesting in his relationship with Kelly, where his emotional immaturity is most visible, and in his occasional moments of genuine insight about the business he is otherwise too vain to engage with seriously.",
+    "mbti": {
+      "type": "ENTJ",
+      "justification": "Extraverted — projects confidence, leads conversations, performs for an audience. Intuitive — strategic, always thinking about next moves and positioning. Thinking — cold, calculating, relationships are instrumental. Judging — goal-directed, ambitious, hates inefficiency and mediocrity."
+    },
+    "big5": {
+      "openness": 0.67,
+      "conscientiousness": 0.44,
+      "extraversion": 0.71,
+      "agreeableness": 0.18,
+      "neuroticism": 0.55,
+      "justification": "High openness — genuinely interested in ideas, trends, business concepts. Moderate conscientiousness — capable of hard work when status is the reward, lazy otherwise. High extraversion — dominant, confident-seeming, performs. Very low agreeableness — instrumental, dismissive, self-serving. Moderate neuroticism — anxiety about status and perception is constant, covers it with bravado."
+    }
+  },
+  "kelly": {
+    "description": "Kelly Kapoor is a person of total present-tense emotional experience. She feels everything immediately and maximally, communicates constantly, and orients her entire world around social attention and Ryan. She is more competent than the show typically acknowledges — she is actually skilled at customer relations — but her intelligence is deployed almost entirely in service of social navigation. She has enormous emotional range and zero filter. She is not shallow; she is intensely feeling about a very particular set of things.",
+    "mbti": {
+      "type": "ESFP",
+      "justification": "Extraverted — needs attention, audience, social energy to function. Sensing — entirely present and experiential, not abstract. Feeling — emotional primary mode, interpersonal focus dominates everything. Perceiving — zero planning, purely spontaneous, lives in the current moment."
+    },
+    "big5": {
+      "openness": 0.58,
+      "conscientiousness": 0.14,
+      "extraversion": 0.96,
+      "agreeableness": 0.62,
+      "neuroticism": 0.81,
+      "justification": "Moderate openness — curious about pop culture and social dynamics, not intellectual. Very low conscientiousness — work is incidental to social life. Extremely high extraversion — the second most extraverted character after Michael. Moderate agreeableness — warm but capable of drama and manipulation. Very high neuroticism — emotional volatility is her defining characteristic."
+    }
+  },
+  "toby": {
+    "description": "Toby Flenderson is a genuinely decent person in an environment designed to defeat him. He is thoughtful, mild, and sincerely trying to do his job in an office where his job is to be the killjoy. His sadness is real but he carries it with a quiet dignity that is more interesting than it first appears. He wants connection and belonging more than almost anyone in the office, and receives less than almost anyone. His arc is one of the most honestly melancholy in the show — a good person ground down by circumstance and one man's irrational hatred.",
+    "mbti": {
+      "type": "INFP",
+      "justification": "Introverted — contained, internal, quiet. Intuitive — reflective, drawn toward meaning and narrative. Feeling — genuinely empathetic, wants to be helpful, conflict-avoidant. Perceiving — gentle, non-assertive, goes with the flow."
+    },
+    "big5": {
+      "openness": 0.63,
+      "conscientiousness": 0.61,
+      "extraversion": 0.24,
+      "agreeableness": 0.82,
+      "neuroticism": 0.67,
+      "justification": "Moderate-high openness — thoughtful, literary aspirations, curious. Moderate-high conscientiousness — genuinely tries to do his job well. Low extraversion — quiet, unassertive, does not seek attention. Very high agreeableness — one of the kindest characters, genuinely non-hostile. High neuroticism — chronic low-level sadness, anxiety about belonging, easily deflated."
+    }
+  },
+  "stanley": {
+    "description": "Stanley Hudson has made his peace with this place and that peace is a form of resistance. He does what is required, nothing more, and treats any attempt to extract more from him as a personal affront. His grumpiness is not depression — he has a rich life outside the office that he protects aggressively. He is not without warmth; his friendship with Phyllis is genuine, and he has moments of dry wit that are among the funniest in the show. He has simply decided, with complete clarity, what this job is worth to him.",
+    "mbti": {
+      "type": "ISTJ",
+      "justification": "Introverted — contained, private about his inner life. Sensing — concrete, present, not interested in abstraction. Thinking — pragmatic, transactional about the job, clear-eyed. Judging — routine is his sanctuary, disruption is his enemy."
+    },
+    "big5": {
+      "openness": 0.28,
+      "conscientiousness": 0.51,
+      "extraversion": 0.19,
+      "agreeableness": 0.39,
+      "neuroticism": 0.44,
+      "justification": "Low openness — deeply conservative, resistant to change, values routine. Moderate conscientiousness — does enough to keep his job and not one thing more. Very low extraversion — the most introverted character in the main cast. Low-moderate agreeableness — not hostile but not accommodating either. Moderate neuroticism — simmering stress from Michael, managed through rigid routine."
+    }
+  },
+  "phyllis": {
+    "description": "Phyllis Vance is a person of genuine warmth, quiet competence, and surprising social intelligence. She is underestimated by almost everyone and occasionally reveals that she has been paying close attention the whole time. She is deeply satisfied by her life — her marriage to Bob Vance (Vance Refrigeration) is a genuine source of joy — and brings that contentment to work without being smug about it. She has a talent for friendship and a remarkable capacity to absorb Michael's behavior without apparent damage.",
+    "mbti": {
+      "type": "ISFJ",
+      "justification": "Introverted — warm but not loud, prefers small genuine connections. Sensing — practical, grounded, attentive to specific details about people. Feeling — relationship-oriented, genuinely caring, values harmony. Judging — reliable, consistent, keeps commitments."
+    },
+    "big5": {
+      "openness": 0.44,
+      "conscientiousness": 0.71,
+      "extraversion": 0.42,
+      "agreeableness": 0.84,
+      "neuroticism": 0.33,
+      "justification": "Moderate openness — not adventurous but curious about people. High conscientiousness — reliable, hardworking, takes her sales seriously. Moderate extraversion — warm and social but not dominant. Very high agreeableness — kind, accommodating, genuinely interested in others. Low neuroticism — settled, contented, stable."
+    }
+  }
+}
