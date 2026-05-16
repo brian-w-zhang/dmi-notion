@@ -17,12 +17,18 @@ export default function DashboardPage() {
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col px-6 py-5">
-        <Link
-          href="/"
-          className="text-[#9B9B9B] hover:text-[#E8E8E8] transition-colors mb-6 self-start text-sm shrink-0"
-        >
-          ← Simulation
-        </Link>
+        <div className="shrink-0 flex items-center justify-between mb-6">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-[#E8E8E8] hover:text-white transition-colors text-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            Simulation
+          </Link>
+          <span className="text-[10px] font-medium tracking-widest uppercase text-[#E8E8E8]">
+            Characters
+          </span>
+        </div>
 
         <div className="flex-1 flex items-center justify-center">
           <div className="grid grid-cols-7 gap-2.5">

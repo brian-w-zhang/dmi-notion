@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Ensure the Phaser canvas fills its container correctly */
 #phaser-container canvas {
   display: block;

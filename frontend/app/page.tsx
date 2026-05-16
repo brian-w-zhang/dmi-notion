@@ -29,14 +29,24 @@ export default function SimulationPage() {
       <section className="flex-1 right-0 h-full w-full">
         <PhaserGame onSceneReady={handleSceneReady} />
       </section>
-      <a
-        href="/dashboard"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="absolute bottom-3 right-3 z-50 px-3 py-1.5 bg-gray-900/80 border border-gray-700/60 rounded text-xs text-gray-400 hover:text-white hover:bg-gray-800 transition-colors backdrop-blur-sm"
-      >
-        Characters ↗
-      </a>
+      <div className="absolute bottom-3 right-3 z-50 flex gap-2">
+        <a
+          href="/dashboard/actions"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 bg-gray-900/80 border border-gray-700/60 rounded text-xs text-gray-400 hover:text-white hover:bg-gray-800 transition-colors backdrop-blur-sm"
+        >
+          Actions ↗
+        </a>
+        <a
+          href="/dashboard"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 bg-gray-900/80 border border-gray-700/60 rounded text-xs text-gray-400 hover:text-white hover:bg-gray-800 transition-colors backdrop-blur-sm"
+        >
+          Characters ↗
+        </a>
+      </div>
     </main>
   );
 }
