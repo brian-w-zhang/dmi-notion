@@ -5,21 +5,24 @@ import CharacterCard from '../../components/CharacterCard'
 export default function DashboardPage() {
   return (
     <div className="h-full overflow-y-auto bg-gray-950 text-white">
-      <div className="max-w-5xl mx-auto px-6 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-xl font-semibold tracking-tight">Characters</h1>
-            <p className="text-gray-500 text-sm mt-0.5">Dunder Mifflin, Scranton</p>
-          </div>
+      <div className="max-w-2xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <h1
+            className="text-white"
+            style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px', lineHeight: 1.6 }}
+          >
+            Characters
+          </h1>
           <Link
             href="/"
-            className="text-sm text-gray-500 hover:text-gray-300 transition-colors"
+            className="text-gray-500 hover:text-gray-300 transition-colors"
+            style={{ fontFamily: 'var(--font-vt323)', fontSize: '18px' }}
           >
             ← Simulation
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {CHARACTER_ASSETS.map((character) => (
             <CharacterCard key={character.owner} character={character} />
           ))}
