@@ -130,6 +130,9 @@ export default function NeedsCurvesPanel({ needs, needsConfig, slug }: Props) {
                         overrideParams={override?.params}
                         color={cfg.color}
                       />
+                      {!override && (
+                        <span style={{ color: '#444', marginLeft: 6 }}>(default curve)</span>
+                      )}
                     </p>
                     {override && (
                       <p>
@@ -139,22 +142,22 @@ export default function NeedsCurvesPanel({ needs, needsConfig, slug }: Props) {
                           color={cfg.color}
                           dim
                         />
-                        <span style={{ color: '#444', marginLeft: 6 }}>(default)</span>
+                        <span style={{ color: '#444', marginLeft: 6 }}>(default curve)</span>
                       </p>
                     )}
                   </div>
 
-                  {/* Blurb or default note */}
-                  {override ? (
-                    <p className="text-[9px] leading-relaxed text-[#E8E8E8]">
-                      {override.blurb}
-                    </p>
-                  ) : (
-                    <p className="text-[9px] text-[#E8E8E8] italic">Default curve</p>
-                  )}
+                  {/* Blurb */}
+                  <p className="text-[9px] leading-relaxed text-[#E8E8E8]">
+                    {override ? override.blurb : base.blurb}
+                  </p>
                 </div>
               ) : (
-                <NeedCurveGraph config={cfg} currentValue={need.value} />
+                <NeedCurveGraph
+                  config={cfg}
+                  currentValue={need.value}
+                  defaultConfig={override ? base : undefined}
+                />
               )}
             </div>
           </div>

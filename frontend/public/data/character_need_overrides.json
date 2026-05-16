@@ -13,8 +13,8 @@
       "blurb": "Michael's self-image is fragile and grandiose in equal measure. Esteem urgency ramps steeply from deprivation and the curve barely flattens. Validation is a treadmill he can never step off."
     },
     "stress": {
-      "params": { "power": 2.8 },
-      "blurb": "High neuroticism means stress escalates non-linearly even from small slights or perceived rejection. Michael catastrophizes quickly, so the curve steepens more sharply than the baseline."
+      "params": { "power": 1.3 },
+      "blurb": "High neuroticism means stress escalates non-linearly even from small slights or perceived rejection. Michael catastrophizes quickly, so urgency rises much faster than baseline."
     },
     "productivity": {
       "params": { "amplitude": 0.35, "power": 0.7, "baseline": 0.04 },
@@ -44,7 +44,7 @@
       "blurb": "The receptionist-who-wanted-to-be-an-artist arc is pure fulfillment deficit. Pam knows what she wants creatively but consistently puts others first, leaving fulfillment chronically underfed."
     },
     "stress": {
-      "params": { "power": 2.3 },
+      "params": { "power": 1.7 },
       "blurb": "Pam absorbs tension patiently but stress accumulates at a slightly above-average rate, occasionally surfacing in assertive moments."
     }
   },
@@ -63,7 +63,7 @@
       "blurb": "Jim is solidly extroverted but not exhaustingly so. He needs social fuel but also values quality over quantity. The midpoint near centre reflects a comfortable social range."
     },
     "stress": {
-      "params": { "power": 1.5 },
+      "params": { "power": 2.6 },
       "blurb": "Jim is emotionally resilient. Stress accumulates more slowly and shallowly than baseline. He shrugs off most office absurdity with a look at the camera."
     },
     "fulfillment": {
@@ -90,7 +90,7 @@
       "blurb": "Dwight rarely admits to needing belonging, and his low agreeableness means he suppresses the signal. The reduced amplitude reflects emotional compartmentalisation, though the Angela storyline reveals it is there underneath."
     },
     "stress": {
-      "params": { "power": 1.7 },
+      "params": { "power": 2.3 },
       "blurb": "Dwight's moderate neuroticism is buffered by his extreme conscientiousness. Protocol and preparation reduce perceived threat. Stress accumulates more slowly than average, and he tends to externalise it as aggression rather than distress."
     },
     "stimulation": {
@@ -109,7 +109,7 @@
       "blurb": "Angela wants almost no socialising and reaches her limit very quickly. The low midpoint means even a small amount of quality interaction, preferably with cats or Dwight, constitutes full satisfaction."
     },
     "stress": {
-      "params": { "power": 2.6 },
+      "params": { "power": 1.5 },
       "blurb": "Angela's moderate-to-high neuroticism combined with extreme conscientiousness means any deviation from rules generates outsized stress. The steeper curve captures how quickly she becomes wound up when things are out of order."
     },
     "belonging": {
@@ -136,7 +136,7 @@
       "blurb": "Oscar is introverted but not reclusive. He enjoys one-on-one conversation and small-group debate but finds prolonged group energy draining. A moderately lower midpoint reflects faster satiation."
     },
     "stress": {
-      "params": { "power": 1.5 },
+      "params": { "power": 2.7 },
       "blurb": "Oscar is one of the most emotionally stable characters in the office. Stress accumulates slowly and shallowly. He responds to conflict with analysis rather than panic."
     },
     "productivity": {
@@ -151,8 +151,8 @@
 
   "kevin": {
     "hunger": {
-      "params": { "power": 3.5 },
-      "blurb": "Kevin's relationship with food is legendary and borderline clinical. Hunger urgency spikes dramatically because food is not just a need but a primary pleasure and coping mechanism. The steeper curve reflects how consuming the drive becomes."
+      "params": { "power": 1.5 },
+      "blurb": "Kevin's relationship with food is legendary and borderline clinical. Hunger urgency spikes dramatically because food is not just a need but a primary pleasure and coping mechanism. The elevated curve reflects how consuming the drive becomes even at moderate hunger levels."
     },
     "productivity": {
       "params": { "amplitude": 0.25, "power": 0.8, "baseline": 0.03 },
@@ -167,7 +167,7 @@
       "blurb": "Kevin wants to be included more than he wants to be impressive. His warmth and moderate sociability combine to make belonging urgency above baseline. Exclusion visibly wounds him."
     },
     "stress": {
-      "params": { "power": 1.6 },
+      "params": { "power": 2.4 },
       "blurb": "Kevin doesn't worry much. Stress accumulates slowly and he processes setbacks with a kind of cheerful resignation rather than anxiety."
     }
   },
@@ -178,7 +178,7 @@
       "blurb": "Meredith is action-oriented and sensation-seeking: she needs things to be happening. The high amplitude reflects a low boredom tolerance and a wide appetite for experiences."
     },
     "stress": {
-      "params": { "power": 1.4 },
+      "params": { "power": 3.2 },
       "blurb": "Meredith is arguably the most emotionally resilient character in the office. She has been through enough that almost nothing fazes her. Stress barely accumulates on the ascending curve."
     },
     "productivity": {
@@ -197,7 +197,7 @@
 
   "creed": {
     "stress": {
-      "params": { "power": 1.1 },
+      "params": { "power": 4.5 },
       "blurb": "Creed experiences almost no stress response to external events. Years of operating outside conventional reality have made him functionally immune to workplace anxiety. The ascending curve is nearly flat."
     },
     "productivity": {
@@ -213,8 +213,8 @@
       "blurb": "Creed orbits the office more than belonging to it. He has minimal need for genuine group belonging. He drifts in, says something unsettling, and drifts out, apparently satisfied."
     },
     "hunger": {
-      "params": { "power": 2.0 },
-      "blurb": "Creed's relationship to physical needs is notably detached. He eats whatever is available without urgency or preference. The slightly reduced power reflects a dulled physiological signalling that mirrors his general disconnection from normal experience."
+      "params": { "power": 3.5 },
+      "blurb": "Creed's relationship to physical needs is notably detached. He eats whatever is available without urgency or preference. The elevated power reflects dulled physiological signalling that mirrors his general disconnection from normal experience."
     }
   },
 
@@ -228,7 +228,7 @@
       "blurb": "Ryan is socially active and strategic. He uses social contact for status cultivation rather than warmth. Amplitude is elevated because being excluded or irrelevant triggers real distress."
     },
     "stress": {
-      "params": { "power": 2.5 },
+      "params": { "power": 1.5 },
       "blurb": "Ryan is prone to competitive anxiety and status threat. Stress accumulates non-linearly when he perceives himself as falling behind or being ignored."
     },
     "belonging": {
@@ -251,8 +251,8 @@
       "blurb": "Kelly is the most socially volatile character in the office. She is only truly comfortable when fully embedded in social interaction. The extreme amplitude and high midpoint mean even brief isolation feels catastrophic to her."
     },
     "stress": {
-      "params": { "power": 3.2 },
-      "blurb": "Kelly amplifies every emotional signal and stress escalates in steep, dramatic spikes from minor triggers. The steepened curve captures her pattern of rapid, intense emotional reactions."
+      "params": { "power": 1.1 },
+      "blurb": "Kelly amplifies every emotional signal and stress escalates in steep, dramatic spikes from minor triggers. The elevated curve captures her pattern of rapid, intense emotional reactions."
     },
     "belonging": {
       "params": { "amplitude": 1.3, "power": 0.38, "baseline": 0.13 },
@@ -274,7 +274,7 @@
       "blurb": "Toby is the show's portrait of chronic unfulfillment: a man who wanted to be a priest, became an HR rep he can't quit, and writes a serial-killer novel in his spare time. His high neuroticism and moderate openness keep fulfillment urgency persistently elevated."
     },
     "stress": {
-      "params": { "power": 2.7 },
+      "params": { "power": 1.4 },
       "blurb": "Toby's high neuroticism and the specific torture of working under Michael make stress accumulate steeply. He absorbs psychological damage at a rate that has calcified into defeated acceptance, but the curve still spikes sharply."
     },
     "social": {
@@ -305,8 +305,8 @@
       "blurb": "Stanley's legendary indifference extends to task completion. He does enough to keep his job and precisely not one thing more. His motivation is entirely extrinsic, so intrinsic urgency is low."
     },
     "stress": {
-      "params": { "power": 2.2 },
-      "blurb": "Stanley's stress is specifically triggered by social demands and Michael-generated chaos intruding on his peace. The slightly steeper curve captures how quickly it spikes when his minimal requirements are violated."
+      "params": { "power": 1.8 },
+      "blurb": "Stanley's stress is specifically triggered by social demands and Michael-generated chaos intruding on his peace. The slightly elevated curve captures how quickly it spikes when his minimal requirements are violated."
     },
     "fulfillment": {
       "params": { "amplitude": 0.55, "power": 0.55, "baseline": 0.04 },
@@ -324,7 +324,7 @@
       "blurb": "Phyllis is slightly below average on extraversion but gets real energy from warm, reciprocal social contact. She is not a wallflower but she is not the centre either. A comfortably mid-range social need with moderate amplitude."
     },
     "stress": {
-      "params": { "power": 1.7 },
+      "params": { "power": 2.5 },
       "blurb": "Phyllis is emotionally grounded. She absorbs office chaos without becoming destabilised, and stress accumulates gently. She tends to defuse rather than escalate, though she will assert herself when pushed far enough."
     },
     "esteem": {

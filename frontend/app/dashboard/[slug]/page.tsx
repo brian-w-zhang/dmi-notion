@@ -83,45 +83,45 @@ export default function CharacterDetailPage({
       <div className="flex-1 flex gap-5 overflow-hidden px-6 pb-6 pt-5 min-h-0">
 
         {/* ── Left panel ── */}
-        <div className="w-64 shrink-0 flex flex-col gap-4 overflow-y-auto">
+        <div className="w-64 shrink-0 flex flex-col gap-4 min-h-0">
 
           {/* Character card */}
-          <div className="bg-[#252525] border border-[#383838] rounded p-4 flex gap-3 items-start">
-            <div className="shrink-0">
-              <CharacterSprite spritePath={character.spritePath} scale={3} />
-            </div>
-            <div className="pt-1 min-w-0 flex flex-col gap-1.5">
-              <p className="text-[#E8E8E8] text-base font-semibold leading-snug">
-                {character.displayName}
-              </p>
-              <p className="text-[#9B9B9B] text-xs">
-                {character.isPlayerControlled ? 'Player controlled' : 'Agent'}
-              </p>
-              {personality && (
-                <span className="self-start text-[10px] text-[#9B9B9B] border border-[#4A4A4A] rounded px-1.5 py-0.5 tracking-wide">
-                  {personality.mbti}
-                </span>
-              )}
-            </div>
+          <div className="shrink-0 bg-[#252525] border border-[#383838] rounded p-5 flex flex-col items-center gap-1.5">
+            <p className="text-[#E8E8E8] text-lg font-semibold leading-snug text-center">
+              {character.displayName}
+            </p>
+            <CharacterSprite spritePath={character.spritePath} scale={3.5} />
           </div>
 
-          {/* Personality */}
+          {/* Personality — fills remaining left-panel height */}
           {personality && (
-            <div>
-              <p className="text-[10px] font-medium tracking-widest uppercase text-[#6B6B6B] mb-2">
+            <div className="flex-1 min-h-0 flex flex-col">
+              <p className="shrink-0 text-[10px] font-medium tracking-widest uppercase text-[#6B6B6B] mb-2">
                 Personality
               </p>
-              <div className="bg-[#252525] border border-[#383838] rounded p-4 flex flex-col items-center gap-3">
+              <div className="flex-1 min-h-0 bg-[#252525] border border-[#383838] rounded p-4 flex flex-col items-center gap-3">
                 <PersonalityRadar scores={personality as Big5} />
-                <div className="grid grid-cols-5 w-full">
-                  {(['o','c','e','a','n'] as (keyof Big5)[]).map((k) => (
-                    <div key={k} className="flex flex-col items-center gap-0.5">
-                      <span className="text-[9px] text-[#6B6B6B] uppercase tracking-wide">{k}</span>
-                      <span className="text-xs text-[#9B9B9B] tabular-nums">
+                <div className="w-full flex flex-col gap-1.5">
+                  {([
+                    ['o', 'Openness'],
+                    ['c', 'Conscientiousness'],
+                    ['e', 'Extraversion'],
+                    ['a', 'Agreeableness'],
+                    ['n', 'Neuroticism'],
+                  ] as [keyof Big5, string][]).map(([k, label]) => (
+                    <div key={k} className="flex items-center justify-between">
+                      <span className="text-[10px] text-[#9B9B9B]">{label}</span>
+                      <span className="text-[10px] text-[#E8E8E8] tabular-nums font-medium">
                         {Math.round((personality as Big5)[k] * 100)}
                       </span>
                     </div>
                   ))}
+                  {personality.mbti && (
+                    <div className="flex items-center justify-between pt-1 border-t border-[#383838]">
+                      <span className="text-[10px] text-[#9B9B9B]">MBTI</span>
+                      <span className="text-[10px] text-[#E8E8E8] font-medium tracking-wide">{personality.mbti}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

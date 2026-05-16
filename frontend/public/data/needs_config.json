@@ -4,83 +4,95 @@
     "group": "physiological",
     "curve": "convex",
     "params": { "power": 2.5 },
-    "color": "#f97316"
+    "color": "#f97316",
+    "blurb": "Urgency spikes sharply near zero and collapses fast once satisfied. Physiological deprivation is immediately consuming but a full stomach renders the need nearly invisible."
   },
   "thirst": {
     "label": "Thirst",
     "group": "physiological",
     "curve": "convex",
     "params": { "power": 2.5 },
-    "color": "#06b6d4"
+    "color": "#06b6d4",
+    "blurb": "Same shape as hunger: near-zero urgency when satiated, sudden spike as the need becomes critical. Dehydration accelerates fast in the final stretch."
   },
   "bladder": {
     "label": "Bladder",
     "group": "physiological",
     "curve": "convex",
     "params": { "power": 2.8 },
-    "color": "#84cc16"
+    "color": "#84cc16",
+    "blurb": "Slightly steeper than the other physiological needs. Urgency is negligible for most of the range but becomes overwhelming near empty, mirroring the real physiology of bladder pressure."
   },
   "energy": {
     "label": "Energy",
     "group": "physiological",
     "curve": "convex",
     "params": { "power": 2.0 },
-    "color": "#eab308"
+    "color": "#eab308",
+    "blurb": "A shallower convex than hunger or thirst. Fatigue accumulates more gradually and the urgency near zero is less abrupt, reflecting that tiredness is a slow drain rather than a sudden crisis."
   },
   "stress": {
     "label": "Stress",
     "group": "safety",
     "curve": "ascending",
     "params": { "power": 2.0 },
-    "color": "#ef4444"
+    "color": "#ef4444",
+    "blurb": "Urgency is low when stress is low and accelerates as it builds. This models stress as a self-amplifying state: the more wound up a character is, the more urgently they seek relief."
   },
   "health": {
     "label": "Health",
     "group": "safety",
     "curve": "convex",
     "params": { "power": 2.0 },
-    "color": "#22c55e"
+    "color": "#22c55e",
+    "blurb": "Urgency rises sharply as health deteriorates. At full health the pull is negligible; near zero it becomes the dominant concern, overriding most other needs."
   },
   "social": {
     "label": "Social",
     "group": "belonging",
     "curve": "u-shaped",
     "params": { "amplitude": 2.5, "midpoint": 0.45, "baseline": 0.05 },
-    "color": "#3b82f6"
+    "color": "#3b82f6",
+    "blurb": "Both ends of the spectrum generate urgency. Too little social contact creates loneliness; too much creates overwhelm. The trough near the midpoint is the comfortable social range."
   },
   "belonging": {
     "label": "Belonging",
     "group": "belonging",
     "curve": "concave",
     "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.05 },
-    "color": "#ec4899"
+    "color": "#ec4899",
+    "blurb": "A gradual, always-present pull toward inclusion. The square-root shape means gains are felt most at low levels; the curve never reaches zero because the need for belonging is never fully extinguished."
   },
   "esteem": {
     "label": "Esteem",
     "group": "esteem",
     "curve": "concave",
     "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.08 },
-    "color": "#f59e0b"
+    "color": "#f59e0b",
+    "blurb": "Similar to belonging but with a higher baseline, reflecting that self-worth is slightly more chronically active than social inclusion. Urgency is steady rather than crisis-driven."
   },
   "stimulation": {
     "label": "Stimulation",
     "group": "esteem",
     "curve": "u-shaped",
     "params": { "amplitude": 3.0, "midpoint": 0.55, "baseline": 0.10 },
-    "color": "#a855f7"
+    "color": "#a855f7",
+    "blurb": "Boredom and overstimulation both generate urgency. The higher amplitude means the sweet spot is harder to sustain: most people need to be genuinely engaged to feel comfortable."
   },
   "productivity": {
     "label": "Productivity",
     "group": "esteem",
     "curve": "concave",
     "params": { "amplitude": 0.75, "power": 0.5, "baseline": 0.10 },
-    "color": "#64748b"
+    "color": "#64748b",
+    "blurb": "The highest baseline of all needs: there is always some pull to be doing something useful. Urgency declines gradually as tasks are completed but never fully disappears."
   },
   "fulfillment": {
     "label": "Fulfillment",
     "group": "self-actualization",
     "curve": "concave",
     "params": { "amplitude": 0.6, "power": 0.5, "baseline": 0.05 },
-    "color": "#8b5cf6"
+    "color": "#8b5cf6",
+    "blurb": "The slowest-moving of all needs. Urgency is always present but mild, and even significant progress only slightly reduces it. Meaning accumulates on a timescale of weeks or years, not hours."
   }
 }

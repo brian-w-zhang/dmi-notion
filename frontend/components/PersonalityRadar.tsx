@@ -2,21 +2,20 @@
 
 // Five OCEAN axes evenly spaced at 72°, starting from the top (-90°)
 const TRAITS = [
-  { key: 'o', lines: ['Openness'] },
-  { key: 'c', lines: ['Conscientious-', 'ness'] },
-  { key: 'e', lines: ['Extraversion'] },
-  { key: 'a', lines: ['Agreeableness'] },
-  { key: 'n', lines: ['Neuroticism'] },
+  { key: 'o', letter: 'O' },
+  { key: 'c', letter: 'C' },
+  { key: 'e', letter: 'E' },
+  { key: 'a', letter: 'A' },
+  { key: 'n', letter: 'N' },
 ] as const
 
 const ANGLES = TRAITS.map((_, i) => -90 + i * 72) // degrees
-const SIZE = 155
+const SIZE = 180
 const CX = SIZE / 2
 const CY = SIZE / 2
-const R = 48
-const LABEL_R = R + 22
+const R = 58
+const LABEL_R = R + 18
 const RINGS = [0.25, 0.5, 0.75, 1.0]
-const LINE_H = 8.5
 
 function toRad(deg: number) { return (deg * Math.PI) / 180 }
 
@@ -90,28 +89,23 @@ export default function PersonalityRadar({ scores, color = '#818cf8' }: Props) {
         <circle key={i} cx={x} cy={y} r={2.5} fill={color} />
       ))}
 
-      {/* Full-word axis labels */}
+      {/* Single-letter axis labels */}
       {TRAITS.map((t, i) => {
         const scale = LABEL_R / R
         const [lx, ly] = pt(scale, ANGLES[i])
         const anchor = labelAnchor(lx)
-        const twoLine = t.lines.length === 2
-        // center the text block vertically at ly
-        const firstDy = twoLine ? ly - LINE_H / 2 + 3 : ly + 3
-
         return (
           <text
             key={t.key}
             x={lx}
+            y={ly + 4}
             textAnchor={anchor}
-            fill="#6B6B6B"
-            fontSize={7}
+            fill="#E8E8E8"
+            fontSize={11}
             fontFamily="monospace"
+            fontWeight={600}
           >
-            <tspan x={lx} y={firstDy}>{t.lines[0]}</tspan>
-            {twoLine && (
-              <tspan x={lx} dy={LINE_H}>{t.lines[1]}</tspan>
-            )}
+            {t.letter}
           </text>
         )
       })}

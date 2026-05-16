@@ -18,6 +18,7 @@ export interface NeedConfig {
   curve: NeedCurveType
   params: NeedCurveParams
   color: string
+  blurb?: string
 }
 
 export function computeUrgency(v: number, curve: NeedCurveType, params: NeedCurveParams): number {
@@ -53,11 +54,16 @@ const FLIP_THRESHOLD = TOOLTIP_W + 20
 interface Props {
   config: NeedConfig
   currentValue: number
+  defaultConfig?: NeedConfig
 }
 
-export default function NeedCurveGraph({ config, currentValue }: Props) {
+export default function NeedCurveGraph({ config, currentValue, defaultConfig }: Props) {
   const { curve, params, color } = config
-  const data = DATA.map(({ v }) => ({ v, u: computeUrgency(v, curve, params) }))
+  const data = DATA.map(({ v }) => ({
+    v,
+    u: computeUrgency(v, curve, params),
+    ...(defaultConfig ? { u0: computeUrgency(v, defaultConfig.curve, defaultConfig.params) } : {}),
+  }))
   const currentU = computeUrgency(currentValue, curve, params)
 
   const [coord, setCoord] = useState<{ x: number; y: number } | null>(null)
@@ -128,6 +134,17 @@ export default function NeedCurveGraph({ config, currentValue }: Props) {
           }}
         />
         <ReferenceLine x={currentValue} stroke="#ffffff" strokeWidth={0.75} strokeDasharray="2 2" strokeOpacity={0.25} />
+        {defaultConfig && (
+          <Line
+            type="monotone"
+            dataKey="u0"
+            stroke="#4a4a4a"
+            strokeWidth={1}
+            dot={false}
+            isAnimationActive={false}
+            legendType="none"
+          />
+        )}
         <Line
           type="monotone"
           dataKey="u"
