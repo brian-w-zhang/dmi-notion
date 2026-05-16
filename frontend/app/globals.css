@@ -1,11 +1,8 @@
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+@import "tailwindcss";
 
-html,
-body {
-  height: 100%;
-  overflow: hidden;
+/* Ensure the Phaser canvas fills its container correctly */
+#phaser-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
