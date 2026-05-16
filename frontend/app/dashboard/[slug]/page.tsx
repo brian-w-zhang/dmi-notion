@@ -37,7 +37,7 @@ export default function CharacterDetailPage({
         {/* Header */}
         <div className="flex items-start gap-6 mb-10 mt-4">
           <div className="shrink-0 bg-gray-900 border border-gray-800 rounded-lg p-4">
-            <CharacterSprite spritePath={character.spritePath} scale={5} />
+            <CharacterSprite spritePath={character.spritePath} scale={3} />
           </div>
           <div className="pt-2">
             <h1

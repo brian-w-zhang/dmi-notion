@@ -5,7 +5,7 @@ import CharacterCard from '../../components/CharacterCard'
 export default function DashboardPage() {
   return (
     <div className="h-full overflow-y-auto bg-gray-950 text-white">
-      <div className="max-w-2xl mx-auto px-6 py-8">
+      <div className="max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1
             className="text-white"
@@ -22,7 +22,7 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-7 gap-3">
           {CHARACTER_ASSETS.map((character) => (
             <CharacterCard key={character.owner} character={character} />
           ))}
