@@ -99,3 +99,106 @@ Open [http://localhost:3000](http://localhost:3000). The Dunder Mifflin office l
 | Mouse drag | Pan camera |
 | Scroll wheel | Zoom |
 
+---
+
+## Milestones
+
+### 1. World Layer
+The office map as a structured affordance space, not just visuals. Every object is a data entity that advertises what characters can do with it.
+
+- Tiled map with named semantic zones (open plan, Michael's office, conference room, kitchen, reception, warehouse)
+- Object metadata layer: desks, copier, fridge, water cooler, whiteboard, printers — each with action point coordinates and affordance tags
+- Appliance interaction system with progress bars and SFX
+- Chair sit/stand system with per-seat ownership and sit point data
+- Building entrance transitions (interior ↔ exterior)
+- Car system with mount/dismount and driving state
+- NPC simulation scaffolding: action loops, dialogue overlays, HUD
+
+### 2. Character System
+All cast members running as independent agents in the same world, each with persistent identity.
+
+- Remaining cast spawned as autonomous agents (Michael, Jim, Pam, Ryan, Kelly, Stanley, Kevin, Angela, Andy, Toby)
+- Per-character spritesheet + animation registration
+- Pathfinding and navigation to target tiles/zones
+- Character-to-character proximity detection
+- Active character switching (player can follow any cast member)
+
+### 3. Needs System
+The Sims-style need decay creating constant action pressure. Characters don't invent actions — the world advertises them and need urgency scores them.
+
+- Per-character needs vector: hunger, social, stimulation, belonging, esteem, autonomy
+- Need decay rates driven by Big Five personality parameters (extraversion → social decay rate, etc.)
+- Urgency-to-language bridge: numeric needs translated to natural-language desire strings for LLM context
+- Candidate action assembly: world affordances scored by `need_urgency × weight × proximity × social_context`
+- Object advertising: each world entity emits a scored action candidate to nearby characters
+
+### 4. Cognitive Loop
+The per-tick decision pipeline that runs inside each character agent.
+
+- Perception snapshot: what each character can currently see and hear within their radius
+- Memory retrieval: weighted score of `importance × 0.4 + recency × 0.3 + state_match × 0.3`
+- PAD (Pleasure-Arousal-Dominance) state tracking and baseline drift
+- OCC appraisal: emotions as goal-relative event evaluations, written into every memory row
+- Daily morning planning: character-specific intentions grounded in personality and current needs
+- Action selection: LLM receives needs vector, candidate actions, retrieved memories, current plan, relationship context → selects one
+- Post-action appraisal: fixed delta for physical actions; appraisal agent for social/dialogue outcomes
+- Micro-reflections after significant events; end-of-day synthesis into narrative identity updates
+
+### 5. Memory Architecture
+Episodic memory seeded from canon and extended by simulation — the core identity persistence layer.
+
+- Memory DB per character, seeded with annotated memories from S1–S2 canon dialogue
+- Memory write schema: content, importance score, PAD state at encoding, OCC `goal_status`, relational deltas
+- Retrieval using Fixed Bag spreading activation (8–12 curated concept terms per character)
+- State-dependent retrieval: current PAD state weights `state_match` in retrieval scoring
+- Constructive simulation: retrieved memories passed as predictive priors, not just historical facts
+- Relationship DB: per-pair relationship summaries updated with deltas and triggering events
+
+### 6. Notion Agents + Backend Bridge
+The mind-body connection: Notion agents handle cognition, the backend bridge relays decisions to Phaser.
+
+- One Notion custom agent per cast member with a full cognitive pipeline instruction page
+- Orchestrator using the Notion Agents SDK (`@notionhq/agents-client`) to invoke agents and stream decisions
+- `executeGameAction` worker: writes Notion DBs (World State, Conversations, Memory, Relationships) and forwards actions to backend
+- Backend bridge (Node/Python): REST endpoints (`POST /move`, `/dialogue`, `/event`) + WebSocket push to Phaser
+- Phaser subscribes to WebSocket and executes the visual side (movement, animation, SFX) independently of the decision loop
+- Inter-character dialogue mediated by the orchestrator: Character A's decision triggers Character B's context assembly and invocation
+
+### 7. Conversation System
+Character-to-character dialogue as a first-class mechanic, not a post-hoc text dump.
+
+- Proximity-triggered conversation initiation (Smallville-style)
+- Zone acoustics constraints (conversations leak or don't based on zone)
+- In-world dialogue bubbles + optional transcript panel
+- Multi-turn conversation threads with `threadId` continuity across agent invocations
+- Conversation DB in Notion: both sides' internal thought, emotional state, and relationship context stored per turn
+- Talking heads: situation-triggered performative cutaways (not once-per-day) — audience-aware reflections distinct from private internal reflection
+
+### 8. DVR / Replay Layer
+Every simulation day is a replayable episode. The event log makes it deterministic and inspectable.
+
+- Append-only event log: every agent action timestamped with character, action type, target, content summary, PAD state
+- Full-day replay with play/pause/scrub controls
+- Timeline-driven camera: jump to any moment, follow any character at any timestamp
+- Auto POV "documentary crew": switches to high-salience moments (confrontations, dense clusters, meeting starts, sharp relationship deltas)
+
+### 9. Inspectability Layer
+The research hook. Clicking any character at any moment reveals the full cognitive trace.
+
+- Needs vector snapshot at any timestamp
+- PAD/emotion trace over the day
+- Retrieved memories at decision time: which memories were pulled and why (score breakdown)
+- Action candidates considered and the selected action with rationale
+- Relationship context used in the decision
+- Internal thought vs. talking head (private vs. performative reflection)
+- Wiki-style character profiles: Big Five parameters, memory log, relationship graph, narrative identity summary
+
+### 10. Episode Demos
+Pre-run simulation days seeded with a perturbation premise and hosted as interactive artifacts.
+
+- Perturbation seeds: downsizing rumor, corporate audit, HR crackdown, sales leaderboard contest, prank escalation chain
+- Each episode is a complete simulation day runnable and replayable on the public site
+- Episode player with inspectability layer exposed (click any moment → see the cognitive trace)
+- 30–60s highlight reel clips cut from pre-run episodes for distribution
+
+---
