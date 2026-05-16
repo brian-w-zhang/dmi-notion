@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spritesheet Frame Checker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1a1a2e;
+      color: #e0e0e0;
+      font-family: monospace;
+      padding: 24px;
+    }
+    h1 { font-size: 18px; margin-bottom: 16px; color: #a78bfa; }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: flex-end;
+      margin-bottom: 20px;
+      background: #16213e;
+      padding: 16px;
+      border-radius: 8px;
+    }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    label { font-size: 11px; color: #9ca3af; }
+    input[type="number"] {
+      width: 80px;
+      background: #0f3460;
+      border: 1px solid #4f46e5;
+      color: #e0e0e0;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    input[type="file"] {
+      background: #0f3460;
+      border: 1px solid #4f46e5;
+      color: #e0e0e0;
+      padding: 6px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    input[type="range"] { width: 140px; cursor: pointer; }
+    .hint {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 16px;
+    }
+    .hover-info {
+      font-size: 13px;
+      color: #fbbf24;
+      margin-bottom: 12px;
+      min-height: 20px;
+    }
+    #canvas-wrap {
+      overflow: auto;
+      border: 1px solid #4f46e5;
+      border-radius: 4px;
+      background: #888;
+      display: inline-block;
+      max-width: 100%;
+    }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <h1>Spritesheet Frame Checker</h1>
+  <p class="hint">
+    Load your character PNG, set the frame dimensions, and each cell will show its Phaser frame number.
+    Hover over a cell to highlight it. Default settings match the LimeZu character generator (32 × 64).
+  </p>
+
+  <div class="controls">
+    <div class="field">
+      <label>Spritesheet PNG</label>
+      <input type="file" id="fileInput" accept="image/png,image/gif,image/webp" />
+    </div>
+    <div class="field">
+      <label>Frame width (px)</label>
+      <input type="number" id="fw" value="32" min="1" max="512" />
+    </div>
+    <div class="field">
+      <label>Frame height (px)</label>
+      <input type="number" id="fh" value="64" min="1" max="512" />
+    </div>
+    <div class="field">
+      <label>Zoom (<span id="zoomLabel">1.0</span>×)</label>
+      <input type="range" id="zoom" min="0.5" max="6" step="0.25" value="1" />
+    </div>
+  </div>
+
+  <div class="hover-info" id="hoverInfo">Hover over a cell to see its frame number and coordinates.</div>
+  <div id="canvas-wrap"><canvas id="canvas"></canvas></div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const fwInput   = document.getElementById('fw');
+    const fhInput   = document.getElementById('fh');
+    const zoomInput = document.getElementById('zoom');
+    const zoomLabel = document.getElementById('zoomLabel');
+    const hoverInfo = document.getElementById('hoverInfo');
+    const canvas    = document.getElementById('canvas');
+    const ctx       = canvas.getContext('2d');
+
+    let img       = null;
+    let zoom      = 1;
+    let frameW    = 32;
+    let frameH    = 64;
+    let hoveredCell = null; // { col, row, frameNum }
+
+    function draw() {
+      if (!img) return;
+
+      frameW = parseInt(fwInput.value) || 32;
+      frameH = parseInt(fhInput.value) || 64;
+
+      const cols = Math.floor(img.width  / frameW);
+      const rows = Math.floor(img.height / frameH);
+
+      canvas.width  = Math.round(img.width  * zoom);
+      canvas.height = Math.round(img.height * zoom);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the spritesheet
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      // Draw grid + frame numbers
+      const fw = frameW * zoom;
+      const fh = frameH * zoom;
+
+      ctx.lineWidth = Math.max(0.5, zoom * 0.5);
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          const x = col * fw;
+          const y = row * fh;
+          const frameNum = row * cols + col;
+          const isHovered = hoveredCell && hoveredCell.col === col && hoveredCell.row === row;
+
+          // Cell highlight
+          if (isHovered) {
+            ctx.fillStyle = 'rgba(167, 139, 250, 0.35)';
+            ctx.fillRect(x, y, fw, fh);
+          }
+
+          // Grid line
+          ctx.strokeStyle = isHovered ? '#a78bfa' : 'rgba(255, 80, 80, 0.65)';
+          ctx.strokeRect(x + ctx.lineWidth / 2, y + ctx.lineWidth / 2, fw - ctx.lineWidth, fh - ctx.lineWidth);
+
+          // Frame number label
+          const fontSize = Math.max(6, Math.min(11, fw * 0.28));
+          ctx.font = `bold ${fontSize}px monospace`;
+
+          const label = String(frameNum);
+          const tw = ctx.measureText(label).width;
+          const tx = x + (fw - tw) / 2;
+          const ty = y + fh * 0.52;
+
+          // Shadow for readability
+          ctx.fillStyle = 'rgba(0,0,0,0.75)';
+          ctx.fillText(label, tx + 1, ty + 1);
+
+          ctx.fillStyle = isHovered ? '#fbbf24' : '#ffffff';
+          ctx.fillText(label, tx, ty);
+        }
+      }
+    }
+
+    function cellFromEvent(e) {
+      if (!img) return null;
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / zoom;
+      const y = (e.clientY - rect.top)  / zoom;
+      const fw = frameW;
+      const fh = frameH;
+      const cols = Math.floor(img.width  / fw);
+      const rows = Math.floor(img.height / fh);
+      const col = Math.floor(x / fw);
+      const row = Math.floor(y / fh);
+      if (col < 0 || col >= cols || row < 0 || row >= rows) return null;
+      return { col, row, frameNum: row * cols + col };
+    }
+
+    canvas.addEventListener('mousemove', e => {
+      const cell = cellFromEvent(e);
+      if (!cell) {
+        hoveredCell = null;
+        hoverInfo.textContent = 'Hover over a cell to see its frame number and coordinates.';
+        draw();
+        return;
+      }
+      if (!hoveredCell || hoveredCell.frameNum !== cell.frameNum) {
+        hoveredCell = cell;
+        const cols = Math.floor(img.width / frameW);
+        hoverInfo.textContent =
+          `Frame ${cell.frameNum}  —  col ${cell.col}, row ${cell.row}  ` +
+          `(pixel x: ${cell.col * frameW}, y: ${cell.row * frameH})`;
+        draw();
+      }
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      hoveredCell = null;
+      hoverInfo.textContent = 'Hover over a cell to see its frame number and coordinates.';
+      draw();
+    });
+
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const image = new Image();
+      image.onload = () => { img = image; draw(); };
+      image.src = url;
+    });
+
+    fwInput.addEventListener('input', draw);
+    fhInput.addEventListener('input', draw);
+    zoomInput.addEventListener('input', () => {
+      zoom = parseFloat(zoomInput.value);
+      zoomLabel.textContent = zoom.toFixed(2);
+      draw();
+    });
+  </script>
+</body>
+</html>

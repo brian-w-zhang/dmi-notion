@@ -1,0 +1,5189 @@
+{
+  "zones": {
+    "stairs": {
+      "id": 36,
+      "name": "stairs",
+      "entities": []
+    },
+    "entrance hallway": {
+      "id": 37,
+      "name": "entrance hallway",
+      "entities": []
+    },
+    "elevator": {
+      "id": 38,
+      "name": "elevator",
+      "entities": []
+    },
+    "lobby": {
+      "id": 39,
+      "name": "lobby",
+      "entities": [
+        {
+          "id": 56,
+          "name": "lobby_couch",
+          "entityType": "chair",
+          "zone": "lobby",
+          "center": {
+            "x": 725.9,
+            "y": 433.1
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 57,
+              "name": "lobby_couch_seat1",
+              "position": {
+                "x": 735.5,
+                "y": 441.2
+              },
+              "facing": "right"
+            },
+            {
+              "id": 58,
+              "name": "lobby_couch_seat2",
+              "position": {
+                "x": 735.5,
+                "y": 476.9
+              },
+              "facing": "right"
+            },
+            {
+              "id": 59,
+              "name": "lobby_couch_seat3",
+              "position": {
+                "x": 735.6,
+                "y": 513.6
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 60,
+          "name": "lobby_chair",
+          "entityType": "chair",
+          "zone": "lobby",
+          "center": {
+            "x": 896,
+            "y": 453.7
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 61,
+              "name": "lobby_chair_seat1",
+              "position": {
+                "x": 881.6,
+                "y": 464.5
+              },
+              "facing": "front"
+            },
+            {
+              "id": 62,
+              "name": "lobby_chair_seat2",
+              "position": {
+                "x": 911.2,
+                "y": 465
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        }
+      ]
+    },
+    "reception": {
+      "id": 41,
+      "name": "reception",
+      "entities": [
+        {
+          "id": 63,
+          "name": "reception_desk",
+          "entityType": "table",
+          "zone": "reception",
+          "center": {
+            "x": 871.4,
+            "y": 640
+          },
+          "owner": "pam",
+          "actionPoints": [
+            {
+              "id": 303,
+              "name": "reception_spot1",
+              "position": {
+                "x": 960.3,
+                "y": 655.9
+              },
+              "facing": "left"
+            },
+            {
+              "id": 304,
+              "name": "reception_spot2",
+              "position": {
+                "x": 959,
+                "y": 606.4
+              },
+              "facing": "left"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 64,
+          "name": "pam_chair",
+          "entityType": "chair",
+          "zone": "reception",
+          "center": {
+            "x": 847.2,
+            "y": 639.5
+          },
+          "owner": "pam",
+          "sitPoints": [
+            {
+              "id": 67,
+              "name": "pam_chair_seat",
+              "position": {
+                "x": 850.4,
+                "y": 653.2
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 316,
+          "name": "reception_trash",
+          "entityType": "appliance",
+          "zone": "reception",
+          "center": {
+            "x": 849,
+            "y": 574.2
+          },
+          "actionPoints": [
+            {
+              "id": 317,
+              "name": "reception_trash_spot",
+              "position": {
+                "x": 814.8,
+                "y": 587.8
+              },
+              "facing": "right"
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    "accounting": {
+      "id": 42,
+      "name": "accounting",
+      "entities": [
+        {
+          "id": 79,
+          "name": "angela_chair",
+          "entityType": "chair",
+          "zone": "accounting",
+          "center": {
+            "x": 783.8,
+            "y": 837.4
+          },
+          "owner": "angela",
+          "sitPoints": [
+            {
+              "id": 80,
+              "name": "angela_chair_seat",
+              "position": {
+                "x": 784.4,
+                "y": 853.2
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 89,
+          "name": "oscar_desk",
+          "entityType": "table",
+          "zone": "accounting",
+          "center": {
+            "x": 880.9,
+            "y": 920
+          },
+          "owner": "oscar",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 90,
+          "name": "angela_desk",
+          "entityType": "table",
+          "zone": "accounting",
+          "center": {
+            "x": 768.5,
+            "y": 880.9
+          },
+          "owner": "angela",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 91,
+          "name": "kevin_desk",
+          "entityType": "table",
+          "zone": "accounting",
+          "center": {
+            "x": 767.6,
+            "y": 953.4
+          },
+          "owner": "kevin",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 92,
+          "name": "kevin_chair",
+          "entityType": "chair",
+          "zone": "accounting",
+          "center": {
+            "x": 751.5,
+            "y": 998.9
+          },
+          "owner": "kevin",
+          "sitPoints": [
+            {
+              "id": 94,
+              "name": "kevin_chair_seat",
+              "position": {
+                "x": 752,
+                "y": 1005.6
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 95,
+          "name": "oscar_chair",
+          "entityType": "chair",
+          "zone": "accounting",
+          "center": {
+            "x": 944.3,
+            "y": 927.3
+          },
+          "owner": "oscar",
+          "sitPoints": [
+            {
+              "id": 96,
+              "name": "oscar_chair_seat",
+              "position": {
+                "x": 942.3,
+                "y": 938.1
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 233,
+          "name": "accounting_printer",
+          "entityType": "appliance",
+          "zone": "accounting",
+          "center": {
+            "x": 936.9,
+            "y": 775.2
+          },
+          "actionPoints": [
+            {
+              "id": 291,
+              "name": "accounting_printer_spot",
+              "position": {
+                "x": 936.4,
+                "y": 832.7
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 234,
+          "name": "accounting_fire_hydrant",
+          "entityType": "appliance",
+          "zone": "accounting",
+          "center": {
+            "x": 878.9,
+            "y": 763.2
+          },
+          "actionPoints": [
+            {
+              "id": 290,
+              "name": "accounting_hydrant_spot",
+              "position": {
+                "x": 881.3,
+                "y": 820.9
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 235,
+          "name": "accounting_shelf",
+          "entityType": "storage",
+          "zone": "accounting",
+          "center": {
+            "x": 847.9,
+            "y": 782.1
+          },
+          "actionPoints": [
+            {
+              "id": 318,
+              "name": "accounting_shelf_spot",
+              "position": {
+                "x": 848.6,
+                "y": 832.3
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 319,
+          "name": "accounting_big_shelf",
+          "entityType": "storage",
+          "zone": "accounting",
+          "center": {
+            "x": 896,
+            "y": 1072
+          },
+          "actionPoints": [
+            {
+              "id": 320,
+              "name": "accounting_big_shelf_spot",
+              "position": {
+                "x": 964.3,
+                "y": 1043.3
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    "sales": {
+      "id": 43,
+      "name": "sales",
+      "entities": [
+        {
+          "id": 97,
+          "name": "jim_desk",
+          "entityType": "table",
+          "zone": "sales",
+          "center": {
+            "x": 1136.3,
+            "y": 627.2
+          },
+          "owner": "jim",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 98,
+          "name": "jim_chair",
+          "entityType": "chair",
+          "zone": "sales",
+          "center": {
+            "x": 1136,
+            "y": 581.3
+          },
+          "owner": "jim",
+          "sitPoints": [
+            {
+              "id": 126,
+              "name": "jim_chair_seat",
+              "position": {
+                "x": 1135.6,
+                "y": 594.1
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 100,
+          "name": "dwight_desk",
+          "entityType": "table",
+          "zone": "sales",
+          "center": {
+            "x": 1167.7,
+            "y": 729.6
+          },
+          "owner": "dwight",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 101,
+          "name": "dwight_chair",
+          "entityType": "chair",
+          "zone": "sales",
+          "center": {
+            "x": 1232.1,
+            "y": 735.4
+          },
+          "owner": "dwight",
+          "sitPoints": [
+            {
+              "id": 121,
+              "name": "dwight_chair_seat",
+              "position": {
+                "x": 1229.9,
+                "y": 748.7
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 103,
+          "name": "phyllis_desk",
+          "entityType": "table",
+          "zone": "sales",
+          "center": {
+            "x": 1439.9,
+            "y": 697.3
+          },
+          "owner": "phyllis",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 104,
+          "name": "phyllis_chair",
+          "entityType": "chair",
+          "zone": "sales",
+          "center": {
+            "x": 1391.8,
+            "y": 703.2
+          },
+          "owner": "phyllis",
+          "sitPoints": [
+            {
+              "id": 122,
+              "name": "phyllis_chair_seat",
+              "position": {
+                "x": 1394.9,
+                "y": 716.6
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 106,
+          "name": "stanley_chair",
+          "entityType": "chair",
+          "zone": "sales",
+          "center": {
+            "x": 1551.9,
+            "y": 703
+          },
+          "owner": "stanley",
+          "sitPoints": [
+            {
+              "id": 127,
+              "name": "stanley_chair_seat",
+              "position": {
+                "x": 1551,
+                "y": 715.3
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 108,
+          "name": "stanley_desk",
+          "entityType": "table",
+          "zone": "sales",
+          "center": {
+            "x": 1504.4,
+            "y": 697
+          },
+          "owner": "stanley",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 109,
+          "name": "meredith_desk",
+          "entityType": "table",
+          "zone": "sales",
+          "center": {
+            "x": 1184.2,
+            "y": 953.4
+          },
+          "owner": "meredith",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 110,
+          "name": "meredith_chair",
+          "entityType": "chair",
+          "zone": "sales",
+          "center": {
+            "x": 1136.3,
+            "y": 959.4
+          },
+          "owner": "meredith",
+          "sitPoints": [
+            {
+              "id": 123,
+              "name": "meredith_chair_seat",
+              "position": {
+                "x": 1137.8,
+                "y": 971.9
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 112,
+          "name": "ryan_desk",
+          "entityType": "table",
+          "zone": "sales",
+          "center": {
+            "x": 1248.2,
+            "y": 952.8
+          },
+          "owner": "ryan",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 113,
+          "name": "ryan_chair",
+          "entityType": "chair",
+          "zone": "sales",
+          "center": {
+            "x": 1296.2,
+            "y": 959.4
+          },
+          "owner": "ryan",
+          "sitPoints": [
+            {
+              "id": 124,
+              "name": "ryan_chair_seat",
+              "position": {
+                "x": 1295.1,
+                "y": 970
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 118,
+          "name": "creed_desk",
+          "entityType": "table",
+          "zone": "sales",
+          "center": {
+            "x": 1471.9,
+            "y": 952.5
+          },
+          "owner": "creed",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 119,
+          "name": "creed_chair",
+          "entityType": "chair",
+          "zone": "sales",
+          "center": {
+            "x": 1423.9,
+            "y": 959.4
+          },
+          "owner": "creed",
+          "sitPoints": [
+            {
+              "id": 125,
+              "name": "creed_chair_seat",
+              "position": {
+                "x": 1424.9,
+                "y": 972.6
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 236,
+          "name": "sales_shelf1",
+          "entityType": "storage",
+          "zone": "sales",
+          "center": {
+            "x": 1566.9,
+            "y": 434
+          },
+          "actionPoints": [
+            {
+              "id": 321,
+              "name": "sales_shelf1_spot",
+              "position": {
+                "x": 1567.2,
+                "y": 491.5
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 237,
+          "name": "sales_shelf2",
+          "entityType": "storage",
+          "zone": "sales",
+          "center": {
+            "x": 1650.1,
+            "y": 537.1
+          },
+          "actionPoints": [
+            {
+              "id": 322,
+              "name": "sales_shelf2_spot",
+              "position": {
+                "x": 1606.9,
+                "y": 552.2
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 238,
+          "name": "sales_shelf3",
+          "entityType": "storage",
+          "zone": "sales",
+          "center": {
+            "x": 1649.9,
+            "y": 913
+          },
+          "actionPoints": [
+            {
+              "id": 324,
+              "name": "sales_shelf3_spot",
+              "position": {
+                "x": 1615.1,
+                "y": 911.8
+              },
+              "facing": "right"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 239,
+          "name": "sales_printer",
+          "entityType": "appliance",
+          "zone": "sales",
+          "center": {
+            "x": 1651.6,
+            "y": 802.3
+          },
+          "actionPoints": [
+            {
+              "id": 288,
+              "name": "sales_printer_spot",
+              "position": {
+                "x": 1602.6,
+                "y": 811.1
+              },
+              "facing": "right"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 245,
+          "name": "water_cooler",
+          "entityType": "appliance",
+          "zone": "sales",
+          "center": {
+            "x": 1647,
+            "y": 739.6
+          },
+          "actionPoints": [
+            {
+              "id": 289,
+              "name": "water_cooler_spot_1",
+              "position": {
+                "x": 1602.1,
+                "y": 763.4
+              },
+              "facing": "right"
+            },
+            {
+              "id": 298,
+              "name": "water_cooler_spot_2",
+              "position": {
+                "x": 1609.6,
+                "y": 734.2
+              },
+              "facing": "right"
+            },
+            {
+              "id": 299,
+              "name": "water_cooler_spot_3",
+              "position": {
+                "x": 1632.8,
+                "y": 714.4
+              },
+              "facing": "front"
+            },
+            {
+              "id": 300,
+              "name": "water_cooler_spot_4",
+              "position": {
+                "x": 1609.4,
+                "y": 792.5
+              },
+              "facing": "right"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 246,
+          "name": "sales_fire_hydrant",
+          "entityType": "appliance",
+          "zone": "sales",
+          "center": {
+            "x": 1650.2,
+            "y": 576
+          },
+          "actionPoints": [
+            {
+              "id": 287,
+              "name": "sales_hydrant_spot",
+              "position": {
+                "x": 1647.3,
+                "y": 637.7
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 366,
+          "name": "dwight_pc",
+          "entityType": "appliance",
+          "zone": "sales",
+          "center": {
+            "x": 1164.5,
+            "y": 724.3
+          },
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 367,
+          "name": "dwight_phone",
+          "entityType": "appliance",
+          "zone": "sales",
+          "center": {
+            "x": 1198.5,
+            "y": 668.3
+          },
+          "actionPoints": [],
+          "actions": []
+        }
+      ]
+    },
+    "michael's office": {
+      "id": 44,
+      "name": "michael's office",
+      "entities": [
+        {
+          "id": 65,
+          "name": "michael_chair",
+          "entityType": "chair",
+          "zone": "michael's office",
+          "center": {
+            "x": 1042.4,
+            "y": 195.8
+          },
+          "owner": "michael",
+          "sitPoints": [
+            {
+              "id": 66,
+              "name": "michael_chair_seat",
+              "position": {
+                "x": 1040.1,
+                "y": 211.8
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 76,
+          "name": "michael_desk",
+          "entityType": "table",
+          "zone": "michael's office",
+          "center": {
+            "x": 1040,
+            "y": 248.8
+          },
+          "owner": "michael",
+          "actionPoints": [
+            {
+              "id": 274,
+              "name": "michael_desk_spot1",
+              "position": {
+                "x": 1043.9,
+                "y": 343.8
+              },
+              "facing": "back"
+            },
+            {
+              "id": 301,
+              "name": "michael_desk_spot3",
+              "position": {
+                "x": 990,
+                "y": 329.3
+              },
+              "facing": "back"
+            },
+            {
+              "id": 302,
+              "name": "michael_desk_spot2",
+              "position": {
+                "x": 1094.5,
+                "y": 333.2
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 77,
+          "name": "michael_office_guest_chair",
+          "entityType": "chair",
+          "zone": "michael's office",
+          "center": {
+            "x": 912.6,
+            "y": 323
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 78,
+              "name": "michael_office_guest_chair_seat",
+              "position": {
+                "x": 913.4,
+                "y": 328.8
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        }
+      ]
+    },
+    "conference_room": {
+      "id": 45,
+      "name": "conference_room",
+      "entities": [
+        {
+          "id": 157,
+          "name": "conf_outer_chair1",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1360,
+            "y": 163.3
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 181,
+              "name": "conf_chair1_seat",
+              "position": {
+                "x": 1359.6,
+                "y": 180.9
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 158,
+          "name": "conf_outer_chair2",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1455.9,
+            "y": 163.6
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 182,
+              "name": "conf_chair2_seat",
+              "position": {
+                "x": 1455.4,
+                "y": 180.1
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 159,
+          "name": "conf_outer_chair3",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1519.7,
+            "y": 163.1
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 183,
+              "name": "conf_chair3_seat",
+              "position": {
+                "x": 1519.6,
+                "y": 180.6
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 160,
+          "name": "conf_outer_chair4",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1583.9,
+            "y": 163.4
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 184,
+              "name": "conf_chair4_seat",
+              "position": {
+                "x": 1583.8,
+                "y": 180.8
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 161,
+          "name": "conf_table_chair1",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1327.9,
+            "y": 227.2
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 185,
+              "name": "conf_chair5_seat",
+              "position": {
+                "x": 1327.9,
+                "y": 239.1
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 162,
+          "name": "conf_table_chair2",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1391.8,
+            "y": 227.2
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 186,
+              "name": "conf_chair6_seat",
+              "position": {
+                "x": 1392.1,
+                "y": 238.3
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 163,
+          "name": "conf_table_chair3",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1423.9,
+            "y": 227.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 187,
+              "name": "conf_chair7_seat",
+              "position": {
+                "x": 1424.3,
+                "y": 238
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 164,
+          "name": "conf_table_chair4",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1487.9,
+            "y": 227.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 188,
+              "name": "conf_chair8_seat",
+              "position": {
+                "x": 1488.4,
+                "y": 238.9
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 165,
+          "name": "conf_table_chair5",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1519.9,
+            "y": 227.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 189,
+              "name": "conf_chair9_seat",
+              "position": {
+                "x": 1520.9,
+                "y": 238.6
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 166,
+          "name": "conf_table_chair12",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1328,
+            "y": 325
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 196,
+              "name": "conf_chair10_seat",
+              "position": {
+                "x": 1327.9,
+                "y": 334.9
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 167,
+          "name": "conf_table_chair11",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1360,
+            "y": 324.9
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 197,
+              "name": "conf_chair11_seat",
+              "position": {
+                "x": 1360.7,
+                "y": 334.9
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 168,
+          "name": "conf_table_chair10",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1423.9,
+            "y": 325
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 198,
+              "name": "conf_chair12_seat",
+              "position": {
+                "x": 1424.4,
+                "y": 335.4
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 169,
+          "name": "conf_table_chair9",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1488,
+            "y": 325
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 199,
+              "name": "conf_chair13_seat",
+              "position": {
+                "x": 1488.6,
+                "y": 336.5
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 170,
+          "name": "conf_table_chair8",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1552.1,
+            "y": 325
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 200,
+              "name": "conf_chair14_seat",
+              "position": {
+                "x": 1552.5,
+                "y": 335.7
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 171,
+          "name": "conf_outer_chair10",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1391.7,
+            "y": 389
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 222,
+              "name": "conf_chair16_seat",
+              "position": {
+                "x": 1391.9,
+                "y": 399.3
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 172,
+          "name": "conf_outer_chair11",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1359.6,
+            "y": 389.1
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 221,
+              "name": "conf_chair15_seat",
+              "position": {
+                "x": 1359.8,
+                "y": 399.7
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 173,
+          "name": "conf_outer_chair9",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1455.7,
+            "y": 389.1
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 223,
+              "name": "conf_chair17_seat",
+              "position": {
+                "x": 1456.2,
+                "y": 399.3
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 174,
+          "name": "conf_outer_chair8",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1551.6,
+            "y": 388.6
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 224,
+              "name": "conf_chair18_seat",
+              "position": {
+                "x": 1552.1,
+                "y": 399.8
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 175,
+          "name": "conf_chair_michael",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1263,
+            "y": 286.7
+          },
+          "owner": "michael",
+          "sitPoints": [
+            {
+              "id": 190,
+              "name": "conf_chair_michael_seat",
+              "position": {
+                "x": 1266.6,
+                "y": 298.1
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 176,
+          "name": "conf_table_chair7",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1585.1,
+            "y": 286.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 192,
+              "name": "conf_chair16_seat",
+              "position": {
+                "x": 1583.2,
+                "y": 296.6
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 177,
+          "name": "conf_table_chair6",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1584.9,
+            "y": 254.6
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 191,
+              "name": "conf_chair15_seat",
+              "position": {
+                "x": 1583.4,
+                "y": 264.4
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 178,
+          "name": "conf_outer_chair5",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1649,
+            "y": 222.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 193,
+              "name": "conf_chair19_seat",
+              "position": {
+                "x": 1647,
+                "y": 232.4
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 179,
+          "name": "conf_outer_chair6",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1648.9,
+            "y": 254.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 194,
+              "name": "conf_chair20_seat",
+              "position": {
+                "x": 1647.3,
+                "y": 264.4
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 180,
+          "name": "conf_outer_chair7",
+          "entityType": "chair",
+          "zone": "conference_room",
+          "center": {
+            "x": 1649,
+            "y": 286.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 195,
+              "name": "conf_chair21_seat",
+              "position": {
+                "x": 1647.5,
+                "y": 297.2
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 240,
+          "name": "conf_tv",
+          "entityType": "appliance",
+          "zone": "conference_room",
+          "center": {
+            "x": 1230.3,
+            "y": 260.2
+          },
+          "actionPoints": [
+            {
+              "id": 273,
+              "name": "conf_tv_spot",
+              "position": {
+                "x": 1232.7,
+                "y": 340.2
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 241,
+          "name": "conf_easel",
+          "entityType": "appliance",
+          "zone": "conference_room",
+          "center": {
+            "x": 1261.8,
+            "y": 164.3
+          },
+          "actionPoints": [
+            {
+              "id": 272,
+              "name": "conf_easel_spot",
+              "position": {
+                "x": 1251.3,
+                "y": 207.1
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 243,
+          "name": "conf_table",
+          "entityType": "table",
+          "zone": "conference_room",
+          "center": {
+            "x": 1440,
+            "y": 292.7
+          },
+          "owner": null,
+          "actionPoints": [],
+          "actions": []
+        }
+      ]
+    },
+    "kitchen": {
+      "id": 46,
+      "name": "kitchen",
+      "entities": [
+        {
+          "id": 206,
+          "name": "kitchen_table",
+          "entityType": "table",
+          "zone": "kitchen",
+          "center": {
+            "x": 2144,
+            "y": 596.9
+          },
+          "owner": null,
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 207,
+          "name": "kitchen_chair1",
+          "entityType": "chair",
+          "zone": "kitchen",
+          "center": {
+            "x": 2098.4,
+            "y": 582.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 217,
+              "name": "kitchen_chair1_seat",
+              "position": {
+                "x": 2100.2,
+                "y": 591.9
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 208,
+          "name": "kitchen_chair2",
+          "entityType": "chair",
+          "zone": "kitchen",
+          "center": {
+            "x": 2158,
+            "y": 533.2
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 219,
+              "name": "kitchen_chair2_seat",
+              "position": {
+                "x": 2160,
+                "y": 552.1
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 209,
+          "name": "kitchen_chair3",
+          "entityType": "chair",
+          "zone": "kitchen",
+          "center": {
+            "x": 2189.5,
+            "y": 582.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 220,
+              "name": "kitchen_chair3_seat",
+              "position": {
+                "x": 2189.4,
+                "y": 592.3
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 210,
+          "name": "kitchen_chair4",
+          "entityType": "chair",
+          "zone": "kitchen",
+          "center": {
+            "x": 2127.3,
+            "y": 640.7
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 218,
+              "name": "kitchen_chair4_seat",
+              "position": {
+                "x": 2128.4,
+                "y": 641.2
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 211,
+          "name": "kitchen_fridge",
+          "entityType": "appliance",
+          "zone": "kitchen",
+          "center": {
+            "x": 2037.3,
+            "y": 535.3
+          },
+          "actionPoints": [
+            {
+              "id": 216,
+              "name": "kitchen_fridge_spot",
+              "position": {
+                "x": 2017.5,
+                "y": 588.1
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 212,
+          "name": "kitchen_sink",
+          "entityType": "appliance",
+          "zone": "kitchen",
+          "center": {
+            "x": 1829.9,
+            "y": 525.1
+          },
+          "actionPoints": [
+            {
+              "id": 214,
+              "name": "kitchen_sink_spot",
+              "position": {
+                "x": 1824.3,
+                "y": 584.5
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 213,
+          "name": "kitchen_microwave",
+          "entityType": "appliance",
+          "zone": "kitchen",
+          "center": {
+            "x": 1903.9,
+            "y": 525
+          },
+          "actionPoints": [
+            {
+              "id": 215,
+              "name": "kitchen_microwave_spot",
+              "position": {
+                "x": 1904.5,
+                "y": 584.4
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 249,
+          "name": "coffee_machine",
+          "entityType": "appliance",
+          "zone": "kitchen",
+          "center": {
+            "x": 1936,
+            "y": 518.5
+          },
+          "actionPoints": [
+            {
+              "id": 325,
+              "name": "kitchen_coffee_spot",
+              "position": {
+                "x": 1936.1,
+                "y": 584.7
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 250,
+          "name": "toaster",
+          "entityType": "appliance",
+          "zone": "kitchen",
+          "center": {
+            "x": 1716.3,
+            "y": 526
+          },
+          "actionPoints": [
+            {
+              "id": 268,
+              "name": "kitchen_toaster_spot",
+              "position": {
+                "x": 1715.6,
+                "y": 582
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 254,
+          "name": "kitchen_fire_hydrant",
+          "entityType": "appliance",
+          "zone": "kitchen",
+          "center": {
+            "x": 2224,
+            "y": 513.2
+          },
+          "actionPoints": [
+            {
+              "id": 269,
+              "name": "kitchen_hydrant_spot",
+              "position": {
+                "x": 2225.8,
+                "y": 560.3
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 255,
+          "name": "kitchen_trash",
+          "entityType": "appliance",
+          "zone": "kitchen",
+          "center": {
+            "x": 2257.3,
+            "y": 543.8
+          },
+          "actionPoints": [
+            {
+              "id": 314,
+              "name": "kitchen_trash_spot",
+              "position": {
+                "x": 2256,
+                "y": 578.8
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    "men's bathroom": {
+      "id": 47,
+      "name": "men's bathroom",
+      "entities": [
+        {
+          "id": 229,
+          "name": "mens_sink1",
+          "entityType": "appliance",
+          "zone": "men's bathroom",
+          "center": {
+            "x": 1734,
+            "y": 1005
+          },
+          "actionPoints": [
+            {
+              "id": 280,
+              "name": "mens_sink1_spot",
+              "position": {
+                "x": 1738.2,
+                "y": 984.5
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 230,
+          "name": "mens_sink2",
+          "entityType": "appliance",
+          "zone": "men's bathroom",
+          "center": {
+            "x": 1798,
+            "y": 1005
+          },
+          "actionPoints": [
+            {
+              "id": 281,
+              "name": "mens_sink2_spot",
+              "position": {
+                "x": 1802.5,
+                "y": 983.3
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 257,
+          "name": "urinal1",
+          "entityType": "appliance",
+          "zone": "men's bathroom",
+          "center": {
+            "x": 1951,
+            "y": 912
+          },
+          "actionPoints": [
+            {
+              "id": 275,
+              "name": "mens_urinal1_spot",
+              "position": {
+                "x": 1916.4,
+                "y": 920.4
+              },
+              "facing": "right"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 258,
+          "name": "urinal2",
+          "entityType": "appliance",
+          "zone": "men's bathroom",
+          "center": {
+            "x": 1951.2,
+            "y": 976
+          },
+          "actionPoints": [
+            {
+              "id": 276,
+              "name": "mens_urinal2_spot",
+              "position": {
+                "x": 1915.1,
+                "y": 982.1
+              },
+              "facing": "right"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 259,
+          "name": "mens_toilet",
+          "entityType": "appliance",
+          "zone": "men's bathroom",
+          "center": {
+            "x": 1872,
+            "y": 912
+          },
+          "actionPoints": [
+            {
+              "id": 271,
+              "name": "mens_toilet_spot",
+              "position": {
+                "x": 1871.6,
+                "y": 925.9
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    "women's bathroom": {
+      "id": 48,
+      "name": "women's bathroom",
+      "entities": [
+        {
+          "id": 231,
+          "name": "womens_sink1",
+          "entityType": "appliance",
+          "zone": "women's bathroom",
+          "center": {
+            "x": 2150,
+            "y": 1005
+          },
+          "actionPoints": [
+            {
+              "id": 282,
+              "name": "womens_sink1_spot",
+              "position": {
+                "x": 2152.7,
+                "y": 979.3
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 232,
+          "name": "womens_sink2",
+          "entityType": "appliance",
+          "zone": "women's bathroom",
+          "center": {
+            "x": 2214,
+            "y": 1004.9
+          },
+          "actionPoints": [
+            {
+              "id": 283,
+              "name": "womens_sink2_spot",
+              "position": {
+                "x": 2219.2,
+                "y": 979
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 260,
+          "name": "womens_toilet1",
+          "entityType": "appliance",
+          "zone": "women's bathroom",
+          "center": {
+            "x": 2032,
+            "y": 879.7
+          },
+          "actionPoints": [
+            {
+              "id": 277,
+              "name": "womens_toilet1_spot",
+              "position": {
+                "x": 2031.8,
+                "y": 906.6
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 261,
+          "name": "womens_toilet2",
+          "entityType": "appliance",
+          "zone": "women's bathroom",
+          "center": {
+            "x": 2070,
+            "y": 879.5
+          },
+          "actionPoints": [
+            {
+              "id": 278,
+              "name": "womens_toilet2_spot",
+              "position": {
+                "x": 2070.1,
+                "y": 906
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 262,
+          "name": "womens_toilet3",
+          "entityType": "appliance",
+          "zone": "women's bathroom",
+          "center": {
+            "x": 2107.9,
+            "y": 879.7
+          },
+          "actionPoints": [
+            {
+              "id": 279,
+              "name": "womens_toilet3_spot",
+              "position": {
+                "x": 2109,
+                "y": 905.2
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 263,
+          "name": "womens_couch1",
+          "entityType": "chair",
+          "zone": "women's bathroom",
+          "center": {
+            "x": 2083.3,
+            "y": 776.9
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 284,
+              "name": "womens_couch_seat1",
+              "position": {
+                "x": 2066.7,
+                "y": 779.1
+              },
+              "facing": "front"
+            },
+            {
+              "id": 285,
+              "name": "womens_couch_seat2",
+              "position": {
+                "x": 2093.6,
+                "y": 779.1
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 264,
+          "name": "womens_couch2",
+          "entityType": "chair",
+          "zone": "women's bathroom",
+          "center": {
+            "x": 2006.2,
+            "y": 798.2
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 286,
+              "name": "womens_couch_seat1",
+              "position": {
+                "x": 2015.4,
+                "y": 814.7
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        }
+      ]
+    },
+    "closet": {
+      "id": 49,
+      "name": "closet",
+      "entities": []
+    },
+    "break room": {
+      "id": 50,
+      "name": "break room",
+      "entities": [
+        {
+          "id": 138,
+          "name": "break_room_chair1",
+          "entityType": "chair",
+          "zone": "break room",
+          "center": {
+            "x": 2513.9,
+            "y": 258.1
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 151,
+              "name": "break_room_chair1_seat",
+              "position": {
+                "x": 2516,
+                "y": 269.4
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 139,
+          "name": "break_room_chair4",
+          "entityType": "chair",
+          "zone": "break room",
+          "center": {
+            "x": 2514,
+            "y": 354.3
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 153,
+              "name": "break_room_chair4_seat",
+              "position": {
+                "x": 2516.6,
+                "y": 367.1
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 141,
+          "name": "break_room_chair3",
+          "entityType": "chair",
+          "zone": "break room",
+          "center": {
+            "x": 2606.7,
+            "y": 258.1
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 152,
+              "name": "break_room_chair3_seat",
+              "position": {
+                "x": 2605.3,
+                "y": 269.4
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 142,
+          "name": "break_room_chair7",
+          "entityType": "chair",
+          "zone": "break room",
+          "center": {
+            "x": 2606.6,
+            "y": 353.7
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 156,
+              "name": "break_room_chair7_seat",
+              "position": {
+                "x": 2603.7,
+                "y": 368.2
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 143,
+          "name": "break_room_chair5",
+          "entityType": "chair",
+          "zone": "break room",
+          "center": {
+            "x": 2542.3,
+            "y": 376.5
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 154,
+              "name": "break_room_chair4_seat",
+              "position": {
+                "x": 2543.3,
+                "y": 384.4
+              },
+              "facing": "back"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 144,
+          "name": "break_room_chair2",
+          "entityType": "chair",
+          "zone": "break room",
+          "center": {
+            "x": 2544.2,
+            "y": 221.1
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 150,
+              "name": "break_room_chair2_seat",
+              "position": {
+                "x": 2544.2,
+                "y": 234.5
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 145,
+          "name": "break_room_chair6",
+          "entityType": "chair",
+          "zone": "break room",
+          "center": {
+            "x": 2576.3,
+            "y": 316.9
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 155,
+              "name": "break_room_chair6_seat",
+              "position": {
+                "x": 2576.8,
+                "y": 332.5
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 146,
+          "name": "break_room_table1",
+          "entityType": "table",
+          "zone": "break room",
+          "center": {
+            "x": 2534.5,
+            "y": 228.5
+          },
+          "owner": null,
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 147,
+          "name": "break_room_table2",
+          "entityType": "table",
+          "zone": "break room",
+          "center": {
+            "x": 2534.3,
+            "y": 324.8
+          },
+          "owner": null,
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 148,
+          "name": "vending_machines",
+          "entityType": "appliance",
+          "zone": "break room",
+          "center": {
+            "x": 2695.5,
+            "y": 252
+          },
+          "actionPoints": [
+            {
+              "id": 149,
+              "name": "break_room_vending_spot",
+              "position": {
+                "x": 2687.3,
+                "y": 364.3
+              },
+              "facing": "back"
+            }
+          ],
+          "actions": []
+        },
+        {
+          "id": 256,
+          "name": "break_room_microwave",
+          "entityType": "appliance",
+          "zone": "break room",
+          "center": {
+            "x": 2640,
+            "y": 428.9
+          },
+          "actionPoints": [
+            {
+              "id": 270,
+              "name": "break_room_microwave_spot",
+              "position": {
+                "x": 2639.4,
+                "y": 402.9
+              },
+              "facing": "front"
+            }
+          ],
+          "actions": []
+        }
+      ]
+    },
+    "far lobby": {
+      "id": 51,
+      "name": "far lobby",
+      "entities": [
+        {
+          "id": 68,
+          "name": "far_lobby_couch",
+          "entityType": "chair",
+          "zone": "far lobby",
+          "center": {
+            "x": 2299.1,
+            "y": 361.4
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 69,
+              "name": "far_lobby_couch_seat1",
+              "position": {
+                "x": 2303,
+                "y": 343.5
+              },
+              "facing": "right"
+            },
+            {
+              "id": 70,
+              "name": "far_lobby_couch_seat2",
+              "position": {
+                "x": 2303,
+                "y": 381.2
+              },
+              "facing": "right"
+            },
+            {
+              "id": 71,
+              "name": "far_lobby_couch_seat3",
+              "position": {
+                "x": 2303.1,
+                "y": 421.9
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 227,
+          "name": "far_lobby_chair2",
+          "entityType": "chair",
+          "zone": "far lobby",
+          "center": {
+            "x": 2417.2,
+            "y": 318.8
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 267,
+              "name": "far_lobby_chair_seat1",
+              "position": {
+                "x": 2416.7,
+                "y": 332.9
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 228,
+          "name": "far_lobby_chair1",
+          "entityType": "chair",
+          "zone": "far lobby",
+          "center": {
+            "x": 2417,
+            "y": 286.7
+          },
+          "owner": null,
+          "sitPoints": [
+            {
+              "id": 266,
+              "name": "far_lobby_chair_seat1",
+              "position": {
+                "x": 2415.1,
+                "y": 301.4
+              },
+              "facing": "left"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        }
+      ]
+    },
+    "annex": {
+      "id": 52,
+      "name": "annex",
+      "entities": [
+        {
+          "id": 128,
+          "name": "kelly_desk",
+          "entityType": "table",
+          "zone": "annex",
+          "center": {
+            "x": 2639.7,
+            "y": 1001.7
+          },
+          "owner": "kelly",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 131,
+          "name": "toby_desk",
+          "entityType": "table",
+          "zone": "annex",
+          "center": {
+            "x": 2672.4,
+            "y": 695.3
+          },
+          "owner": "toby",
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 132,
+          "name": "toby_chair",
+          "entityType": "chair",
+          "zone": "annex",
+          "center": {
+            "x": 2607.7,
+            "y": 702.8
+          },
+          "owner": "toby",
+          "sitPoints": [
+            {
+              "id": 134,
+              "name": "toby_chair_seat",
+              "position": {
+                "x": 2609.8,
+                "y": 718.5
+              },
+              "facing": "right"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        },
+        {
+          "id": 135,
+          "name": "kelly_chair",
+          "entityType": "chair",
+          "zone": "annex",
+          "center": {
+            "x": 2640.5,
+            "y": 965.1
+          },
+          "owner": "kelly",
+          "sitPoints": [
+            {
+              "id": 130,
+              "name": "kelly_chair_seat",
+              "position": {
+                "x": 2641.6,
+                "y": 979.6
+              },
+              "facing": "front"
+            }
+          ],
+          "actionPoints": [],
+          "actions": []
+        }
+      ]
+    },
+    "parking lot ": {
+      "id": 53,
+      "name": "parking lot ",
+      "entities": []
+    },
+    "ground entrance": {
+      "id": 294,
+      "name": "ground entrance",
+      "entities": []
+    }
+  },
+  "entitiesById": {
+    "56": {
+      "id": 56,
+      "name": "lobby_couch",
+      "entityType": "chair",
+      "zone": "lobby",
+      "center": {
+        "x": 725.9,
+        "y": 433.1
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 57,
+          "name": "lobby_couch_seat1",
+          "position": {
+            "x": 735.5,
+            "y": 441.2
+          },
+          "facing": "right"
+        },
+        {
+          "id": 58,
+          "name": "lobby_couch_seat2",
+          "position": {
+            "x": 735.5,
+            "y": 476.9
+          },
+          "facing": "right"
+        },
+        {
+          "id": 59,
+          "name": "lobby_couch_seat3",
+          "position": {
+            "x": 735.6,
+            "y": 513.6
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "60": {
+      "id": 60,
+      "name": "lobby_chair",
+      "entityType": "chair",
+      "zone": "lobby",
+      "center": {
+        "x": 896,
+        "y": 453.7
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 61,
+          "name": "lobby_chair_seat1",
+          "position": {
+            "x": 881.6,
+            "y": 464.5
+          },
+          "facing": "front"
+        },
+        {
+          "id": 62,
+          "name": "lobby_chair_seat2",
+          "position": {
+            "x": 911.2,
+            "y": 465
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "63": {
+      "id": 63,
+      "name": "reception_desk",
+      "entityType": "table",
+      "zone": "reception",
+      "center": {
+        "x": 871.4,
+        "y": 640
+      },
+      "owner": "pam",
+      "actionPoints": [
+        {
+          "id": 303,
+          "name": "reception_spot1",
+          "position": {
+            "x": 960.3,
+            "y": 655.9
+          },
+          "facing": "left"
+        },
+        {
+          "id": 304,
+          "name": "reception_spot2",
+          "position": {
+            "x": 959,
+            "y": 606.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actions": []
+    },
+    "64": {
+      "id": 64,
+      "name": "pam_chair",
+      "entityType": "chair",
+      "zone": "reception",
+      "center": {
+        "x": 847.2,
+        "y": 639.5
+      },
+      "owner": "pam",
+      "sitPoints": [
+        {
+          "id": 67,
+          "name": "pam_chair_seat",
+          "position": {
+            "x": 850.4,
+            "y": 653.2
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "65": {
+      "id": 65,
+      "name": "michael_chair",
+      "entityType": "chair",
+      "zone": "michael's office",
+      "center": {
+        "x": 1042.4,
+        "y": 195.8
+      },
+      "owner": "michael",
+      "sitPoints": [
+        {
+          "id": 66,
+          "name": "michael_chair_seat",
+          "position": {
+            "x": 1040.1,
+            "y": 211.8
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "68": {
+      "id": 68,
+      "name": "far_lobby_couch",
+      "entityType": "chair",
+      "zone": "far lobby",
+      "center": {
+        "x": 2299.1,
+        "y": 361.4
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 69,
+          "name": "far_lobby_couch_seat1",
+          "position": {
+            "x": 2303,
+            "y": 343.5
+          },
+          "facing": "right"
+        },
+        {
+          "id": 70,
+          "name": "far_lobby_couch_seat2",
+          "position": {
+            "x": 2303,
+            "y": 381.2
+          },
+          "facing": "right"
+        },
+        {
+          "id": 71,
+          "name": "far_lobby_couch_seat3",
+          "position": {
+            "x": 2303.1,
+            "y": 421.9
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "76": {
+      "id": 76,
+      "name": "michael_desk",
+      "entityType": "table",
+      "zone": "michael's office",
+      "center": {
+        "x": 1040,
+        "y": 248.8
+      },
+      "owner": "michael",
+      "actionPoints": [
+        {
+          "id": 274,
+          "name": "michael_desk_spot1",
+          "position": {
+            "x": 1043.9,
+            "y": 343.8
+          },
+          "facing": "back"
+        },
+        {
+          "id": 301,
+          "name": "michael_desk_spot3",
+          "position": {
+            "x": 990,
+            "y": 329.3
+          },
+          "facing": "back"
+        },
+        {
+          "id": 302,
+          "name": "michael_desk_spot2",
+          "position": {
+            "x": 1094.5,
+            "y": 333.2
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "77": {
+      "id": 77,
+      "name": "michael_office_guest_chair",
+      "entityType": "chair",
+      "zone": "michael's office",
+      "center": {
+        "x": 912.6,
+        "y": 323
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 78,
+          "name": "michael_office_guest_chair_seat",
+          "position": {
+            "x": 913.4,
+            "y": 328.8
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "79": {
+      "id": 79,
+      "name": "angela_chair",
+      "entityType": "chair",
+      "zone": "accounting",
+      "center": {
+        "x": 783.8,
+        "y": 837.4
+      },
+      "owner": "angela",
+      "sitPoints": [
+        {
+          "id": 80,
+          "name": "angela_chair_seat",
+          "position": {
+            "x": 784.4,
+            "y": 853.2
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "89": {
+      "id": 89,
+      "name": "oscar_desk",
+      "entityType": "table",
+      "zone": "accounting",
+      "center": {
+        "x": 880.9,
+        "y": 920
+      },
+      "owner": "oscar",
+      "actionPoints": [],
+      "actions": []
+    },
+    "90": {
+      "id": 90,
+      "name": "angela_desk",
+      "entityType": "table",
+      "zone": "accounting",
+      "center": {
+        "x": 768.5,
+        "y": 880.9
+      },
+      "owner": "angela",
+      "actionPoints": [],
+      "actions": []
+    },
+    "91": {
+      "id": 91,
+      "name": "kevin_desk",
+      "entityType": "table",
+      "zone": "accounting",
+      "center": {
+        "x": 767.6,
+        "y": 953.4
+      },
+      "owner": "kevin",
+      "actionPoints": [],
+      "actions": []
+    },
+    "92": {
+      "id": 92,
+      "name": "kevin_chair",
+      "entityType": "chair",
+      "zone": "accounting",
+      "center": {
+        "x": 751.5,
+        "y": 998.9
+      },
+      "owner": "kevin",
+      "sitPoints": [
+        {
+          "id": 94,
+          "name": "kevin_chair_seat",
+          "position": {
+            "x": 752,
+            "y": 1005.6
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "95": {
+      "id": 95,
+      "name": "oscar_chair",
+      "entityType": "chair",
+      "zone": "accounting",
+      "center": {
+        "x": 944.3,
+        "y": 927.3
+      },
+      "owner": "oscar",
+      "sitPoints": [
+        {
+          "id": 96,
+          "name": "oscar_chair_seat",
+          "position": {
+            "x": 942.3,
+            "y": 938.1
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "97": {
+      "id": 97,
+      "name": "jim_desk",
+      "entityType": "table",
+      "zone": "sales",
+      "center": {
+        "x": 1136.3,
+        "y": 627.2
+      },
+      "owner": "jim",
+      "actionPoints": [],
+      "actions": []
+    },
+    "98": {
+      "id": 98,
+      "name": "jim_chair",
+      "entityType": "chair",
+      "zone": "sales",
+      "center": {
+        "x": 1136,
+        "y": 581.3
+      },
+      "owner": "jim",
+      "sitPoints": [
+        {
+          "id": 126,
+          "name": "jim_chair_seat",
+          "position": {
+            "x": 1135.6,
+            "y": 594.1
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "100": {
+      "id": 100,
+      "name": "dwight_desk",
+      "entityType": "table",
+      "zone": "sales",
+      "center": {
+        "x": 1167.7,
+        "y": 729.6
+      },
+      "owner": "dwight",
+      "actionPoints": [],
+      "actions": []
+    },
+    "101": {
+      "id": 101,
+      "name": "dwight_chair",
+      "entityType": "chair",
+      "zone": "sales",
+      "center": {
+        "x": 1232.1,
+        "y": 735.4
+      },
+      "owner": "dwight",
+      "sitPoints": [
+        {
+          "id": 121,
+          "name": "dwight_chair_seat",
+          "position": {
+            "x": 1229.9,
+            "y": 748.7
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "103": {
+      "id": 103,
+      "name": "phyllis_desk",
+      "entityType": "table",
+      "zone": "sales",
+      "center": {
+        "x": 1439.9,
+        "y": 697.3
+      },
+      "owner": "phyllis",
+      "actionPoints": [],
+      "actions": []
+    },
+    "104": {
+      "id": 104,
+      "name": "phyllis_chair",
+      "entityType": "chair",
+      "zone": "sales",
+      "center": {
+        "x": 1391.8,
+        "y": 703.2
+      },
+      "owner": "phyllis",
+      "sitPoints": [
+        {
+          "id": 122,
+          "name": "phyllis_chair_seat",
+          "position": {
+            "x": 1394.9,
+            "y": 716.6
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "106": {
+      "id": 106,
+      "name": "stanley_chair",
+      "entityType": "chair",
+      "zone": "sales",
+      "center": {
+        "x": 1551.9,
+        "y": 703
+      },
+      "owner": "stanley",
+      "sitPoints": [
+        {
+          "id": 127,
+          "name": "stanley_chair_seat",
+          "position": {
+            "x": 1551,
+            "y": 715.3
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "108": {
+      "id": 108,
+      "name": "stanley_desk",
+      "entityType": "table",
+      "zone": "sales",
+      "center": {
+        "x": 1504.4,
+        "y": 697
+      },
+      "owner": "stanley",
+      "actionPoints": [],
+      "actions": []
+    },
+    "109": {
+      "id": 109,
+      "name": "meredith_desk",
+      "entityType": "table",
+      "zone": "sales",
+      "center": {
+        "x": 1184.2,
+        "y": 953.4
+      },
+      "owner": "meredith",
+      "actionPoints": [],
+      "actions": []
+    },
+    "110": {
+      "id": 110,
+      "name": "meredith_chair",
+      "entityType": "chair",
+      "zone": "sales",
+      "center": {
+        "x": 1136.3,
+        "y": 959.4
+      },
+      "owner": "meredith",
+      "sitPoints": [
+        {
+          "id": 123,
+          "name": "meredith_chair_seat",
+          "position": {
+            "x": 1137.8,
+            "y": 971.9
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "112": {
+      "id": 112,
+      "name": "ryan_desk",
+      "entityType": "table",
+      "zone": "sales",
+      "center": {
+        "x": 1248.2,
+        "y": 952.8
+      },
+      "owner": "ryan",
+      "actionPoints": [],
+      "actions": []
+    },
+    "113": {
+      "id": 113,
+      "name": "ryan_chair",
+      "entityType": "chair",
+      "zone": "sales",
+      "center": {
+        "x": 1296.2,
+        "y": 959.4
+      },
+      "owner": "ryan",
+      "sitPoints": [
+        {
+          "id": 124,
+          "name": "ryan_chair_seat",
+          "position": {
+            "x": 1295.1,
+            "y": 970
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "118": {
+      "id": 118,
+      "name": "creed_desk",
+      "entityType": "table",
+      "zone": "sales",
+      "center": {
+        "x": 1471.9,
+        "y": 952.5
+      },
+      "owner": "creed",
+      "actionPoints": [],
+      "actions": []
+    },
+    "119": {
+      "id": 119,
+      "name": "creed_chair",
+      "entityType": "chair",
+      "zone": "sales",
+      "center": {
+        "x": 1423.9,
+        "y": 959.4
+      },
+      "owner": "creed",
+      "sitPoints": [
+        {
+          "id": 125,
+          "name": "creed_chair_seat",
+          "position": {
+            "x": 1424.9,
+            "y": 972.6
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "128": {
+      "id": 128,
+      "name": "kelly_desk",
+      "entityType": "table",
+      "zone": "annex",
+      "center": {
+        "x": 2639.7,
+        "y": 1001.7
+      },
+      "owner": "kelly",
+      "actionPoints": [],
+      "actions": []
+    },
+    "131": {
+      "id": 131,
+      "name": "toby_desk",
+      "entityType": "table",
+      "zone": "annex",
+      "center": {
+        "x": 2672.4,
+        "y": 695.3
+      },
+      "owner": "toby",
+      "actionPoints": [],
+      "actions": []
+    },
+    "132": {
+      "id": 132,
+      "name": "toby_chair",
+      "entityType": "chair",
+      "zone": "annex",
+      "center": {
+        "x": 2607.7,
+        "y": 702.8
+      },
+      "owner": "toby",
+      "sitPoints": [
+        {
+          "id": 134,
+          "name": "toby_chair_seat",
+          "position": {
+            "x": 2609.8,
+            "y": 718.5
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "135": {
+      "id": 135,
+      "name": "kelly_chair",
+      "entityType": "chair",
+      "zone": "annex",
+      "center": {
+        "x": 2640.5,
+        "y": 965.1
+      },
+      "owner": "kelly",
+      "sitPoints": [
+        {
+          "id": 130,
+          "name": "kelly_chair_seat",
+          "position": {
+            "x": 2641.6,
+            "y": 979.6
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "138": {
+      "id": 138,
+      "name": "break_room_chair1",
+      "entityType": "chair",
+      "zone": "break room",
+      "center": {
+        "x": 2513.9,
+        "y": 258.1
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 151,
+          "name": "break_room_chair1_seat",
+          "position": {
+            "x": 2516,
+            "y": 269.4
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "139": {
+      "id": 139,
+      "name": "break_room_chair4",
+      "entityType": "chair",
+      "zone": "break room",
+      "center": {
+        "x": 2514,
+        "y": 354.3
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 153,
+          "name": "break_room_chair4_seat",
+          "position": {
+            "x": 2516.6,
+            "y": 367.1
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "141": {
+      "id": 141,
+      "name": "break_room_chair3",
+      "entityType": "chair",
+      "zone": "break room",
+      "center": {
+        "x": 2606.7,
+        "y": 258.1
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 152,
+          "name": "break_room_chair3_seat",
+          "position": {
+            "x": 2605.3,
+            "y": 269.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "142": {
+      "id": 142,
+      "name": "break_room_chair7",
+      "entityType": "chair",
+      "zone": "break room",
+      "center": {
+        "x": 2606.6,
+        "y": 353.7
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 156,
+          "name": "break_room_chair7_seat",
+          "position": {
+            "x": 2603.7,
+            "y": 368.2
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "143": {
+      "id": 143,
+      "name": "break_room_chair5",
+      "entityType": "chair",
+      "zone": "break room",
+      "center": {
+        "x": 2542.3,
+        "y": 376.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 154,
+          "name": "break_room_chair4_seat",
+          "position": {
+            "x": 2543.3,
+            "y": 384.4
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "144": {
+      "id": 144,
+      "name": "break_room_chair2",
+      "entityType": "chair",
+      "zone": "break room",
+      "center": {
+        "x": 2544.2,
+        "y": 221.1
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 150,
+          "name": "break_room_chair2_seat",
+          "position": {
+            "x": 2544.2,
+            "y": 234.5
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "145": {
+      "id": 145,
+      "name": "break_room_chair6",
+      "entityType": "chair",
+      "zone": "break room",
+      "center": {
+        "x": 2576.3,
+        "y": 316.9
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 155,
+          "name": "break_room_chair6_seat",
+          "position": {
+            "x": 2576.8,
+            "y": 332.5
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "146": {
+      "id": 146,
+      "name": "break_room_table1",
+      "entityType": "table",
+      "zone": "break room",
+      "center": {
+        "x": 2534.5,
+        "y": 228.5
+      },
+      "owner": null,
+      "actionPoints": [],
+      "actions": []
+    },
+    "147": {
+      "id": 147,
+      "name": "break_room_table2",
+      "entityType": "table",
+      "zone": "break room",
+      "center": {
+        "x": 2534.3,
+        "y": 324.8
+      },
+      "owner": null,
+      "actionPoints": [],
+      "actions": []
+    },
+    "148": {
+      "id": 148,
+      "name": "vending_machines",
+      "entityType": "appliance",
+      "zone": "break room",
+      "center": {
+        "x": 2695.5,
+        "y": 252
+      },
+      "actionPoints": [
+        {
+          "id": 149,
+          "name": "break_room_vending_spot",
+          "position": {
+            "x": 2687.3,
+            "y": 364.3
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "157": {
+      "id": 157,
+      "name": "conf_outer_chair1",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1360,
+        "y": 163.3
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 181,
+          "name": "conf_chair1_seat",
+          "position": {
+            "x": 1359.6,
+            "y": 180.9
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "158": {
+      "id": 158,
+      "name": "conf_outer_chair2",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1455.9,
+        "y": 163.6
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 182,
+          "name": "conf_chair2_seat",
+          "position": {
+            "x": 1455.4,
+            "y": 180.1
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "159": {
+      "id": 159,
+      "name": "conf_outer_chair3",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1519.7,
+        "y": 163.1
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 183,
+          "name": "conf_chair3_seat",
+          "position": {
+            "x": 1519.6,
+            "y": 180.6
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "160": {
+      "id": 160,
+      "name": "conf_outer_chair4",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1583.9,
+        "y": 163.4
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 184,
+          "name": "conf_chair4_seat",
+          "position": {
+            "x": 1583.8,
+            "y": 180.8
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "161": {
+      "id": 161,
+      "name": "conf_table_chair1",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1327.9,
+        "y": 227.2
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 185,
+          "name": "conf_chair5_seat",
+          "position": {
+            "x": 1327.9,
+            "y": 239.1
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "162": {
+      "id": 162,
+      "name": "conf_table_chair2",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1391.8,
+        "y": 227.2
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 186,
+          "name": "conf_chair6_seat",
+          "position": {
+            "x": 1392.1,
+            "y": 238.3
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "163": {
+      "id": 163,
+      "name": "conf_table_chair3",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1423.9,
+        "y": 227.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 187,
+          "name": "conf_chair7_seat",
+          "position": {
+            "x": 1424.3,
+            "y": 238
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "164": {
+      "id": 164,
+      "name": "conf_table_chair4",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1487.9,
+        "y": 227.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 188,
+          "name": "conf_chair8_seat",
+          "position": {
+            "x": 1488.4,
+            "y": 238.9
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "165": {
+      "id": 165,
+      "name": "conf_table_chair5",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1519.9,
+        "y": 227.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 189,
+          "name": "conf_chair9_seat",
+          "position": {
+            "x": 1520.9,
+            "y": 238.6
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "166": {
+      "id": 166,
+      "name": "conf_table_chair12",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1328,
+        "y": 325
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 196,
+          "name": "conf_chair10_seat",
+          "position": {
+            "x": 1327.9,
+            "y": 334.9
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "167": {
+      "id": 167,
+      "name": "conf_table_chair11",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1360,
+        "y": 324.9
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 197,
+          "name": "conf_chair11_seat",
+          "position": {
+            "x": 1360.7,
+            "y": 334.9
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "168": {
+      "id": 168,
+      "name": "conf_table_chair10",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1423.9,
+        "y": 325
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 198,
+          "name": "conf_chair12_seat",
+          "position": {
+            "x": 1424.4,
+            "y": 335.4
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "169": {
+      "id": 169,
+      "name": "conf_table_chair9",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1488,
+        "y": 325
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 199,
+          "name": "conf_chair13_seat",
+          "position": {
+            "x": 1488.6,
+            "y": 336.5
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "170": {
+      "id": 170,
+      "name": "conf_table_chair8",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1552.1,
+        "y": 325
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 200,
+          "name": "conf_chair14_seat",
+          "position": {
+            "x": 1552.5,
+            "y": 335.7
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "171": {
+      "id": 171,
+      "name": "conf_outer_chair10",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1391.7,
+        "y": 389
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 222,
+          "name": "conf_chair16_seat",
+          "position": {
+            "x": 1391.9,
+            "y": 399.3
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "172": {
+      "id": 172,
+      "name": "conf_outer_chair11",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1359.6,
+        "y": 389.1
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 221,
+          "name": "conf_chair15_seat",
+          "position": {
+            "x": 1359.8,
+            "y": 399.7
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "173": {
+      "id": 173,
+      "name": "conf_outer_chair9",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1455.7,
+        "y": 389.1
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 223,
+          "name": "conf_chair17_seat",
+          "position": {
+            "x": 1456.2,
+            "y": 399.3
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "174": {
+      "id": 174,
+      "name": "conf_outer_chair8",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1551.6,
+        "y": 388.6
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 224,
+          "name": "conf_chair18_seat",
+          "position": {
+            "x": 1552.1,
+            "y": 399.8
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "175": {
+      "id": 175,
+      "name": "conf_chair_michael",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1263,
+        "y": 286.7
+      },
+      "owner": "michael",
+      "sitPoints": [
+        {
+          "id": 190,
+          "name": "conf_chair_michael_seat",
+          "position": {
+            "x": 1266.6,
+            "y": 298.1
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "176": {
+      "id": 176,
+      "name": "conf_table_chair7",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1585.1,
+        "y": 286.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 192,
+          "name": "conf_chair16_seat",
+          "position": {
+            "x": 1583.2,
+            "y": 296.6
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "177": {
+      "id": 177,
+      "name": "conf_table_chair6",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1584.9,
+        "y": 254.6
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 191,
+          "name": "conf_chair15_seat",
+          "position": {
+            "x": 1583.4,
+            "y": 264.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "178": {
+      "id": 178,
+      "name": "conf_outer_chair5",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1649,
+        "y": 222.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 193,
+          "name": "conf_chair19_seat",
+          "position": {
+            "x": 1647,
+            "y": 232.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "179": {
+      "id": 179,
+      "name": "conf_outer_chair6",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1648.9,
+        "y": 254.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 194,
+          "name": "conf_chair20_seat",
+          "position": {
+            "x": 1647.3,
+            "y": 264.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "180": {
+      "id": 180,
+      "name": "conf_outer_chair7",
+      "entityType": "chair",
+      "zone": "conference_room",
+      "center": {
+        "x": 1649,
+        "y": 286.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 195,
+          "name": "conf_chair21_seat",
+          "position": {
+            "x": 1647.5,
+            "y": 297.2
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "206": {
+      "id": 206,
+      "name": "kitchen_table",
+      "entityType": "table",
+      "zone": "kitchen",
+      "center": {
+        "x": 2144,
+        "y": 596.9
+      },
+      "owner": null,
+      "actionPoints": [],
+      "actions": []
+    },
+    "207": {
+      "id": 207,
+      "name": "kitchen_chair1",
+      "entityType": "chair",
+      "zone": "kitchen",
+      "center": {
+        "x": 2098.4,
+        "y": 582.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 217,
+          "name": "kitchen_chair1_seat",
+          "position": {
+            "x": 2100.2,
+            "y": 591.9
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "208": {
+      "id": 208,
+      "name": "kitchen_chair2",
+      "entityType": "chair",
+      "zone": "kitchen",
+      "center": {
+        "x": 2158,
+        "y": 533.2
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 219,
+          "name": "kitchen_chair2_seat",
+          "position": {
+            "x": 2160,
+            "y": 552.1
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "209": {
+      "id": 209,
+      "name": "kitchen_chair3",
+      "entityType": "chair",
+      "zone": "kitchen",
+      "center": {
+        "x": 2189.5,
+        "y": 582.5
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 220,
+          "name": "kitchen_chair3_seat",
+          "position": {
+            "x": 2189.4,
+            "y": 592.3
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "210": {
+      "id": 210,
+      "name": "kitchen_chair4",
+      "entityType": "chair",
+      "zone": "kitchen",
+      "center": {
+        "x": 2127.3,
+        "y": 640.7
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 218,
+          "name": "kitchen_chair4_seat",
+          "position": {
+            "x": 2128.4,
+            "y": 641.2
+          },
+          "facing": "back"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "211": {
+      "id": 211,
+      "name": "kitchen_fridge",
+      "entityType": "appliance",
+      "zone": "kitchen",
+      "center": {
+        "x": 2037.3,
+        "y": 535.3
+      },
+      "actionPoints": [
+        {
+          "id": 216,
+          "name": "kitchen_fridge_spot",
+          "position": {
+            "x": 2017.5,
+            "y": 588.1
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "212": {
+      "id": 212,
+      "name": "kitchen_sink",
+      "entityType": "appliance",
+      "zone": "kitchen",
+      "center": {
+        "x": 1829.9,
+        "y": 525.1
+      },
+      "actionPoints": [
+        {
+          "id": 214,
+          "name": "kitchen_sink_spot",
+          "position": {
+            "x": 1824.3,
+            "y": 584.5
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "213": {
+      "id": 213,
+      "name": "kitchen_microwave",
+      "entityType": "appliance",
+      "zone": "kitchen",
+      "center": {
+        "x": 1903.9,
+        "y": 525
+      },
+      "actionPoints": [
+        {
+          "id": 215,
+          "name": "kitchen_microwave_spot",
+          "position": {
+            "x": 1904.5,
+            "y": 584.4
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "227": {
+      "id": 227,
+      "name": "far_lobby_chair2",
+      "entityType": "chair",
+      "zone": "far lobby",
+      "center": {
+        "x": 2417.2,
+        "y": 318.8
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 267,
+          "name": "far_lobby_chair_seat1",
+          "position": {
+            "x": 2416.7,
+            "y": 332.9
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "228": {
+      "id": 228,
+      "name": "far_lobby_chair1",
+      "entityType": "chair",
+      "zone": "far lobby",
+      "center": {
+        "x": 2417,
+        "y": 286.7
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 266,
+          "name": "far_lobby_chair_seat1",
+          "position": {
+            "x": 2415.1,
+            "y": 301.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "229": {
+      "id": 229,
+      "name": "mens_sink1",
+      "entityType": "appliance",
+      "zone": "men's bathroom",
+      "center": {
+        "x": 1734,
+        "y": 1005
+      },
+      "actionPoints": [
+        {
+          "id": 280,
+          "name": "mens_sink1_spot",
+          "position": {
+            "x": 1738.2,
+            "y": 984.5
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "230": {
+      "id": 230,
+      "name": "mens_sink2",
+      "entityType": "appliance",
+      "zone": "men's bathroom",
+      "center": {
+        "x": 1798,
+        "y": 1005
+      },
+      "actionPoints": [
+        {
+          "id": 281,
+          "name": "mens_sink2_spot",
+          "position": {
+            "x": 1802.5,
+            "y": 983.3
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "231": {
+      "id": 231,
+      "name": "womens_sink1",
+      "entityType": "appliance",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2150,
+        "y": 1005
+      },
+      "actionPoints": [
+        {
+          "id": 282,
+          "name": "womens_sink1_spot",
+          "position": {
+            "x": 2152.7,
+            "y": 979.3
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "232": {
+      "id": 232,
+      "name": "womens_sink2",
+      "entityType": "appliance",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2214,
+        "y": 1004.9
+      },
+      "actionPoints": [
+        {
+          "id": 283,
+          "name": "womens_sink2_spot",
+          "position": {
+            "x": 2219.2,
+            "y": 979
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "233": {
+      "id": 233,
+      "name": "accounting_printer",
+      "entityType": "appliance",
+      "zone": "accounting",
+      "center": {
+        "x": 936.9,
+        "y": 775.2
+      },
+      "actionPoints": [
+        {
+          "id": 291,
+          "name": "accounting_printer_spot",
+          "position": {
+            "x": 936.4,
+            "y": 832.7
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "234": {
+      "id": 234,
+      "name": "accounting_fire_hydrant",
+      "entityType": "appliance",
+      "zone": "accounting",
+      "center": {
+        "x": 878.9,
+        "y": 763.2
+      },
+      "actionPoints": [
+        {
+          "id": 290,
+          "name": "accounting_hydrant_spot",
+          "position": {
+            "x": 881.3,
+            "y": 820.9
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "235": {
+      "id": 235,
+      "name": "accounting_shelf",
+      "entityType": "storage",
+      "zone": "accounting",
+      "center": {
+        "x": 847.9,
+        "y": 782.1
+      },
+      "actionPoints": [
+        {
+          "id": 318,
+          "name": "accounting_shelf_spot",
+          "position": {
+            "x": 848.6,
+            "y": 832.3
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "236": {
+      "id": 236,
+      "name": "sales_shelf1",
+      "entityType": "storage",
+      "zone": "sales",
+      "center": {
+        "x": 1566.9,
+        "y": 434
+      },
+      "actionPoints": [
+        {
+          "id": 321,
+          "name": "sales_shelf1_spot",
+          "position": {
+            "x": 1567.2,
+            "y": 491.5
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "237": {
+      "id": 237,
+      "name": "sales_shelf2",
+      "entityType": "storage",
+      "zone": "sales",
+      "center": {
+        "x": 1650.1,
+        "y": 537.1
+      },
+      "actionPoints": [
+        {
+          "id": 322,
+          "name": "sales_shelf2_spot",
+          "position": {
+            "x": 1606.9,
+            "y": 552.2
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "238": {
+      "id": 238,
+      "name": "sales_shelf3",
+      "entityType": "storage",
+      "zone": "sales",
+      "center": {
+        "x": 1649.9,
+        "y": 913
+      },
+      "actionPoints": [
+        {
+          "id": 324,
+          "name": "sales_shelf3_spot",
+          "position": {
+            "x": 1615.1,
+            "y": 911.8
+          },
+          "facing": "right"
+        }
+      ],
+      "actions": []
+    },
+    "239": {
+      "id": 239,
+      "name": "sales_printer",
+      "entityType": "appliance",
+      "zone": "sales",
+      "center": {
+        "x": 1651.6,
+        "y": 802.3
+      },
+      "actionPoints": [
+        {
+          "id": 288,
+          "name": "sales_printer_spot",
+          "position": {
+            "x": 1602.6,
+            "y": 811.1
+          },
+          "facing": "right"
+        }
+      ],
+      "actions": []
+    },
+    "240": {
+      "id": 240,
+      "name": "conf_tv",
+      "entityType": "appliance",
+      "zone": "conference_room",
+      "center": {
+        "x": 1230.3,
+        "y": 260.2
+      },
+      "actionPoints": [
+        {
+          "id": 273,
+          "name": "conf_tv_spot",
+          "position": {
+            "x": 1232.7,
+            "y": 340.2
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "241": {
+      "id": 241,
+      "name": "conf_easel",
+      "entityType": "appliance",
+      "zone": "conference_room",
+      "center": {
+        "x": 1261.8,
+        "y": 164.3
+      },
+      "actionPoints": [
+        {
+          "id": 272,
+          "name": "conf_easel_spot",
+          "position": {
+            "x": 1251.3,
+            "y": 207.1
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "243": {
+      "id": 243,
+      "name": "conf_table",
+      "entityType": "table",
+      "zone": "conference_room",
+      "center": {
+        "x": 1440,
+        "y": 292.7
+      },
+      "owner": null,
+      "actionPoints": [],
+      "actions": []
+    },
+    "245": {
+      "id": 245,
+      "name": "water_cooler",
+      "entityType": "appliance",
+      "zone": "sales",
+      "center": {
+        "x": 1647,
+        "y": 739.6
+      },
+      "actionPoints": [
+        {
+          "id": 289,
+          "name": "water_cooler_spot_1",
+          "position": {
+            "x": 1602.1,
+            "y": 763.4
+          },
+          "facing": "right"
+        },
+        {
+          "id": 298,
+          "name": "water_cooler_spot_2",
+          "position": {
+            "x": 1609.6,
+            "y": 734.2
+          },
+          "facing": "right"
+        },
+        {
+          "id": 299,
+          "name": "water_cooler_spot_3",
+          "position": {
+            "x": 1632.8,
+            "y": 714.4
+          },
+          "facing": "front"
+        },
+        {
+          "id": 300,
+          "name": "water_cooler_spot_4",
+          "position": {
+            "x": 1609.4,
+            "y": 792.5
+          },
+          "facing": "right"
+        }
+      ],
+      "actions": []
+    },
+    "246": {
+      "id": 246,
+      "name": "sales_fire_hydrant",
+      "entityType": "appliance",
+      "zone": "sales",
+      "center": {
+        "x": 1650.2,
+        "y": 576
+      },
+      "actionPoints": [
+        {
+          "id": 287,
+          "name": "sales_hydrant_spot",
+          "position": {
+            "x": 1647.3,
+            "y": 637.7
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "249": {
+      "id": 249,
+      "name": "coffee_machine",
+      "entityType": "appliance",
+      "zone": "kitchen",
+      "center": {
+        "x": 1936,
+        "y": 518.5
+      },
+      "actionPoints": [
+        {
+          "id": 325,
+          "name": "kitchen_coffee_spot",
+          "position": {
+            "x": 1936.1,
+            "y": 584.7
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "250": {
+      "id": 250,
+      "name": "toaster",
+      "entityType": "appliance",
+      "zone": "kitchen",
+      "center": {
+        "x": 1716.3,
+        "y": 526
+      },
+      "actionPoints": [
+        {
+          "id": 268,
+          "name": "kitchen_toaster_spot",
+          "position": {
+            "x": 1715.6,
+            "y": 582
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "254": {
+      "id": 254,
+      "name": "kitchen_fire_hydrant",
+      "entityType": "appliance",
+      "zone": "kitchen",
+      "center": {
+        "x": 2224,
+        "y": 513.2
+      },
+      "actionPoints": [
+        {
+          "id": 269,
+          "name": "kitchen_hydrant_spot",
+          "position": {
+            "x": 2225.8,
+            "y": 560.3
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "255": {
+      "id": 255,
+      "name": "kitchen_trash",
+      "entityType": "appliance",
+      "zone": "kitchen",
+      "center": {
+        "x": 2257.3,
+        "y": 543.8
+      },
+      "actionPoints": [
+        {
+          "id": 314,
+          "name": "kitchen_trash_spot",
+          "position": {
+            "x": 2256,
+            "y": 578.8
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": []
+    },
+    "256": {
+      "id": 256,
+      "name": "break_room_microwave",
+      "entityType": "appliance",
+      "zone": "break room",
+      "center": {
+        "x": 2640,
+        "y": 428.9
+      },
+      "actionPoints": [
+        {
+          "id": 270,
+          "name": "break_room_microwave_spot",
+          "position": {
+            "x": 2639.4,
+            "y": 402.9
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "257": {
+      "id": 257,
+      "name": "urinal1",
+      "entityType": "appliance",
+      "zone": "men's bathroom",
+      "center": {
+        "x": 1951,
+        "y": 912
+      },
+      "actionPoints": [
+        {
+          "id": 275,
+          "name": "mens_urinal1_spot",
+          "position": {
+            "x": 1916.4,
+            "y": 920.4
+          },
+          "facing": "right"
+        }
+      ],
+      "actions": []
+    },
+    "258": {
+      "id": 258,
+      "name": "urinal2",
+      "entityType": "appliance",
+      "zone": "men's bathroom",
+      "center": {
+        "x": 1951.2,
+        "y": 976
+      },
+      "actionPoints": [
+        {
+          "id": 276,
+          "name": "mens_urinal2_spot",
+          "position": {
+            "x": 1915.1,
+            "y": 982.1
+          },
+          "facing": "right"
+        }
+      ],
+      "actions": []
+    },
+    "259": {
+      "id": 259,
+      "name": "mens_toilet",
+      "entityType": "appliance",
+      "zone": "men's bathroom",
+      "center": {
+        "x": 1872,
+        "y": 912
+      },
+      "actionPoints": [
+        {
+          "id": 271,
+          "name": "mens_toilet_spot",
+          "position": {
+            "x": 1871.6,
+            "y": 925.9
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "260": {
+      "id": 260,
+      "name": "womens_toilet1",
+      "entityType": "appliance",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2032,
+        "y": 879.7
+      },
+      "actionPoints": [
+        {
+          "id": 277,
+          "name": "womens_toilet1_spot",
+          "position": {
+            "x": 2031.8,
+            "y": 906.6
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "261": {
+      "id": 261,
+      "name": "womens_toilet2",
+      "entityType": "appliance",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2070,
+        "y": 879.5
+      },
+      "actionPoints": [
+        {
+          "id": 278,
+          "name": "womens_toilet2_spot",
+          "position": {
+            "x": 2070.1,
+            "y": 906
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "262": {
+      "id": 262,
+      "name": "womens_toilet3",
+      "entityType": "appliance",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2107.9,
+        "y": 879.7
+      },
+      "actionPoints": [
+        {
+          "id": 279,
+          "name": "womens_toilet3_spot",
+          "position": {
+            "x": 2109,
+            "y": 905.2
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "263": {
+      "id": 263,
+      "name": "womens_couch1",
+      "entityType": "chair",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2083.3,
+        "y": 776.9
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 284,
+          "name": "womens_couch_seat1",
+          "position": {
+            "x": 2066.7,
+            "y": 779.1
+          },
+          "facing": "front"
+        },
+        {
+          "id": 285,
+          "name": "womens_couch_seat2",
+          "position": {
+            "x": 2093.6,
+            "y": 779.1
+          },
+          "facing": "front"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "264": {
+      "id": 264,
+      "name": "womens_couch2",
+      "entityType": "chair",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2006.2,
+        "y": 798.2
+      },
+      "owner": null,
+      "sitPoints": [
+        {
+          "id": 286,
+          "name": "womens_couch_seat1",
+          "position": {
+            "x": 2015.4,
+            "y": 814.7
+          },
+          "facing": "right"
+        }
+      ],
+      "actionPoints": [],
+      "actions": []
+    },
+    "316": {
+      "id": 316,
+      "name": "reception_trash",
+      "entityType": "appliance",
+      "zone": "reception",
+      "center": {
+        "x": 849,
+        "y": 574.2
+      },
+      "actionPoints": [
+        {
+          "id": 317,
+          "name": "reception_trash_spot",
+          "position": {
+            "x": 814.8,
+            "y": 587.8
+          },
+          "facing": "right"
+        }
+      ],
+      "actions": []
+    },
+    "319": {
+      "id": 319,
+      "name": "accounting_big_shelf",
+      "entityType": "storage",
+      "zone": "accounting",
+      "center": {
+        "x": 896,
+        "y": 1072
+      },
+      "actionPoints": [
+        {
+          "id": 320,
+          "name": "accounting_big_shelf_spot",
+          "position": {
+            "x": 964.3,
+            "y": 1043.3
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": []
+    },
+    "366": {
+      "id": 366,
+      "name": "dwight_pc",
+      "entityType": "appliance",
+      "zone": "sales",
+      "center": {
+        "x": 1164.5,
+        "y": 724.3
+      },
+      "actionPoints": [],
+      "actions": []
+    },
+    "367": {
+      "id": 367,
+      "name": "dwight_phone",
+      "entityType": "appliance",
+      "zone": "sales",
+      "center": {
+        "x": 1198.5,
+        "y": 668.3
+      },
+      "actionPoints": [],
+      "actions": []
+    }
+  },
+  "entrances": {
+    "elevator_entrance": {
+      "id": 297,
+      "name": "elevator_entrance",
+      "zone": "elevator",
+      "center": {
+        "x": 608,
+        "y": 303.9
+      },
+      "actionPoints": [
+        {
+          "id": 73,
+          "name": "elevator_entrance_end",
+          "position": {
+            "x": 608.1,
+            "y": 328.4
+          },
+          "facing": "back"
+        },
+        {
+          "id": 295,
+          "name": "elevator_entrance_start",
+          "position": {
+            "x": 607.7,
+            "y": 447
+          },
+          "facing": "back"
+        }
+      ]
+    },
+    "office_ground_entrance": {
+      "id": 293,
+      "name": "office_ground_entrance",
+      "zone": "ground entrance",
+      "center": {
+        "x": 819,
+        "y": 1247.3
+      },
+      "actionPoints": [
+        {
+          "id": 72,
+          "name": "ground_entrance_start",
+          "position": {
+            "x": 817.5,
+            "y": 1326.6
+          },
+          "facing": "back"
+        },
+        {
+          "id": 292,
+          "name": "ground_entrance_end",
+          "position": {
+            "x": 818.7,
+            "y": 1204.7
+          },
+          "facing": "back"
+        }
+      ]
+    },
+    "michael_office_entrance": {
+      "id": 306,
+      "name": "michael_office_entrance",
+      "zone": "michael's office",
+      "center": {
+        "x": 1104,
+        "y": 432
+      },
+      "actionPoints": [
+        {
+          "id": 305,
+          "name": "michael_announcement_spot",
+          "position": {
+            "x": 1163.9,
+            "y": 499.3
+          },
+          "facing": "front"
+        }
+      ]
+    },
+    "conference_room_entrance": {
+      "id": 307,
+      "name": "conference_room_entrance",
+      "zone": "conference_room",
+      "center": {
+        "x": 1264,
+        "y": 432
+      },
+      "actionPoints": []
+    },
+    "kitchen_sales_entrance": {
+      "id": 308,
+      "name": "kitchen_sales_entrance",
+      "zone": "kitchen",
+      "center": {
+        "x": 1680,
+        "y": 656
+      },
+      "actionPoints": []
+    },
+    "kitchen_annex_entrance": {
+      "id": 309,
+      "name": "kitchen_annex_entrance",
+      "zone": "kitchen",
+      "center": {
+        "x": 2256,
+        "y": 592
+      },
+      "actionPoints": []
+    },
+    "break_room_lobby_entrance": {
+      "id": 310,
+      "name": "break_room_lobby_entrance",
+      "zone": "break room",
+      "center": {
+        "x": 2448,
+        "y": 192
+      },
+      "actionPoints": []
+    },
+    "break_room_annex_entrance": {
+      "id": 311,
+      "name": "break_room_annex_entrance",
+      "zone": "break room",
+      "center": {
+        "x": 2560,
+        "y": 464
+      },
+      "actionPoints": []
+    },
+    "mens_bathroom_entrance": {
+      "id": 312,
+      "name": "mens_bathroom_entrance",
+      "zone": "men's bathroom",
+      "center": {
+        "x": 1760,
+        "y": 752
+      },
+      "actionPoints": []
+    },
+    "womens_bathroom_entrance": {
+      "id": 313,
+      "name": "womens_bathroom_entrance",
+      "zone": "women's bathroom",
+      "center": {
+        "x": 2176,
+        "y": 752
+      },
+      "actionPoints": []
+    }
+  },
+  "meta": {
+    "generatedAt": "2026-04-20T11:30:20.882Z",
+    "sourceFile": "frontend/public/assets/tilemap/dunder-mifflin-tilemap.json",
+    "counts": {
+      "zones": 18,
+      "chairs": 57,
+      "tables": 18,
+      "appliances": 29,
+      "storage": 5,
+      "entrances": 10,
+      "parkingSpots": 16,
+      "sitPoints": 63,
+      "actionPoints": 61
+    }
+  }
+}
