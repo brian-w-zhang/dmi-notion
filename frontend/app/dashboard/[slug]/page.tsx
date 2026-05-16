@@ -1,17 +1,36 @@
 'use client'
-import { use } from 'react'
+import { use, useState } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { CHARACTER_ASSETS } from '../../../game/config/characters'
 import CharacterSprite from '../../../components/CharacterSprite'
+import NeedsCurvesPanel from '../../../components/NeedsCurvesPanel'
+import PersonalityRadar from '../../../components/PersonalityRadar'
+import type { Big5 } from '../../../components/PersonalityRadar'
+import needsConfig from '../../../public/data/needs_config.json'
+import personalitiesData from '../../../public/data/personalities.json'
+import type { NeedConfig } from '../../../components/NeedCurveGraph'
 
 const NEEDS = [
-  { name: 'Hunger',      color: 'bg-orange-500', value: 65 },
-  { name: 'Social',      color: 'bg-blue-500',   value: 80 },
-  { name: 'Stimulation', color: 'bg-purple-500', value: 45 },
-  { name: 'Belonging',   color: 'bg-pink-500',   value: 72 },
-  { name: 'Esteem',      color: 'bg-yellow-500', value: 58 },
-  { name: 'Autonomy',    color: 'bg-green-500',  value: 40 },
+  { name: 'Hunger',       color: 'bg-orange-400', value: 65 },
+  { name: 'Thirst',       color: 'bg-cyan-400',   value: 70 },
+  { name: 'Bladder',      color: 'bg-lime-400',   value: 55 },
+  { name: 'Energy',       color: 'bg-yellow-400', value: 60 },
+  { name: 'Stress',       color: 'bg-red-400',    value: 30 },
+  { name: 'Health',       color: 'bg-green-400',  value: 90 },
+  { name: 'Social',       color: 'bg-blue-400',   value: 80 },
+  { name: 'Belonging',    color: 'bg-pink-400',   value: 72 },
+  { name: 'Esteem',       color: 'bg-amber-400',  value: 58 },
+  { name: 'Stimulation',  color: 'bg-purple-400', value: 45 },
+  { name: 'Productivity', color: 'bg-slate-400',  value: 50 },
+  { name: 'Fulfillment',  color: 'bg-violet-400', value: 40 },
+]
+
+type Tab = 'status' | 'curves'
+
+const TABS: { key: Tab; label: string }[] = [
+  { key: 'curves', label: 'Need Curves' },
+  { key: 'status', label: 'Status' },
 ]
 
 export default function CharacterDetailPage({
@@ -23,101 +42,123 @@ export default function CharacterDetailPage({
   const character = CHARACTER_ASSETS.find((c) => c.owner === slug)
   if (!character) notFound()
 
-  return (
-    <div className="h-full overflow-y-auto bg-gray-950 text-white">
-      <div className="max-w-xl mx-auto px-6 py-8">
-        <Link
-          href="/dashboard"
-          className="text-gray-500 hover:text-gray-300 transition-colors mb-8 inline-block"
-          style={{ fontFamily: 'var(--font-vt323)', fontSize: '18px' }}
-        >
-          ← All characters
-        </Link>
+  const [tab, setTab] = useState<Tab>('curves')
 
-        {/* Header */}
-        <div className="flex items-start gap-6 mb-10 mt-4">
-          <div className="shrink-0 bg-gray-900 border border-gray-800 rounded-lg p-4">
-            <CharacterSprite spritePath={character.spritePath} scale={3} />
-          </div>
-          <div className="pt-2">
-            <h1
-              className="text-white leading-relaxed"
-              style={{ fontFamily: 'var(--font-press-start)', fontSize: '10px' }}
-            >
-              {character.displayName}
-            </h1>
-            <p
-              className="text-gray-500 mt-2"
-              style={{ fontFamily: 'var(--font-vt323)', fontSize: '18px' }}
-            >
-              {character.isPlayerControlled ? 'Player controlled' : 'Agent'}
-            </p>
-          </div>
+  const personality = (personalitiesData as Record<string, { mbti: string; o: number; c: number; e: number; a: number; n: number }>)[slug]
+
+  return (
+    <div className="h-full flex flex-col bg-[#191919] text-[#E8E8E8]">
+
+      {/* Shared header row: breadcrumb (left) + tabs (right), same vertical baseline */}
+      <div className="shrink-0 flex items-end gap-5 px-6 pt-5 border-b border-[#383838]">
+        {/* Left slot — same width as left panel */}
+        <div className="w-64 shrink-0 pb-3">
+          <Link
+            href="/dashboard"
+            className="text-[#9B9B9B] hover:text-[#E8E8E8] transition-colors text-sm"
+          >
+            ← All characters
+          </Link>
         </div>
 
-        {/* Needs */}
-        <section className="mb-8">
-          <h2
-            className="text-gray-500 mb-3"
-            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', letterSpacing: '0.1em' }}
-          >
-            Needs
-          </h2>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg divide-y divide-gray-800/60">
-            {NEEDS.map((need) => (
-              <div key={need.name} className="px-4 py-3 flex items-center gap-4">
-                <span
-                  className="text-gray-300 w-24 shrink-0"
-                  style={{ fontFamily: 'var(--font-vt323)', fontSize: '18px' }}
-                >
-                  {need.name}
+        {/* Right slot — tabs flush to the border-b */}
+        <div className="flex">
+          {TABS.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`px-4 py-2.5 text-sm -mb-px transition-colors border-b-2 ${
+                tab === key
+                  ? 'border-[#E8E8E8] text-[#E8E8E8]'
+                  : 'border-transparent text-[#9B9B9B] hover:text-[#E8E8E8]'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Two-column body */}
+      <div className="flex-1 flex gap-5 overflow-hidden px-6 pb-6 pt-5 min-h-0">
+
+        {/* ── Left panel ── */}
+        <div className="w-64 shrink-0 flex flex-col gap-4 overflow-y-auto">
+
+          {/* Character card */}
+          <div className="bg-[#252525] border border-[#383838] rounded p-4 flex gap-3 items-start">
+            <div className="shrink-0">
+              <CharacterSprite spritePath={character.spritePath} scale={3} />
+            </div>
+            <div className="pt-1 min-w-0 flex flex-col gap-1.5">
+              <p className="text-[#E8E8E8] text-base font-semibold leading-snug">
+                {character.displayName}
+              </p>
+              <p className="text-[#9B9B9B] text-xs">
+                {character.isPlayerControlled ? 'Player controlled' : 'Agent'}
+              </p>
+              {personality && (
+                <span className="self-start text-[10px] text-[#9B9B9B] border border-[#4A4A4A] rounded px-1.5 py-0.5 tracking-wide">
+                  {personality.mbti}
                 </span>
-                <div className="flex-1 bg-gray-800 rounded-full h-1.5">
-                  <div
-                    className={`${need.color} h-1.5 rounded-full opacity-70`}
-                    style={{ width: `${need.value}%` }}
-                  />
+              )}
+            </div>
+          </div>
+
+          {/* Personality */}
+          {personality && (
+            <div>
+              <p className="text-[10px] font-medium tracking-widest uppercase text-[#6B6B6B] mb-2">
+                Personality
+              </p>
+              <div className="bg-[#252525] border border-[#383838] rounded p-4 flex flex-col items-center gap-3">
+                <PersonalityRadar scores={personality as Big5} />
+                <div className="grid grid-cols-5 w-full">
+                  {(['o','c','e','a','n'] as (keyof Big5)[]).map((k) => (
+                    <div key={k} className="flex flex-col items-center gap-0.5">
+                      <span className="text-[9px] text-[#6B6B6B] uppercase tracking-wide">{k}</span>
+                      <span className="text-xs text-[#9B9B9B] tabular-nums">
+                        {Math.round((personality as Big5)[k] * 100)}
+                      </span>
+                    </div>
+                  ))}
                 </div>
-                <span
-                  className="text-gray-600 w-7 text-right tabular-nums"
-                  style={{ fontFamily: 'var(--font-vt323)', fontSize: '16px' }}
-                >
-                  {need.value}
-                </span>
               </div>
-            ))}
-          </div>
-        </section>
+            </div>
+          )}
 
-        {/* Relationships */}
-        <section className="mb-8">
-          <h2
-            className="text-gray-500 mb-3"
-            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', letterSpacing: '0.1em' }}
-          >
-            Relationships
-          </h2>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-10 text-center">
-            <p style={{ fontFamily: 'var(--font-vt323)', fontSize: '18px' }} className="text-gray-700">
-              No relationship data yet
-            </p>
-          </div>
-        </section>
+        </div>
 
-        {/* Memories */}
-        <section>
-          <h2
-            className="text-gray-500 mb-3"
-            style={{ fontFamily: 'var(--font-press-start)', fontSize: '8px', letterSpacing: '0.1em' }}
-          >
-            Recent Memories
-          </h2>
-          <div className="bg-gray-900 border border-gray-800 rounded-lg px-4 py-10 text-center">
-            <p style={{ fontFamily: 'var(--font-vt323)', fontSize: '18px' }} className="text-gray-700">
-              No memory data yet
-            </p>
-          </div>
-        </section>
+        {/* ── Right panel ── */}
+        <div className={`flex-1 min-h-0 min-w-0 ${tab === 'curves' ? 'overflow-hidden' : 'overflow-y-auto'}`}>
+
+          {tab === 'status' && (
+            <div className="grid grid-cols-2 gap-4 h-full">
+              {[
+                { label: 'Relationships' },
+                { label: 'Recent Memories' },
+              ].map(({ label }) => (
+                <div key={label} className="flex flex-col min-h-0">
+                  <p className="text-[10px] font-medium tracking-widest uppercase text-[#6B6B6B] mb-2">
+                    {label}
+                  </p>
+                  <div className="flex-1 bg-[#252525] border border-[#383838] rounded flex items-center justify-center">
+                    <p className="text-sm text-[#4A4A4A]">No data yet</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tab === 'curves' && (
+            <NeedsCurvesPanel
+              needs={NEEDS}
+              needsConfig={needsConfig as Record<string, NeedConfig>}
+              slug={slug}
+            />
+          )}
+
+        </div>
       </div>
     </div>
   )

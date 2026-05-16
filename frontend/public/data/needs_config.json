@@ -1,0 +1,86 @@
+{
+  "hunger": {
+    "label": "Hunger",
+    "group": "physiological",
+    "curve": "convex",
+    "params": { "power": 2.5 },
+    "color": "#f97316"
+  },
+  "thirst": {
+    "label": "Thirst",
+    "group": "physiological",
+    "curve": "convex",
+    "params": { "power": 2.5 },
+    "color": "#06b6d4"
+  },
+  "bladder": {
+    "label": "Bladder",
+    "group": "physiological",
+    "curve": "convex",
+    "params": { "power": 2.8 },
+    "color": "#84cc16"
+  },
+  "energy": {
+    "label": "Energy",
+    "group": "physiological",
+    "curve": "convex",
+    "params": { "power": 2.0 },
+    "color": "#eab308"
+  },
+  "stress": {
+    "label": "Stress",
+    "group": "safety",
+    "curve": "ascending",
+    "params": { "power": 2.0 },
+    "color": "#ef4444"
+  },
+  "health": {
+    "label": "Health",
+    "group": "safety",
+    "curve": "convex",
+    "params": { "power": 2.0 },
+    "color": "#22c55e"
+  },
+  "social": {
+    "label": "Social",
+    "group": "belonging",
+    "curve": "u-shaped",
+    "params": { "amplitude": 2.5, "midpoint": 0.45, "baseline": 0.05 },
+    "color": "#3b82f6"
+  },
+  "belonging": {
+    "label": "Belonging",
+    "group": "belonging",
+    "curve": "concave",
+    "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.05 },
+    "color": "#ec4899"
+  },
+  "esteem": {
+    "label": "Esteem",
+    "group": "esteem",
+    "curve": "concave",
+    "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.08 },
+    "color": "#f59e0b"
+  },
+  "stimulation": {
+    "label": "Stimulation",
+    "group": "esteem",
+    "curve": "u-shaped",
+    "params": { "amplitude": 3.0, "midpoint": 0.55, "baseline": 0.10 },
+    "color": "#a855f7"
+  },
+  "productivity": {
+    "label": "Productivity",
+    "group": "esteem",
+    "curve": "concave",
+    "params": { "amplitude": 0.75, "power": 0.5, "baseline": 0.10 },
+    "color": "#64748b"
+  },
+  "fulfillment": {
+    "label": "Fulfillment",
+    "group": "self-actualization",
+    "curve": "concave",
+    "params": { "amplitude": 0.6, "power": 0.5, "baseline": 0.05 },
+    "color": "#8b5cf6"
+  }
+}

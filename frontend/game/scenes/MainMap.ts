@@ -25,6 +25,7 @@ import { spawnStaticCastMembers, type SpawnedCastMember } from './mainMapCast';
 import { ApplianceActionController } from '../systems/ApplianceActionController';
 import { FootstepSystem } from '../systems/FootstepSystem';
 import { PathfindingSystem } from '../systems/PathfindingSystem';
+import { CarAutoParkSystem, type ParkingSpot } from '../systems/CarAutoParkSystem';
 import {
   hitTestTarget,
   drawTargetHighlight,
@@ -115,6 +116,15 @@ export class MainMap extends Phaser.Scene {
   private footstepSystem!: FootstepSystem;
   private pathfindingSystem!: PathfindingSystem;
   private actionQueue!: ActionQueueController;
+  private carAutoPark!: CarAutoParkSystem;
+  private parkingSpots: ParkingSpot[] = [];
+  private hoveredParkingSpot: ParkingSpot | null = null;
+
+  // ── Debug overlay ─────────────────────────────────────────────────────────
+  private debugGraphics!: Phaser.GameObjects.Graphics;
+  private debugSpotLabels: Phaser.GameObjects.Text[] = [];
+  private debugVisible = false;
+  private bKey!: Phaser.Input.Keyboard.Key;
 
   private hoverHighlight!: Phaser.GameObjects.Graphics;
   private hoveredTarget: QueueTarget | null = null;
@@ -156,6 +166,9 @@ export class MainMap extends Phaser.Scene {
     this.chairHighlight    = entities.chairHighlight;
     this.applianceHighlight = entities.applianceHighlight;
     this.castMembers = spawnStaticCastMembers(this, this.chairs, worldObjects);
+
+    this.carAutoPark = new CarAutoParkSystem(worldData.parkingSpots);
+    this.parkingSpots = worldData.parkingSpots;
 
     this.hud = new MainMapHud(
       this, sceneW, sceneH, worldObjects, this.cameraMode,
@@ -214,12 +227,29 @@ export class MainMap extends Phaser.Scene {
     this.hoverHighlight = this.add.graphics().setDepth(9997);
     this.hud.ignoreWorldObjects(this.hoverHighlight);
 
+    this.debugGraphics = this.add.graphics().setDepth(9998).setVisible(false);
+    this.hud.ignoreWorldObjects(this.debugGraphics);
+    for (const spot of this.parkingSpots) {
+      const label = this.add.text(spot.x + 8, spot.y - 18, spot.name, {
+        fontSize: '11px', fontFamily: 'monospace',
+        color: spot.handicap ? '#ffaa00' : '#00ff88',
+        backgroundColor: '#00000099', padding: { x: 3, y: 2 },
+      }).setDepth(9998).setVisible(false);
+      this.hud.ignoreWorldObjects(label);
+      this.debugSpotLabels.push(label);
+    }
+
     this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
       const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
       this.updateHoverHighlight(wp.x, wp.y);
     });
     this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-      if (pointer.button !== 0 || !this.hoveredTarget) return;
+      if (pointer.button !== 0) return;
+      if (this.driving) {
+        if (this.hoveredParkingSpot) this.startAutoParkToSpot(this.hoveredParkingSpot);
+        return;
+      }
+      if (!this.hoveredTarget) return;
       this.actionQueue.enqueue(this.hoveredTarget);
     });
 
@@ -231,12 +261,36 @@ export class MainMap extends Phaser.Scene {
   }
 
   private updateHoverHighlight(worldX: number, worldY: number): void {
+    if (this.driving) {
+      this.updateDrivingHoverHighlight(worldX, worldY);
+      return;
+    }
     const hit = hitTestTarget(worldX, worldY, this.appliances, this.chairs, this.castMembers);
     if (queueTargetKey(hit) === queueTargetKey(this.hoveredTarget)) return;
     this.hoveredTarget = hit;
     this.updateHoverPersonTalkEmoji(hit);
     drawTargetHighlight(this.hoverHighlight, hit);
     this.game.canvas.style.cursor = hit ? 'pointer' : 'default';
+  }
+
+  private updateDrivingHoverHighlight(worldX: number, worldY: number): void {
+    const HOVER_R = 52;
+    let closest: ParkingSpot | null = null;
+    let bestDist = HOVER_R;
+    for (const spot of this.parkingSpots) {
+      const dx = worldX - spot.x;
+      const dy = worldY - spot.y;
+      const d = Math.sqrt(dx * dx + dy * dy);
+      if (d < bestDist) { bestDist = d; closest = spot; }
+    }
+    if (closest?.name === this.hoveredParkingSpot?.name) return;
+    this.hoveredParkingSpot = closest;
+    this.hoverHighlight.clear();
+    if (closest) {
+      this.hoverHighlight.lineStyle(2, 0xffd700, 1);
+      this.hoverHighlight.strokePoints(closest.polygon as Phaser.Types.Math.Vector2Like[], true);
+    }
+    this.game.canvas.style.cursor = closest ? 'pointer' : 'default';
   }
 
   private updateHoverPersonTalkEmoji(hit: QueueTarget | null): void {
@@ -310,6 +364,7 @@ export class MainMap extends Phaser.Scene {
   }
 
   private exitCar(): void {
+    this.carAutoPark.cancel();
     this.playOpenCarDoorSfx();
     this.stopCarDrivingLoop();
     registerAnimations(this, 'dwight-schrute');
@@ -350,6 +405,11 @@ export class MainMap extends Phaser.Scene {
     this.highlightedChairId = null;
     this.highlightedApplianceId = null;
     this.startCarDrivingLoop();
+  }
+
+  private startAutoParkToSpot(spot: ParkingSpot): void {
+    const { x, y } = this.car.getPivot();
+    this.carAutoPark.startAtSpot(spot, x, y);
   }
 
   // ── Zone tracking ────────────────────────────────────────────────────────
@@ -398,11 +458,26 @@ export class MainMap extends Phaser.Scene {
   // ── Driving update ───────────────────────────────────────────────────────
 
   private updateDriving(inputKeys: CharacterKeys, xPressed: boolean): void {
-    this.car.update(inputKeys, this.shiftKey.isDown, this.getOldestHeldDirection(inputKeys));
-    if (xPressed) this.exitCar();
+    const playerMoving = inputKeys.up || inputKeys.down || inputKeys.left || inputKeys.right;
+    if (this.carAutoPark.isActive && playerMoving) this.carAutoPark.cancel();
+
     const pivot = this.car.getPivot();
-    this.syncCameraToTarget(pivot.x, pivot.y);
-    this.hud.updatePosition(pivot.x, pivot.y);
+    const autoKeys = this.carAutoPark.tick(pivot.x, pivot.y);
+
+    // Snap y exactly to the spot centroid when align-spot-y completes, so the
+    // approach direction (up vs down) doesn't cause vertical misalignment.
+    const snapY = this.carAutoPark.consumeSnapY();
+    if (snapY !== null) this.car.snapToPivot(pivot.x, snapY);
+
+    const effectiveKeys = autoKeys ?? inputKeys;
+    const effectiveShift = autoKeys ? false : this.shiftKey.isDown;
+    const effectiveOldest = autoKeys ? null : this.getOldestHeldDirection(inputKeys);
+
+    this.car.update(effectiveKeys, effectiveShift, effectiveOldest);
+    if (xPressed) this.exitCar();
+    const newPivot = this.car.getPivot();
+    this.syncCameraToTarget(newPivot.x, newPivot.y);
+    this.hud.updatePosition(newPivot.x, newPivot.y);
   }
 
   // ── Camera ───────────────────────────────────────────────────────────────
@@ -442,6 +517,7 @@ export class MainMap extends Phaser.Scene {
     this.tKey     = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.T);
     this.rKey     = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     this.shiftKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
+    this.bKey     = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.B);
   }
 
   // ── Update loop ──────────────────────────────────────────────────────────
@@ -461,6 +537,11 @@ export class MainMap extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.rKey)) {
       this._simulationActive ? this.deactivateSimulation() : this.activateSimulation();
     }
+    if (Phaser.Input.Keyboard.JustDown(this.bKey)) {
+      this.debugVisible = !this.debugVisible;
+      this.debugGraphics.setVisible(this.debugVisible);
+      this.debugSpotLabels.forEach(l => l.setVisible(this.debugVisible));
+    }
 
     this.hoverPersonTalkEmoji?.syncToTarget();
     this.actionQueue.syncBubbles();
@@ -477,6 +558,7 @@ export class MainMap extends Phaser.Scene {
     if (this.driving) {
       this.updateNearbyTalkPrompt(null);
       this.updateDriving(inputKeys, xPressed);
+      if (this.debugVisible) this.renderDebugOverlay();
       return;
     }
 
@@ -535,6 +617,42 @@ export class MainMap extends Phaser.Scene {
     this.syncCameraToTarget(dwight.sprite.x, dwight.sprite.y);
     this.hud.updatePosition(dwight.sprite.x, dwight.sprite.y);
     this.updateDwightZoneTracking();
+    if (this.debugVisible) this.renderDebugOverlay();
+  }
+
+  // ── Debug overlay ─────────────────────────────────────────────────────────
+
+  private renderDebugOverlay(): void {
+    const g = this.debugGraphics;
+    g.clear();
+
+    // Parking spots — green circles for normal, orange for handicap
+    for (const spot of this.parkingSpots) {
+      const color = spot.handicap ? 0xffaa00 : 0x00ff88;
+      g.fillStyle(color, 0.7);
+      g.fillCircle(spot.x, spot.y, 7);
+      g.lineStyle(1.5, color, 1);
+      g.strokeCircle(spot.x, spot.y, 7);
+      // Crosshair so you can see the exact point
+      g.lineStyle(1, color, 0.8);
+      g.lineBetween(spot.x - 14, spot.y, spot.x + 14, spot.y);
+      g.lineBetween(spot.x, spot.y - 14, spot.x, spot.y + 14);
+    }
+
+    // Car collider polygon (cyan)
+    const poly = this.car.getColliderPolygon();
+    g.lineStyle(2, 0x00ffff, 1);
+    g.strokePoints(poly.vertices as Phaser.Types.Math.Vector2Like[], true);
+
+    // Red dot at the geometric centre of the collider polygon (average of vertices).
+    const verts = poly.vertices;
+    const cx = verts.reduce((s, v) => s + v.x, 0) / verts.length;
+    const cy = verts.reduce((s, v) => s + v.y, 0) / verts.length;
+    g.fillStyle(0xff3333, 1);
+    g.fillCircle(cx, cy, 5);
+    g.lineStyle(2, 0xff3333, 1);
+    g.lineBetween(cx - 18, cy, cx + 18, cy);
+    g.lineBetween(cx, cy - 18, cx, cy + 18);
   }
 
   // ── Simulation toggle ─────────────────────────────────────────────────────

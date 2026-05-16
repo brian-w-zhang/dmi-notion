@@ -166,6 +166,13 @@ export class Car {
     return { x: this.pivotX, y: this.pivotY };
   }
 
+  /** Teleport the car pivot to exact world coordinates — used for autopilot final snap. */
+  snapToPivot(x: number, y: number): void {
+    this.pivotX = x;
+    this.pivotY = y;
+    this.sprite.setPosition(this.pivotX, this.pivotY);
+  }
+
   /**
    * Axis-aligned bounding rectangle of the car as a Polygon, using the same
    * asymmetric dimensions as the edge-detection checks (front = halfLong,

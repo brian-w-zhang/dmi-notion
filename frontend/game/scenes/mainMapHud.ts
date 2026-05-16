@@ -4,6 +4,14 @@ import { HUD_BOTTOM_HINT_OFFSET, HUD_DEPTH } from './mainMap.constants';
 type EntranceMode = 'enter' | 'exit';
 type CameraMode = 'manual' | 'follow';
 
+const TOGGLE_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
+  fontSize: '13px',
+  fontFamily: 'monospace',
+  color: '#ffffff',
+  backgroundColor: '#00000088',
+  padding: { x: 6, y: 4 },
+};
+
 const CONTEXT_HINT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
   fontSize: '14px',
   fontFamily: 'monospace',
@@ -61,13 +69,8 @@ export class MainMapHud {
 
     this.setCameraMode(initialCameraMode);
 
-    this.simulationToggle = scene.add.text(sceneW - 8, 8, 'simulation: off', {
-      fontSize: '13px',
-      fontFamily: 'monospace',
-      color: '#ffffff',
-      backgroundColor: '#00000088',
-      padding: { x: 6, y: 4 },
-    }).setOrigin(1, 0);
+    this.simulationToggle = scene.add.text(sceneW - 8, 8, 'simulation: off', TOGGLE_STYLE)
+      .setOrigin(1, 0);
     this.wireSimulationTogglePointer();
 
     this.sitHint = scene.add.text(this.sceneW / 2, this.bottomHintY, '[c] sit', CONTEXT_HINT_STYLE)

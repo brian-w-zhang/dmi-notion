@@ -1,0 +1,339 @@
+{
+  "michael": {
+    "social": {
+      "params": { "amplitude": 4.2, "midpoint": 0.62 },
+      "blurb": "Michael is one of the most socially dependent people imaginable. He physically cannot tolerate being alone and will manufacture social situations just to feel the room. The elevated midpoint means his sweet spot is sustained high-engagement interaction, not brief check-ins."
+    },
+    "belonging": {
+      "params": { "amplitude": 1.4, "power": 0.35, "baseline": 0.12 },
+      "blurb": "The need to be loved, not just liked, is Michael's defining psychological wound. His extreme warmth and high neuroticism combine to make belonging urgency spike sharply and never fully satisfy. There is always a nagging sense that people don't quite get him."
+    },
+    "esteem": {
+      "params": { "amplitude": 1.5, "power": 0.3, "baseline": 0.15 },
+      "blurb": "Michael's self-image is fragile and grandiose in equal measure. Esteem urgency ramps steeply from deprivation and the curve barely flattens. Validation is a treadmill he can never step off."
+    },
+    "stress": {
+      "params": { "power": 2.8 },
+      "blurb": "High neuroticism means stress escalates non-linearly even from small slights or perceived rejection. Michael catastrophizes quickly, so the curve steepens more sharply than the baseline."
+    },
+    "productivity": {
+      "params": { "amplitude": 0.35, "power": 0.7, "baseline": 0.04 },
+      "blurb": "Michael has almost no intrinsic drive to complete tasks for their own sake. Productivity urgency is shallow and easily displaced by any social opportunity."
+    },
+    "stimulation": {
+      "params": { "amplitude": 3.8, "midpoint": 0.60 },
+      "blurb": "Michael's high openness and extreme extraversion mean he needs constant novelty and engagement. Boredom hits him hard and his threshold for enough stimulation is unusually high."
+    }
+  },
+
+  "pam": {
+    "social": {
+      "params": { "amplitude": 1.8, "midpoint": 0.35 },
+      "blurb": "Pam reaches social satiety quickly with a small number of close people: Jim, briefly Karen, later Michael. The lower midpoint reflects that her sweet spot is intimate conversation, not group energy."
+    },
+    "belonging": {
+      "params": { "amplitude": 1.0, "power": 0.45, "baseline": 0.08 },
+      "blurb": "Pam is deeply relationship-oriented, and moderate neuroticism means belonging deprivation causes real but manageable distress. She endures Roy's emotional unavailability for years before it breaks."
+    },
+    "esteem": {
+      "params": { "amplitude": 1.1, "power": 0.4, "baseline": 0.06 },
+      "blurb": "Pam quietly struggles with self-worth: she nearly doesn't go to art school and defers to others' opinions for most of the series. Esteem urgency is meaningfully higher than baseline; deprivation bites sooner and recovery takes longer."
+    },
+    "fulfillment": {
+      "params": { "amplitude": 0.9, "power": 0.42, "baseline": 0.07 },
+      "blurb": "The receptionist-who-wanted-to-be-an-artist arc is pure fulfillment deficit. Pam knows what she wants creatively but consistently puts others first, leaving fulfillment chronically underfed."
+    },
+    "stress": {
+      "params": { "power": 2.3 },
+      "blurb": "Pam absorbs tension patiently but stress accumulates at a slightly above-average rate, occasionally surfacing in assertive moments."
+    }
+  },
+
+  "jim": {
+    "stimulation": {
+      "params": { "amplitude": 4.0, "midpoint": 0.60 },
+      "blurb": "Jim is chronically understimulated by routine office work. The pranks on Dwight aren't just fun, they're urgency management. The high amplitude means deprivation hits hard and fast."
+    },
+    "productivity": {
+      "params": { "amplitude": 0.45, "power": 0.65, "baseline": 0.06 },
+      "blurb": "Jim has genuinely low intrinsic motivation for rote tasks. Productivity urgency is shallow, easily deferred in favour of socialising or pranks."
+    },
+    "social": {
+      "params": { "amplitude": 3.0, "midpoint": 0.48 },
+      "blurb": "Jim is solidly extroverted but not exhaustingly so. He needs social fuel but also values quality over quantity. The midpoint near centre reflects a comfortable social range."
+    },
+    "stress": {
+      "params": { "power": 1.5 },
+      "blurb": "Jim is emotionally resilient. Stress accumulates more slowly and shallowly than baseline. He shrugs off most office absurdity with a look at the camera."
+    },
+    "fulfillment": {
+      "params": { "amplitude": 0.85, "power": 0.44, "baseline": 0.08 },
+      "blurb": "Jim's high openness means he feels the gap between salesman at Dunder Mifflin and his actual potential more acutely than most. Fulfillment is never quite sated even when things are going well."
+    }
+  },
+
+  "dwight": {
+    "productivity": {
+      "params": { "amplitude": 1.4, "power": 0.32, "baseline": 0.20 },
+      "blurb": "Dwight's sense of self is almost entirely inseparable from task completion and duty. Productivity urgency is extreme, never fully satisfied, and the high baseline means he always experiences some drive to be doing something purposeful."
+    },
+    "esteem": {
+      "params": { "amplitude": 1.3, "power": 0.35, "baseline": 0.14 },
+      "blurb": "Dwight's entire identity is built on being the best: best salesman, best assistant (to the) regional manager, best beet farmer. His low agreeableness means he expresses esteem needs competitively rather than collaboratively."
+    },
+    "social": {
+      "params": { "amplitude": 2.0, "midpoint": 0.38 },
+      "blurb": "Dwight is assertive and present socially but not warm. His social need is satisfied through hierarchy and command, not connection. The lower midpoint reflects that he doesn't need extended social contact to feel recharged."
+    },
+    "belonging": {
+      "params": { "amplitude": 0.6, "power": 0.6, "baseline": 0.03 },
+      "blurb": "Dwight rarely admits to needing belonging, and his low agreeableness means he suppresses the signal. The reduced amplitude reflects emotional compartmentalisation, though the Angela storyline reveals it is there underneath."
+    },
+    "stress": {
+      "params": { "power": 1.7 },
+      "blurb": "Dwight's moderate neuroticism is buffered by his extreme conscientiousness. Protocol and preparation reduce perceived threat. Stress accumulates more slowly than average, and he tends to externalise it as aggression rather than distress."
+    },
+    "stimulation": {
+      "params": { "amplitude": 1.8, "midpoint": 0.40 },
+      "blurb": "Dwight's low openness means he is stimulated by familiar, structured challenges: drills, self-defence training, beet harvesting. The reduced amplitude and lower midpoint reflect that routine is satisfying, not boring, to him."
+    }
+  },
+
+  "angela": {
+    "productivity": {
+      "params": { "amplitude": 1.5, "power": 0.28, "baseline": 0.22 },
+      "blurb": "Angela's moral universe is built on order, discipline, and task completion. She is never not working on something, and slacking is a personal affront. The high baseline means the drive is always on."
+    },
+    "social": {
+      "params": { "amplitude": 1.2, "midpoint": 0.25 },
+      "blurb": "Angela wants almost no socialising and reaches her limit very quickly. The low midpoint means even a small amount of quality interaction, preferably with cats or Dwight, constitutes full satisfaction."
+    },
+    "stress": {
+      "params": { "power": 2.6 },
+      "blurb": "Angela's moderate-to-high neuroticism combined with extreme conscientiousness means any deviation from rules generates outsized stress. The steeper curve captures how quickly she becomes wound up when things are out of order."
+    },
+    "belonging": {
+      "params": { "amplitude": 0.5, "power": 0.65, "baseline": 0.02 },
+      "blurb": "Angela has the lowest agreeableness in the office. She does not readily admit to needing people, and her belonging need is genuinely suppressed. The arc with Dwight is slow precisely because she must fight her own indifference to connection."
+    },
+    "esteem": {
+      "params": { "amplitude": 1.2, "power": 0.38, "baseline": 0.12 },
+      "blurb": "Angela's sense of moral superiority is her primary esteem strategy: she gains it through judgement of others rather than approval-seeking. Urgency is high because her standards are impossible for anyone to meet, including herself."
+    },
+    "stimulation": {
+      "params": { "amplitude": 1.5, "midpoint": 0.30 },
+      "blurb": "Angela has the lowest openness in the cast and finds novelty distressing, not exciting. Stimulation need is satisfied at a very low threshold: routine, cats, spreadsheets. Amplitude is reduced because she is actively averse to overstimulation."
+    }
+  },
+
+  "oscar": {
+    "stimulation": {
+      "params": { "amplitude": 3.2, "midpoint": 0.55 },
+      "blurb": "Oscar has a genuine appetite for intellectual engagement and needs ideas to chew on. The stimulation curve is modestly amplified because boredom registers as dissatisfaction, even if he expresses it calmly."
+    },
+    "social": {
+      "params": { "amplitude": 2.0, "midpoint": 0.36 },
+      "blurb": "Oscar is introverted but not reclusive. He enjoys one-on-one conversation and small-group debate but finds prolonged group energy draining. A moderately lower midpoint reflects faster satiation."
+    },
+    "stress": {
+      "params": { "power": 1.5 },
+      "blurb": "Oscar is one of the most emotionally stable characters in the office. Stress accumulates slowly and shallowly. He responds to conflict with analysis rather than panic."
+    },
+    "productivity": {
+      "params": { "amplitude": 1.0, "power": 0.45, "baseline": 0.14 },
+      "blurb": "Oscar has a solid work ethic and genuine satisfaction from completing things correctly. Productivity urgency is meaningfully above baseline. Leaving work undone or done sloppily creates real discomfort."
+    },
+    "belonging": {
+      "params": { "amplitude": 0.75, "power": 0.52, "baseline": 0.04 },
+      "blurb": "Oscar values collegial respect more than warmth, and his belonging need is more intellectual than emotional. Slightly reduced amplitude because he is self-sufficient in a way highly agreeable characters are not."
+    }
+  },
+
+  "kevin": {
+    "hunger": {
+      "params": { "power": 3.5 },
+      "blurb": "Kevin's relationship with food is legendary and borderline clinical. Hunger urgency spikes dramatically because food is not just a need but a primary pleasure and coping mechanism. The steeper curve reflects how consuming the drive becomes."
+    },
+    "productivity": {
+      "params": { "amplitude": 0.25, "power": 0.8, "baseline": 0.03 },
+      "blurb": "Kevin has almost no intrinsic task-completion drive, the lowest conscientiousness in the cast. Productivity urgency is extremely shallow. He will drift to food, conversation, or daydreaming the moment a task loses novelty."
+    },
+    "social": {
+      "params": { "amplitude": 2.8, "midpoint": 0.48 },
+      "blurb": "Kevin is genuinely warm and fond of his colleagues. He gets real social satisfaction from the group even if he contributes to it differently. Amplitude is modestly elevated because social deprivation genuinely bothers him."
+    },
+    "belonging": {
+      "params": { "amplitude": 1.1, "power": 0.48, "baseline": 0.07 },
+      "blurb": "Kevin wants to be included more than he wants to be impressive. His warmth and moderate sociability combine to make belonging urgency above baseline. Exclusion visibly wounds him."
+    },
+    "stress": {
+      "params": { "power": 1.6 },
+      "blurb": "Kevin doesn't worry much. Stress accumulates slowly and he processes setbacks with a kind of cheerful resignation rather than anxiety."
+    }
+  },
+
+  "meredith": {
+    "stimulation": {
+      "params": { "amplitude": 3.8, "midpoint": 0.58 },
+      "blurb": "Meredith is action-oriented and sensation-seeking: she needs things to be happening. The high amplitude reflects a low boredom tolerance and a wide appetite for experiences."
+    },
+    "stress": {
+      "params": { "power": 1.4 },
+      "blurb": "Meredith is arguably the most emotionally resilient character in the office. She has been through enough that almost nothing fazes her. Stress barely accumulates on the ascending curve."
+    },
+    "productivity": {
+      "params": { "amplitude": 0.40, "power": 0.72, "baseline": 0.04 },
+      "blurb": "Meredith shows up and does the minimum. Productivity urgency is very shallow and easily displaced by social or stimulation needs."
+    },
+    "social": {
+      "params": { "amplitude": 3.0, "midpoint": 0.50 },
+      "blurb": "Meredith is gregarious in a blunt, unfiltered way. Amplitude is above baseline because isolation would genuinely bother her even if she acts indifferent."
+    },
+    "fulfillment": {
+      "params": { "amplitude": 0.5, "power": 0.55, "baseline": 0.03 },
+      "blurb": "Meredith operates with remarkably low existential ambition. She is not haunted by unlived potential. Fulfillment urgency is reduced because her benchmark for enough is low and she largely meets it."
+    }
+  },
+
+  "creed": {
+    "stress": {
+      "params": { "power": 1.1 },
+      "blurb": "Creed experiences almost no stress response to external events. Years of operating outside conventional reality have made him functionally immune to workplace anxiety. The ascending curve is nearly flat."
+    },
+    "productivity": {
+      "params": { "amplitude": 0.15, "power": 0.9, "baseline": 0.02 },
+      "blurb": "Creed does not experience task completion as a need in any meaningful sense. He has been not doing his job for so long it has ceased to register as deficit."
+    },
+    "stimulation": {
+      "params": { "amplitude": 2.5, "midpoint": 0.45 },
+      "blurb": "Creed has the highest openness in the cast and is genuinely curious. He lives a rich inner life by his own standards. Stimulation matters but his threshold for interesting enough is idiosyncratic and often met by internal monologue alone."
+    },
+    "belonging": {
+      "params": { "amplitude": 0.45, "power": 0.65, "baseline": 0.02 },
+      "blurb": "Creed orbits the office more than belonging to it. He has minimal need for genuine group belonging. He drifts in, says something unsettling, and drifts out, apparently satisfied."
+    },
+    "hunger": {
+      "params": { "power": 2.0 },
+      "blurb": "Creed's relationship to physical needs is notably detached. He eats whatever is available without urgency or preference. The slightly reduced power reflects a dulled physiological signalling that mirrors his general disconnection from normal experience."
+    }
+  },
+
+  "ryan": {
+    "esteem": {
+      "params": { "amplitude": 1.6, "power": 0.28, "baseline": 0.18 },
+      "blurb": "Ryan's entire arc is an esteem spiral: the temp who becomes VP who becomes criminal who becomes temp again. His moderate neuroticism and very low agreeableness make esteem his dominant psychological driver, never truly sated even at the top."
+    },
+    "social": {
+      "params": { "amplitude": 2.8, "midpoint": 0.50 },
+      "blurb": "Ryan is socially active and strategic. He uses social contact for status cultivation rather than warmth. Amplitude is elevated because being excluded or irrelevant triggers real distress."
+    },
+    "stress": {
+      "params": { "power": 2.5 },
+      "blurb": "Ryan is prone to competitive anxiety and status threat. Stress accumulates non-linearly when he perceives himself as falling behind or being ignored."
+    },
+    "belonging": {
+      "params": { "amplitude": 0.55, "power": 0.60, "baseline": 0.03 },
+      "blurb": "Ryan wants admirers, not a tribe. His low agreeableness suppresses genuine belonging need. He is more comfortable being envied than loved, and rarely seeks real connection."
+    },
+    "stimulation": {
+      "params": { "amplitude": 3.2, "midpoint": 0.52 },
+      "blurb": "Ryan needs novelty and forward momentum. He gets bored fast with any situation that doesn't feel like ascent. The WUPHF.com phase is pure stimulation-seeking after conventional status collapsed."
+    },
+    "fulfillment": {
+      "params": { "amplitude": 0.8, "power": 0.42, "baseline": 0.09 },
+      "blurb": "Despite ambition, Ryan is chronically unfulfilled because his goals are extrinsic and always shifting. The elevated amplitude and steeper curve reflect the persistent gap between his self-image and his actual trajectory."
+    }
+  },
+
+  "kelly": {
+    "social": {
+      "params": { "amplitude": 4.5, "midpoint": 0.65 },
+      "blurb": "Kelly is the most socially volatile character in the office. She is only truly comfortable when fully embedded in social interaction. The extreme amplitude and high midpoint mean even brief isolation feels catastrophic to her."
+    },
+    "stress": {
+      "params": { "power": 3.2 },
+      "blurb": "Kelly amplifies every emotional signal and stress escalates in steep, dramatic spikes from minor triggers. The steepened curve captures her pattern of rapid, intense emotional reactions."
+    },
+    "belonging": {
+      "params": { "amplitude": 1.3, "power": 0.38, "baseline": 0.13 },
+      "blurb": "Kelly needs to be someone's favourite, not just part of the group, but central to it. The elevated amplitude and high baseline reflect a belonging need that is always somewhat active and requires constant reinforcement."
+    },
+    "esteem": {
+      "params": { "amplitude": 1.2, "power": 0.40, "baseline": 0.12 },
+      "blurb": "Kelly's self-worth swings with Ryan's attention and social validation. Her high neuroticism means esteem deficits feel enormous and repairs feel temporary. Urgency is elevated and the curve rarely fully flattens."
+    },
+    "productivity": {
+      "params": { "amplitude": 0.20, "power": 0.85, "baseline": 0.02 },
+      "blurb": "Kelly treats work as the backdrop to her social and romantic life. Productivity urgency is minimal and barely registers against the overwhelming pull of social and esteem needs."
+    }
+  },
+
+  "toby": {
+    "fulfillment": {
+      "params": { "amplitude": 1.0, "power": 0.38, "baseline": 0.10 },
+      "blurb": "Toby is the show's portrait of chronic unfulfillment: a man who wanted to be a priest, became an HR rep he can't quit, and writes a serial-killer novel in his spare time. His high neuroticism and moderate openness keep fulfillment urgency persistently elevated."
+    },
+    "stress": {
+      "params": { "power": 2.7 },
+      "blurb": "Toby's high neuroticism and the specific torture of working under Michael make stress accumulate steeply. He absorbs psychological damage at a rate that has calcified into defeated acceptance, but the curve still spikes sharply."
+    },
+    "social": {
+      "params": { "amplitude": 1.5, "midpoint": 0.32 },
+      "blurb": "Toby craves a small circle of genuine connection, his daughter and fleeting office friendships, but group social exposure drains him fast. The low midpoint reflects how little interaction he needs to feel technically satisfied, even if it is never quite enough."
+    },
+    "belonging": {
+      "params": { "amplitude": 1.1, "power": 0.44, "baseline": 0.09 },
+      "blurb": "Toby is deeply oriented toward others and genuinely wants to be part of the team and accepted by Michael. Belonging urgency is elevated because his position as HR makes genuine belonging structurally impossible."
+    },
+    "esteem": {
+      "params": { "amplitude": 1.0, "power": 0.45, "baseline": 0.07 },
+      "blurb": "Toby's self-esteem has been systematically eroded by years of Michael's contempt. Urgency is modestly elevated; he has low expectations but even those are rarely met, leaving a persistent low-grade deficit."
+    }
+  },
+
+  "stanley": {
+    "social": {
+      "params": { "amplitude": 1.0, "midpoint": 0.22 },
+      "blurb": "Stanley has the lowest extraversion in the cast and wants almost zero social interaction at work. His social need is satisfied by the bare minimum: a nod, maybe a word about his crossword. Anything beyond that reads as encroachment."
+    },
+    "stimulation": {
+      "params": { "amplitude": 1.2, "midpoint": 0.28 },
+      "blurb": "Stanley is genuinely content with low stimulation. His crossword puzzles and the prospect of Pretzel Day are enough. He is not bored by routine, he is insulated by it."
+    },
+    "productivity": {
+      "params": { "amplitude": 0.50, "power": 0.60, "baseline": 0.07 },
+      "blurb": "Stanley's legendary indifference extends to task completion. He does enough to keep his job and precisely not one thing more. His motivation is entirely extrinsic, so intrinsic urgency is low."
+    },
+    "stress": {
+      "params": { "power": 2.2 },
+      "blurb": "Stanley's stress is specifically triggered by social demands and Michael-generated chaos intruding on his peace. The slightly steeper curve captures how quickly it spikes when his minimal requirements are violated."
+    },
+    "fulfillment": {
+      "params": { "amplitude": 0.55, "power": 0.55, "baseline": 0.04 },
+      "blurb": "Stanley has made peace with his circumstances in a way that looks like resignation but functions as adaptation. Pretzel Day is genuinely fulfilling to him. Reduced amplitude because his benchmark for enough is calibrated low and he meets it."
+    }
+  },
+
+  "phyllis": {
+    "belonging": {
+      "params": { "amplitude": 1.0, "power": 0.46, "baseline": 0.08 },
+      "blurb": "Phyllis is one of the most genuinely community-oriented people in the office: she bakes, she organises parties, she remembers birthdays. Belonging urgency is above baseline because warm inclusion is central to her identity."
+    },
+    "social": {
+      "params": { "amplitude": 2.6, "midpoint": 0.44 },
+      "blurb": "Phyllis is slightly below average on extraversion but gets real energy from warm, reciprocal social contact. She is not a wallflower but she is not the centre either. A comfortably mid-range social need with moderate amplitude."
+    },
+    "stress": {
+      "params": { "power": 1.7 },
+      "blurb": "Phyllis is emotionally grounded. She absorbs office chaos without becoming destabilised, and stress accumulates gently. She tends to defuse rather than escalate, though she will assert herself when pushed far enough."
+    },
+    "esteem": {
+      "params": { "amplitude": 0.85, "power": 0.50, "baseline": 0.07 },
+      "blurb": "Phyllis has a quiet, earned self-respect. She does not need external validation the way Michael or Ryan do, but she notices when she is undervalued, usually by Angela. Esteem urgency is near baseline with slight reduction in amplitude."
+    },
+    "fulfillment": {
+      "params": { "amplitude": 0.65, "power": 0.50, "baseline": 0.06 },
+      "blurb": "Phyllis is one of the few characters who seems genuinely content with her life: Bob Vance, Vance Refrigeration, the Party Planning Committee, her friends. Fulfillment urgency sits close to baseline because she has largely built what she wanted."
+    }
+  }
+}

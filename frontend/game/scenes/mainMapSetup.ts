@@ -26,6 +26,7 @@ import {
   resolvedSheetLayoutForActiveCar,
   sheetInfoForLayout,
 } from '../config/carAssets';
+import { parseParkingSpots, type ParkingSpot } from '../systems/CarAutoParkSystem';
 import { registerCarAnimations } from '../systems/CarAnimationRegistry';
 import { TILESET_ASSETS } from '../config/assets';
 import {
@@ -78,6 +79,7 @@ export interface MainMapWorldData {
   entrances: MainMapEntrances;
   chairs: Chair[];
   applianceInteractables: ApplianceInteractable[];
+  parkingSpots: ParkingSpot[];
 }
 
 export interface MainMapEntities {
@@ -228,6 +230,9 @@ export function loadMainMapWorldData(scene: Phaser.Scene): MainMapWorldData {
   );
   console.log(`[MainMap] Appliance interactables loaded: ${applianceInteractables.length}`);
 
+  const parkingSpots = parseParkingSpots(tiledJSON);
+  console.log(`[MainMap] Parking spots loaded: ${parkingSpots.length}`);
+
   return {
     tiledJSON,
     exteriorWalkable,
@@ -242,6 +247,7 @@ export function loadMainMapWorldData(scene: Phaser.Scene): MainMapWorldData {
     },
     chairs,
     applianceInteractables,
+    parkingSpots,
   };
 }
 
