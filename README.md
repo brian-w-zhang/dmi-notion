@@ -99,19 +99,3 @@ Open [http://localhost:3000](http://localhost:3000). The Dunder Mifflin office l
 | Mouse drag | Pan camera |
 | Scroll wheel | Zoom |
 
----
-
-## Current Status
-
-| Layer | Status |
-|-------|--------|
-| Tiled office map | Done |
-| Character sprites + animation | Done |
-| Player movement + collisions | Done |
-| Appliance interactions + SFX | Done |
-| Chair sit/stand system | Done |
-| Building entrance transitions | Done |
-| Needs system | Planned |
-| Agent decision loop | Planned |
-| Backend bridge | Planned |
-| DVR replay layer | Planned |
