@@ -2617,7 +2617,8 @@
           "needDeltas": {
             "energy": 40,
             "stress": -10
-          }
+          },
+          "durationSteps": 6
         }
       ]
     },
@@ -2700,7 +2701,8 @@
           "needDeltas": {
             "productivity": 15,
             "stress": 3
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -2716,7 +2718,8 @@
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 20
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -2733,7 +2736,8 @@
             "fulfillment": 15,
             "stimulation": 10,
             "stress": -8
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -2840,7 +2844,8 @@
           "needDeltas": {
             "energy": 40,
             "stress": -10
-          }
+          },
+          "durationSteps": 6
         }
       ]
     },
@@ -2899,7 +2904,8 @@
           "needDeltas": {
             "productivity": 12,
             "esteem": 5
-          }
+          },
+          "durationSteps": 4
         },
         {
           "id": "action_2",
@@ -2917,7 +2923,8 @@
             "productivity": 15,
             "esteem": 10,
             "stress": 8
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_3",
@@ -2935,7 +2942,8 @@
             "esteem": 10,
             "stimulation": 15,
             "belonging": 8
-          }
+          },
+          "durationSteps": 4
         }
       ]
     },
@@ -3015,7 +3023,8 @@
             "productivity": 20,
             "esteem": 5,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3032,7 +3041,8 @@
           "needDeltas": {
             "productivity": 15,
             "stimulation": 12
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_3",
@@ -3048,7 +3058,8 @@
           "needDeltas": {
             "stimulation": 15,
             "esteem": 5
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3080,7 +3091,8 @@
             "productivity": 20,
             "esteem": 5,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3097,7 +3109,8 @@
           "needDeltas": {
             "productivity": 15,
             "esteem": 8
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_3",
@@ -3114,7 +3127,8 @@
             "stress": -15,
             "stimulation": 8,
             "belonging": 5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -3146,7 +3160,8 @@
             "productivity": 20,
             "esteem": 5,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3163,7 +3178,8 @@
           "needDeltas": {
             "productivity": 15,
             "esteem": 8
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_3",
@@ -3179,7 +3195,8 @@
           "needDeltas": {
             "stimulation": 15,
             "productivity": -8
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3259,7 +3276,8 @@
             "productivity": 20,
             "esteem": 8,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3276,7 +3294,8 @@
           "needDeltas": {
             "productivity": 15,
             "stimulation": 10
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3292,7 +3311,8 @@
           "needDeltas": {
             "stress": -15,
             "stimulation": 8
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3348,7 +3368,8 @@
             "productivity": 20,
             "esteem": 8,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3365,7 +3386,8 @@
           "needDeltas": {
             "productivity": 15,
             "stimulation": 10
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3382,7 +3404,8 @@
             "productivity": 8,
             "esteem": 5,
             "stimulation": 5
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3438,7 +3461,8 @@
             "productivity": 20,
             "esteem": 8,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3455,7 +3479,8 @@
           "needDeltas": {
             "productivity": 15,
             "stimulation": 10
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3472,7 +3497,8 @@
             "stimulation": 10,
             "stress": -5,
             "belonging": 5
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3552,7 +3578,8 @@
             "productivity": 20,
             "esteem": 8,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3569,7 +3596,8 @@
           "needDeltas": {
             "productivity": 15,
             "stimulation": 10
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3585,7 +3613,8 @@
           "needDeltas": {
             "stimulation": 22,
             "stress": -12
-          }
+          },
+          "durationSteps": 4
         }
       ]
     },
@@ -3616,7 +3645,8 @@
           "needDeltas": {
             "productivity": 15,
             "stress": 3
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3633,7 +3663,8 @@
           "needDeltas": {
             "productivity": 12,
             "stimulation": 5
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3649,7 +3680,8 @@
           "needDeltas": {
             "stimulation": 12,
             "stress": -5
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3705,7 +3737,8 @@
             "productivity": 20,
             "esteem": 8,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3722,7 +3755,8 @@
           "needDeltas": {
             "productivity": 15,
             "stimulation": 10
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3740,7 +3774,8 @@
             "esteem": 10,
             "stimulation": 15,
             "fulfillment": 8
-          }
+          },
+          "durationSteps": 3
         }
       ]
     },
@@ -3795,7 +3830,8 @@
           "needDeltas": {
             "productivity": 15,
             "esteem": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3810,7 +3846,8 @@
           "durationMs": 5000,
           "needDeltas": {
             "productivity": 10
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3826,7 +3863,8 @@
           "needDeltas": {
             "stimulation": 15,
             "esteem": 8
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3881,7 +3919,8 @@
           "needDeltas": {
             "productivity": 15,
             "stress": 5
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3897,7 +3936,8 @@
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 12
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3913,7 +3953,8 @@
           "needDeltas": {
             "stimulation": 12,
             "social": 5
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -3944,7 +3985,8 @@
           "needDeltas": {
             "productivity": 15,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         },
         {
           "id": "action_2",
@@ -3961,7 +4003,8 @@
           "needDeltas": {
             "productivity": 10,
             "stress": 8
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3978,7 +4021,8 @@
             "fulfillment": 10,
             "stress": -10,
             "productivity": 3
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -4260,7 +4304,8 @@
           "needDeltas": {
             "hunger": 20,
             "stimulation": 5
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -4277,14 +4322,15 @@
           "needDeltas": {
             "thirst": 18,
             "stimulation": 3
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
     "157": {
       "id": 157,
       "name": "conf_outer_chair1",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1360,
@@ -4302,13 +4348,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1000,
+          "name": "conf_outer_chair1_ap",
+          "position": {
+            "x": 1359.6,
+            "y": 180.9
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1000
+        }
+      ]
     },
     "158": {
       "id": 158,
       "name": "conf_outer_chair2",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1455.9,
@@ -4326,13 +4401,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1001,
+          "name": "conf_outer_chair2_ap",
+          "position": {
+            "x": 1455.4,
+            "y": 180.1
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1001
+        }
+      ]
     },
     "159": {
       "id": 159,
       "name": "conf_outer_chair3",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1519.7,
@@ -4350,13 +4454,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1002,
+          "name": "conf_outer_chair3_ap",
+          "position": {
+            "x": 1519.6,
+            "y": 180.6
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1002
+        }
+      ]
     },
     "160": {
       "id": 160,
       "name": "conf_outer_chair4",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1583.9,
@@ -4374,13 +4507,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1003,
+          "name": "conf_outer_chair4_ap",
+          "position": {
+            "x": 1583.8,
+            "y": 180.8
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1003
+        }
+      ]
     },
     "161": {
       "id": 161,
       "name": "conf_table_chair1",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1327.9,
@@ -4398,13 +4560,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1004,
+          "name": "conf_table_chair1_ap",
+          "position": {
+            "x": 1327.9,
+            "y": 239.1
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1004
+        }
+      ]
     },
     "162": {
       "id": 162,
       "name": "conf_table_chair2",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1391.8,
@@ -4422,13 +4613,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1005,
+          "name": "conf_table_chair2_ap",
+          "position": {
+            "x": 1392.1,
+            "y": 238.3
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1005
+        }
+      ]
     },
     "163": {
       "id": 163,
       "name": "conf_table_chair3",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1423.9,
@@ -4446,13 +4666,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1006,
+          "name": "conf_table_chair3_ap",
+          "position": {
+            "x": 1424.3,
+            "y": 238
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1006
+        }
+      ]
     },
     "164": {
       "id": 164,
       "name": "conf_table_chair4",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1487.9,
@@ -4470,13 +4719,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1007,
+          "name": "conf_table_chair4_ap",
+          "position": {
+            "x": 1488.4,
+            "y": 238.9
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1007
+        }
+      ]
     },
     "165": {
       "id": 165,
       "name": "conf_table_chair5",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1519.9,
@@ -4494,13 +4772,42 @@
           "facing": "front"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1008,
+          "name": "conf_table_chair5_ap",
+          "position": {
+            "x": 1520.9,
+            "y": 238.6
+          },
+          "facing": "front"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1008
+        }
+      ]
     },
     "166": {
       "id": 166,
       "name": "conf_table_chair12",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1328,
@@ -4518,13 +4825,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1009,
+          "name": "conf_table_chair12_ap",
+          "position": {
+            "x": 1327.9,
+            "y": 334.9
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1009
+        }
+      ]
     },
     "167": {
       "id": 167,
       "name": "conf_table_chair11",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1360,
@@ -4542,13 +4878,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1010,
+          "name": "conf_table_chair11_ap",
+          "position": {
+            "x": 1360.7,
+            "y": 334.9
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1010
+        }
+      ]
     },
     "168": {
       "id": 168,
       "name": "conf_table_chair10",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1423.9,
@@ -4566,13 +4931,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1011,
+          "name": "conf_table_chair10_ap",
+          "position": {
+            "x": 1424.4,
+            "y": 335.4
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1011
+        }
+      ]
     },
     "169": {
       "id": 169,
       "name": "conf_table_chair9",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1488,
@@ -4590,13 +4984,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1012,
+          "name": "conf_table_chair9_ap",
+          "position": {
+            "x": 1488.6,
+            "y": 336.5
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1012
+        }
+      ]
     },
     "170": {
       "id": 170,
       "name": "conf_table_chair8",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1552.1,
@@ -4614,13 +5037,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1013,
+          "name": "conf_table_chair8_ap",
+          "position": {
+            "x": 1552.5,
+            "y": 335.7
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1013
+        }
+      ]
     },
     "171": {
       "id": 171,
       "name": "conf_outer_chair10",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1391.7,
@@ -4638,13 +5090,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1014,
+          "name": "conf_outer_chair10_ap",
+          "position": {
+            "x": 1391.9,
+            "y": 399.3
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1014
+        }
+      ]
     },
     "172": {
       "id": 172,
       "name": "conf_outer_chair11",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1359.6,
@@ -4662,13 +5143,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1015,
+          "name": "conf_outer_chair11_ap",
+          "position": {
+            "x": 1359.8,
+            "y": 399.7
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1015
+        }
+      ]
     },
     "173": {
       "id": 173,
       "name": "conf_outer_chair9",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1455.7,
@@ -4686,13 +5196,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1016,
+          "name": "conf_outer_chair9_ap",
+          "position": {
+            "x": 1456.2,
+            "y": 399.3
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1016
+        }
+      ]
     },
     "174": {
       "id": 174,
       "name": "conf_outer_chair8",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1551.6,
@@ -4710,13 +5249,42 @@
           "facing": "back"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1017,
+          "name": "conf_outer_chair8_ap",
+          "position": {
+            "x": 1552.1,
+            "y": 399.8
+          },
+          "facing": "back"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1017
+        }
+      ]
     },
     "175": {
       "id": 175,
       "name": "conf_chair_michael",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1263,
@@ -4734,13 +5302,42 @@
           "facing": "right"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1018,
+          "name": "conf_chair_michael_ap",
+          "position": {
+            "x": 1266.6,
+            "y": 298.1
+          },
+          "facing": "right"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1018
+        }
+      ]
     },
     "176": {
       "id": 176,
       "name": "conf_table_chair7",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1585.1,
@@ -4758,13 +5355,42 @@
           "facing": "left"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1019,
+          "name": "conf_table_chair7_ap",
+          "position": {
+            "x": 1583.2,
+            "y": 296.6
+          },
+          "facing": "left"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1019
+        }
+      ]
     },
     "177": {
       "id": 177,
       "name": "conf_table_chair6",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1584.9,
@@ -4782,13 +5408,42 @@
           "facing": "left"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1020,
+          "name": "conf_table_chair6_ap",
+          "position": {
+            "x": 1583.4,
+            "y": 264.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1020
+        }
+      ]
     },
     "178": {
       "id": 178,
       "name": "conf_outer_chair5",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1649,
@@ -4806,13 +5461,42 @@
           "facing": "left"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1021,
+          "name": "conf_outer_chair5_ap",
+          "position": {
+            "x": 1647,
+            "y": 232.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1021
+        }
+      ]
     },
     "179": {
       "id": 179,
       "name": "conf_outer_chair6",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1648.9,
@@ -4830,13 +5514,42 @@
           "facing": "left"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1022,
+          "name": "conf_outer_chair6_ap",
+          "position": {
+            "x": 1647.3,
+            "y": 264.4
+          },
+          "facing": "left"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1022
+        }
+      ]
     },
     "180": {
       "id": 180,
       "name": "conf_outer_chair7",
-      "entityType": "chair",
+      "entityType": "appliance",
       "zone": "conference_room",
       "center": {
         "x": 1649,
@@ -4854,8 +5567,37 @@
           "facing": "left"
         }
       ],
-      "actionPoints": [],
-      "actions": []
+      "actionPoints": [
+        {
+          "id": 1023,
+          "name": "conf_outer_chair7_ap",
+          "position": {
+            "x": 1647.5,
+            "y": 297.2
+          },
+          "facing": "left"
+        }
+      ],
+      "actions": [
+        {
+          "id": "action_attend_meeting",
+          "name": "attend meeting",
+          "emoji": "clipboard",
+          "durationMs": 0,
+          "loadingPhrases": [
+            "settling in before Michael notices you're late",
+            "finding a chair and bracing for impact",
+            "choosing a seat as far from Ryan as possible"
+          ],
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8,
+            "energy": -5
+          },
+          "actionPointId": 1023
+        }
+      ]
     },
     "206": {
       "id": 206,
@@ -5002,7 +5744,8 @@
           "sfxEndKey": "door_close_01",
           "needDeltas": {
             "hunger": 28
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5041,7 +5784,8 @@
           "sfxLoopKey": "wash_hands",
           "needDeltas": {
             "health": 5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5082,7 +5826,8 @@
           "needDeltas": {
             "hunger": 40,
             "energy": 5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5170,7 +5915,8 @@
           "needDeltas": {
             "health": 5,
             "stress": -3
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5210,7 +5956,8 @@
           "needDeltas": {
             "health": 5,
             "stress": -3
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5250,7 +5997,8 @@
           "needDeltas": {
             "health": 5,
             "stress": -3
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5290,7 +6038,8 @@
           "needDeltas": {
             "health": 5,
             "stress": -3
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5328,7 +6077,8 @@
           "durationMs": 2500,
           "needDeltas": {
             "productivity": 10
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -5343,7 +6093,8 @@
           "durationMs": 3000,
           "needDeltas": {
             "productivity": 10
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5381,7 +6132,8 @@
           "durationMs": 2000,
           "needDeltas": {
             "productivity": 5
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -5404,7 +6156,8 @@
             "health": 20,
             "stress": 25,
             "energy": -8
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5530,7 +6283,8 @@
           "durationMs": 2500,
           "needDeltas": {
             "productivity": 10
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -5545,7 +6299,8 @@
           "durationMs": 3000,
           "needDeltas": {
             "productivity": 10
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5584,7 +6339,8 @@
           "needDeltas": {
             "stimulation": 10,
             "productivity": 5
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -5608,7 +6364,8 @@
             "productivity": 20,
             "social": 10,
             "stress": 5
-          }
+          },
+          "durationSteps": 6
         }
       ]
     },
@@ -5648,7 +6405,8 @@
             "esteem": 12,
             "productivity": 15,
             "stimulation": 10
-          }
+          },
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -5665,7 +6423,8 @@
             "stimulation": 15,
             "productivity": 10,
             "esteem": 5
-          }
+          },
+          "durationSteps": 3
         }
       ]
     },
@@ -5744,7 +6503,8 @@
           "durationMs": 1500,
           "needDeltas": {
             "thirst": 20
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -5767,7 +6527,8 @@
             "social": 12,
             "belonging": 5,
             "stress": -8
-          }
+          },
+          "durationSteps": 2
         }
       ]
     },
@@ -5805,7 +6566,8 @@
           "durationMs": 2000,
           "needDeltas": {
             "productivity": 5
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -5828,7 +6590,8 @@
             "health": 20,
             "stress": 25,
             "energy": -8
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5869,7 +6632,8 @@
             "thirst": 10,
             "energy": 25,
             "stress": -5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5907,7 +6671,8 @@
           "durationMs": 2000,
           "needDeltas": {
             "hunger": 18
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -5945,7 +6710,8 @@
           "durationMs": 2000,
           "needDeltas": {
             "productivity": 5
-          }
+          },
+          "durationSteps": 1
         },
         {
           "id": "action_2",
@@ -5968,7 +6734,8 @@
             "health": 20,
             "stress": 25,
             "energy": -8
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6007,7 +6774,8 @@
           "needDeltas": {
             "productivity": 5,
             "health": 3
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6048,7 +6816,8 @@
           "needDeltas": {
             "hunger": 40,
             "energy": 5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6088,7 +6857,8 @@
           "needDeltas": {
             "bladder": 65,
             "stress": -5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6128,7 +6898,8 @@
           "needDeltas": {
             "bladder": 65,
             "stress": -5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6168,7 +6939,8 @@
           "needDeltas": {
             "bladder": 65,
             "stress": -5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6208,7 +6980,8 @@
           "needDeltas": {
             "bladder": 65,
             "stress": -5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6248,7 +7021,8 @@
           "needDeltas": {
             "bladder": 65,
             "stress": -5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6288,7 +7062,8 @@
           "needDeltas": {
             "bladder": 65,
             "stress": -5
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6345,7 +7120,8 @@
             "social": 10,
             "belonging": 8,
             "stress": -8
-          }
+          },
+          "durationSteps": 3
         }
       ]
     },
@@ -6393,7 +7169,8 @@
             "social": 10,
             "belonging": 8,
             "stress": -8
-          }
+          },
+          "durationSteps": 3
         }
       ]
     },
@@ -6432,7 +7209,8 @@
           "needDeltas": {
             "productivity": 5,
             "health": 3
-          }
+          },
+          "durationSteps": 1
         }
       ]
     },
@@ -6484,7 +7262,8 @@
           "needDeltas": {
             "productivity": 15,
             "stimulation": 10
-          }
+          },
+          "durationSteps": 2
         }
       ],
       "hotkeySlot": 2
@@ -6516,7 +7295,8 @@
             "productivity": 20,
             "esteem": 10,
             "stress": 5
-          }
+          },
+          "durationSteps": 3
         }
       ],
       "hotkeySlot": 1

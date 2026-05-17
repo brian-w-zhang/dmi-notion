@@ -42,6 +42,7 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
       bladder: 0.90,
       stress:  0.20,
     },
+    pad: { pleasure: 0.0, arousal: 0.0, dominance: 0.0 },
     state: "idle",            // starts idle; becomes active when plan begins
 
     // Planning

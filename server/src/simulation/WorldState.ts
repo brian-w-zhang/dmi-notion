@@ -1,6 +1,6 @@
 import type {
-  LiveCharacter, ConversationRecord, WorldEvent,
-  CharacterStepState, StepFile, LogEntry, PlanBlock,
+  LiveCharacter, ConversationRecord, GroupConversationRecord, WorldEvent,
+  CharacterStepState, StepFile, LogEntry, PlanBlock, PADState, MeetingState,
 } from "./types.js"
 import { resolveLocationTile } from "./WorldData.js"
 import { decayNeeds } from "./needsDecay.js"
@@ -12,7 +12,12 @@ export class WorldState {
   readonly characters: Map<string, LiveCharacter> = new Map()
   private activeConversations: Map<string, ConversationRecord> = new Map()
   private completedConversations: ConversationRecord[] = []
+  private completedGroupConversations: GroupConversationRecord[] = []
+  private pendingAnnouncements: { from: string; message: string }[] = []
   private events: WorldEvent[] = []
+
+  // Active office-wide meeting state (null when no meeting is running)
+  activeMeeting: MeetingState | null = null
 
   constructor(startSimTime: Date, secPerStep = 300) {
     this.simTime = new Date(startSimTime)
@@ -222,6 +227,80 @@ export class WorldState {
     this.completedConversations.push(record)
   }
 
+  // ── Announcements ───────────────────────────────────────────────────────────
+
+  // Broadcast an announcement to all characters' next tick context and day log.
+  broadcastAnnouncement(fromKey: string, message: string): void {
+    this.pendingAnnouncements.push({ from: fromKey, message })
+    this.addEvent({ type: "announcement", character: fromKey, detail: message.slice(0, 80) })
+
+    const simMin = this.simMinutes
+    for (const c of this.characters.values()) {
+      c.dayLog.push({ type: "announcement", from: fromKey, message, simMin })
+    }
+  }
+
+  // Returns and clears pending announcements (consumed each step).
+  drainAnnouncements(): { from: string; message: string }[] {
+    const out = [...this.pendingAnnouncements]
+    this.pendingAnnouncements = []
+    return out
+  }
+
+  // ── Meeting management ───────────────────────────────────────────────────────
+
+  // ASSEMBLY_TICKS: how many ticks to wait for everyone to arrive before starting.
+  // At secPerStep=300 and PERCEPTION_INTERVAL=5 → 5 perception rounds → ~25 sim min travel window.
+  private static readonly ASSEMBLY_TICKS = 25
+
+  startMeeting(topic: string, initiatorKey: string): MeetingState {
+    const participants = [...this.characters.keys()]
+    this.activeMeeting = {
+      topic,
+      initiatorKey,
+      startStep: this.step,
+      assemblyDueStep: this.step + WorldState.ASSEMBLY_TICKS,
+      participants,
+      phase: "assembling",
+    }
+    // All participants move to conference_room; force their state
+    for (const key of participants) {
+      const c = this.characters.get(key)
+      if (c && key !== initiatorKey) {
+        c.state = "active"
+        this.setDestination(key, "conference_room")
+        c.action = "heading to the meeting"
+        c.emoji = "🏃"
+      }
+    }
+    this.addEvent({ type: "meeting_start", character: initiatorKey, detail: topic })
+    console.log(`\n[Meeting] "${topic}" called by ${initiatorKey} — assembling ${participants.length} characters`)
+    return this.activeMeeting
+  }
+
+  endMeeting(summary?: string): void {
+    if (!this.activeMeeting) return
+    const { participants, topic } = this.activeMeeting
+    this.activeMeeting.phase = "ended"
+    this.addEvent({ type: "meeting_end", character: participants[0], detail: topic })
+    const simMin = this.simMinutes
+    for (const key of participants) {
+      this.pushLogEntry(key, { type: "meeting", topic, participants, simMin, summary })
+      const c = this.characters.get(key)
+      if (c) {
+        c.state = "active"
+        // Send everyone back to their desk
+        this.setDestination(key, `${key}_desk`)
+      }
+    }
+    this.activeMeeting = null
+    console.log(`[Meeting] ended — ${summary?.slice(0, 60) ?? "no summary"}`)
+  }
+
+  pushGroupConversation(record: GroupConversationRecord): void {
+    this.completedGroupConversations.push(record)
+  }
+
   // ── Events ──────────────────────────────────────────────────────────────────
 
   addEvent(event: WorldEvent) {
@@ -260,6 +339,17 @@ export class WorldState {
     }
   }
 
+  // Applies PAD (Pleasure, Arousal, Dominance) deltas after an appraisal.
+  applyPadDeltas(characterName: string, deltas: Partial<PADState>): void {
+    const c = this.getCharacter(characterName)
+    if (deltas.pleasure !== undefined)
+      c.pad.pleasure = Math.max(-1, Math.min(1, c.pad.pleasure + deltas.pleasure))
+    if (deltas.arousal !== undefined)
+      c.pad.arousal = Math.max(-1, Math.min(1, c.pad.arousal + deltas.arousal))
+    if (deltas.dominance !== undefined)
+      c.pad.dominance = Math.max(-1, Math.min(1, c.pad.dominance + deltas.dominance))
+  }
+
   // Applies need deltas from an appliance action.
   // Positive delta = satisfying (increases value toward 1.0).
   // Negative delta = worsening (decreases value toward 0.0).
@@ -283,7 +373,7 @@ export class WorldState {
 
   // ── Step advancement ────────────────────────────────────────────────────────
 
-  advanceStep(): { completedConversations: ConversationRecord[]; events: WorldEvent[] } {
+  advanceStep(): { completedConversations: ConversationRecord[]; completedGroupConversations: GroupConversationRecord[]; announcements: { from: string; message: string }[]; events: WorldEvent[] } {
     // Advance plan indices for all characters
     for (const key of this.characters.keys()) {
       this.advancePlanIndex(key)
@@ -298,16 +388,24 @@ export class WorldState {
     this.maybeClearHourlyLog()
 
     const completed = [...this.completedConversations]
+    const completedGroup = [...this.completedGroupConversations]
+    const announcements = this.drainAnnouncements()
     const events = [...this.events]
     this.completedConversations = []
+    this.completedGroupConversations = []
     this.events = []
 
-    return { completedConversations: completed, events }
+    return { completedConversations: completed, completedGroupConversations: completedGroup, announcements, events }
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
-  toStepFile(completedConversations: ConversationRecord[], events: WorldEvent[]): StepFile {
+  toStepFile(
+    completedConversations: ConversationRecord[],
+    completedGroupConversations: GroupConversationRecord[],
+    announcements: { from: string; message: string }[],
+    events: WorldEvent[]
+  ): StepFile {
     const characters: Record<string, CharacterStepState> = {}
     for (const [name, c] of this.characters) {
       characters[name] = {
@@ -328,6 +426,8 @@ export class WorldState {
       realTimestamp: new Date().toISOString(),
       characters,
       conversations: completedConversations,
+      groupConversations: completedGroupConversations,
+      announcements,
       events,
     }
   }

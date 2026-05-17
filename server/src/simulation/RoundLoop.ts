@@ -1,7 +1,7 @@
 import { NotionAgentsClient } from "@notionhq/agents-client"
 import { WorldState } from "./WorldState.js"
 import { StepWriter } from "./StepWriter.js"
-import { runTickRound, applyDecisions } from "../agents/orchestrator.js"
+import { runTickRound, applyDecisions, runReflectionRound } from "../agents/orchestrator.js"
 
 // Agents are called every PERCEPTION_INTERVAL ticks.
 // Between calls, characters follow their last decision (path + action).
@@ -26,6 +26,8 @@ export async function runSimulation(
   console.log(`Sim time start: ${world.simTime.toISOString()}`)
   console.log(`${"═".repeat(60)}\n`)
 
+  let lastReflectionHour = -1
+
   for (let round = 0; round < totalRounds; round++) {
     const roundStart = Date.now()
 
@@ -40,16 +42,25 @@ export async function runSimulation(
     }
 
     // ── 3. Advance clock + flush ──────────────────────────────────────────────
-    const { completedConversations, events } = world.advanceStep()
+    const { completedConversations, completedGroupConversations, announcements, events } = world.advanceStep()
 
-    // ── 4. Write step file ────────────────────────────────────────────────────
-    const stepFile = world.toStepFile(completedConversations, events)
+    // ── 4. End-of-hour talking heads (fire-and-forget, staggered) ────────────
+    const currentHour = Math.floor(world.simMinutes / 60)
+    if (currentHour !== lastReflectionHour) {
+      lastReflectionHour = currentHour
+      runReflectionRound(world, client, "end_of_hour").catch((err) =>
+        console.error("[RoundLoop] reflection round failed:", err)
+      )
+    }
+
+    // ── 5. Write step file ────────────────────────────────────────────────────
+    const stepFile = world.toStepFile(completedConversations, completedGroupConversations, announcements, events)
     writer.write(stepFile)
 
     const tag = round % PERCEPTION_INTERVAL === 0 ? " [perception]" : ""
     console.log(`  [Step ${stepFile.step}] sim=${world.simTimeString()}${tag}`)
 
-    // ── 5. Breathing room ─────────────────────────────────────────────────────
+    // ── 6. Breathing room ─────────────────────────────────────────────────────
     const elapsed = Date.now() - roundStart
     const wait = Math.max(0, delayBetweenRoundsMs - elapsed)
     if (wait > 0) await sleep(wait)

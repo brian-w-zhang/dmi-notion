@@ -42,7 +42,22 @@ export interface DialogueLogEntry {
   }
 }
 
-export type LogEntry = ActionLogEntry | DialogueLogEntry
+export interface AnnouncementLogEntry {
+  type: "announcement"
+  from: string          // character key of announcer
+  message: string
+  simMin: number
+}
+
+export interface MeetingLogEntry {
+  type: "meeting"
+  topic: string
+  participants: string[]  // character keys
+  simMin: number
+  summary?: string
+}
+
+export type LogEntry = ActionLogEntry | DialogueLogEntry | AnnouncementLogEntry | MeetingLogEntry
 
 // ── Character step state (in step files) ──────────────────────────────────────
 
@@ -78,9 +93,36 @@ export interface ConversationRecord {
 }
 
 export interface WorldEvent {
-  type: "action_complete" | "conversation_start" | "conversation_end" | "need_urgent" | "plan_changed" | "deviation"
+  type: "action_complete" | "conversation_start" | "conversation_end" | "need_urgent" | "plan_changed" | "deviation" | "announcement" | "meeting_start" | "meeting_end"
   character: string
   detail: string
+}
+
+// ── Meeting state ─────────────────────────────────────────────────────────────
+
+export type MeetingPhase = "assembling" | "in_progress" | "ended"
+
+export interface MeetingState {
+  topic: string
+  initiatorKey: string
+  startStep: number
+  assemblyDueStep: number   // step at which meeting starts regardless of who arrived
+  participants: string[]    // character keys who have been included
+  phase: MeetingPhase
+  conversationId?: string
+}
+
+// ── Group conversation ────────────────────────────────────────────────────────
+
+export interface GroupConversationRecord {
+  id: string
+  participants: string[]
+  location: string
+  topic: string
+  turns: ConversationTurn[]
+  summary?: string
+  startStep: number
+  endStep: number
 }
 
 export interface StepFile {
@@ -89,6 +131,8 @@ export interface StepFile {
   realTimestamp: string
   characters: Record<string, CharacterStepState>
   conversations: ConversationRecord[]
+  groupConversations: GroupConversationRecord[]
+  announcements: { from: string; message: string }[]
   events: WorldEvent[]
 }
 
@@ -104,6 +148,12 @@ export interface SimulationMeta {
 
 // ── Live world state (in-memory only) ─────────────────────────────────────────
 
+export interface PADState {
+  pleasure: number    // -1.0 to 1.0
+  arousal: number     // -1.0 to 1.0
+  dominance: number   // -1.0 to 1.0
+}
+
 export interface LiveCharacter {
   name: string
   tile: [number, number]
@@ -115,6 +165,9 @@ export interface LiveCharacter {
   state: CharacterState
   activeConversationId?: string
   plannedPath: [number, number][]
+
+  // PAD emotional state (updated by appraisal after conversations)
+  pad: PADState
 
   // Planning
   dayPlan: PlanBlock[]

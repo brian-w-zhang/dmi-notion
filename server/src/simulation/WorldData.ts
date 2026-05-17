@@ -7,11 +7,15 @@ const ASSETS = path.resolve(__dirname, "../../../frontend/public/assets/world")
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
+// Simulation step duration — must match WorldState constructor default.
+export const SEC_PER_STEP = 300  // 5 game-minutes per step
+
 export interface ApplianceAction {
   id: string
   name: string
   emoji: string
-  durationMs: number
+  durationMs: number       // real-time animation duration for sandbox progress bar
+  durationSteps: number    // how many sim steps (× SEC_PER_STEP game-sec) this action occupies
   needDeltas: Record<string, number>  // positive = satisfying, negative = worsening
   actionPointId?: number
   loadingPhrases?: string[]
@@ -38,6 +42,7 @@ export interface AdvertisedAction {
   action: string
   emoji: string
   durationMs: number
+  durationSteps: number
   needDeltas: Record<string, number>
   actionPointTile: [number, number]  // tile coords of the action point
 }
@@ -63,6 +68,7 @@ export const APPLIANCES: Appliance[] = Object.values(
       name: act.name,
       emoji: act.emoji ?? "⚙️",
       durationMs: act.durationMs ?? 2000,
+      durationSteps: act.durationSteps ?? Math.max(1, Math.round((act.durationMs ?? 2000) / 1000 / SEC_PER_STEP)),
       needDeltas: act.needDeltas ?? act.need_deltas ?? act.needs ?? {},
       actionPointId: act.actionPointId,
       loadingPhrases: act.loadingPhrases ?? [],
@@ -95,6 +101,7 @@ export function getAdvertisedActions(zoneName: string): AdvertisedAction[] {
         action: action.name,
         emoji: action.emoji,
         durationMs: action.durationMs,
+        durationSteps: action.durationSteps,
         needDeltas: action.needDeltas,
         actionPointTile: pixelToTile(pos.x, pos.y),
       })
@@ -265,6 +272,7 @@ const ALL_ENTITIES: EntityRecord[] = Object.values(
       name: act.name,
       emoji: act.emoji ?? "⚙️",
       durationMs: act.durationMs ?? 2000,
+      durationSteps: act.durationSteps ?? Math.max(1, Math.round((act.durationMs ?? 2000) / 1000 / SEC_PER_STEP)),
       needDeltas: act.needDeltas ?? act.need_deltas ?? act.needs ?? {},
       actionPointId: act.actionPointId,
       loadingPhrases: act.loadingPhrases ?? [],
@@ -302,7 +310,7 @@ export interface NearbyEntity {
   availableActions: {
     name: string
     emoji: string
-    durationSec: number
+    durationSteps: number
     needEffects: Record<string, number>
     actionPointTile: [number, number]
   }[]
@@ -334,7 +342,7 @@ export function getEntitiesNearby(
       availableActions: entity.actions.map((a) => ({
         name: a.name,
         emoji: a.emoji,
-        durationSec: Math.round(a.durationMs / 1000),
+        durationSteps: a.durationSteps,
         needEffects: a.needDeltas,
         actionPointTile: entity.actionPointTiles[0] ?? entity.tile,
       })),
@@ -396,7 +404,7 @@ export function summarizeAdvertisedActions(zoneName: string): object[] {
     appliance: a.appliance,
     action: a.action,
     emoji: a.emoji,
-    duration_sec: Math.round(a.durationMs / 1000),
+    duration_steps: a.durationSteps,
     need_effects: a.needDeltas,
   }))
 }
@@ -429,7 +437,7 @@ export interface ActionForNeed {
   action: string
   emoji: string
   zone: string
-  durationSec: number
+  durationSteps: number
   needEffects: Record<string, number>   // delta × urgency contribution per need
   utilityScore: number                   // final ranked score
   actionPointTile: [number, number]
@@ -481,7 +489,7 @@ export function findActionsForNeeds(
         action: action.name,
         emoji: action.emoji,
         zone: entity.zone,
-        durationSec: Math.round(action.durationMs / 1000),
+        durationSteps: action.durationSteps,
         needEffects: relevantEffects,
         utilityScore: Math.round(finalScore * 10) / 10,
         actionPointTile: ap,

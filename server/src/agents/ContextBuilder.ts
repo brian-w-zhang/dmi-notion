@@ -14,6 +14,12 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
   const nextBlock = world.getNextPlanBlock(characterKey)
   const recentLog = world.getRecentLog(characterKey, 5)
 
+  // Recent announcements this character heard (from dayLog)
+  const heardAnnouncements = c.dayLog
+    .filter((e): e is import("../simulation/types.js").AnnouncementLogEntry => e.type === "announcement")
+    .slice(-3)
+    .map((e) => ({ from: CHARACTER_NAMES[e.from] ?? e.from, message: e.message }))
+
   const minutesRemainingInBlock = currentBlock
     ? (currentBlock.startMin + currentBlock.durationMin) - world.simMinutes
     : null
@@ -25,7 +31,7 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     appliance: a.appliance,
     action: a.action,
     emoji: a.emoji,
-    duration_sec: Math.round(a.durationMs / 1000),
+    duration_steps: a.durationSteps,
     need_effects: a.needDeltas,
   }))
 
@@ -41,11 +47,13 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     : []
 
   const payload = {
+    mode: "action",
     character: CHARACTER_NAMES[characterKey],
     sim_time: world.simTimeString(),
     step: world.step,
 
     currently: c.currently,
+    pad: c.pad,
 
     current_plan_block: currentBlock
       ? {
@@ -83,6 +91,14 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     completed_this_hour: c.completedThisHour,
     recent_log: formatRecentLog(recentLog, characterKey),
 
+    // Announcements heard since last tick (empty array if none)
+    heard_announcements: heardAnnouncements,
+
+    // Meeting override — if set, character MUST move to conference_room
+    meeting_summoned: world.activeMeeting?.phase === "assembling"
+      ? { topic: world.activeMeeting.topic, called_by: CHARACTER_NAMES[world.activeMeeting.initiatorKey] }
+      : null,
+
     nearby_characters: nearby.map((n) => ({
       key: n.name,
       name: CHARACTER_NAMES[n.name] ?? n.name,
@@ -93,15 +109,17 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
 
     instructions: [
       "You are a character in a simulation. Review your current situation and decide what to do next.",
+      "If meeting_summoned is set, you MUST respond with action: 'move_to', target: 'conference_room'. No exceptions.",
       "Check your needs — if urgent (listed in needs.urgent), they may override your plan.",
       "Use available_actions_here for actions you can take without moving.",
       "Use recommended_for_urgent_needs if you need to address an urgent need (you may need to move first).",
       "Check nearby_characters — initiate conversation if not on cooldown and it fits the moment.",
+      "Michael may use 'announce' to broadcast a message or 'summon_meeting' to call everyone to the conference room.",
       "Consult your memory and relationship databases for relevant context before deciding.",
       "Respond ONLY with a valid JSON object. No prose, no markdown fences, no explanation.",
       JSON.stringify({
         follow_plan: "boolean — true if following current_plan_block",
-        action: "continue | move_to | use_appliance | initiate_conversation | idle",
+        action: "continue | move_to | use_appliance | initiate_conversation | announce | summon_meeting | idle",
         target: "zone name, appliance name, or character key — omit if not applicable",
         appliance_action: "specific action name on the appliance — only if action is use_appliance",
         description: "one sentence, third person, what you are doing",
@@ -110,6 +128,8 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
         deviation_reason: "string — only if follow_plan is false",
         update_currently: "string — only if something notable just changed, else omit",
         want_to_talk: "{ character_key, opening_topic } — only if action is initiate_conversation",
+        announcement: "what you say out loud — only if action is announce",
+        meeting_topic: "topic string — only if action is summon_meeting",
       }),
     ],
   }
@@ -129,6 +149,7 @@ export function buildConversationTurnContext(args: {
   const listenerName = CHARACTER_NAMES[args.listenerKey]
 
   const payload = {
+    mode: "conversation_turn",
     character: speakerName,
     sim_time: args.simTime,
     scene: {
@@ -158,28 +179,111 @@ export function buildConversationTurnContext(args: {
 // Builds the appraisal prompt sent after a conversation completes.
 // One call from the orchestrator, not from individual characters.
 export function buildAppraisalContext(args: {
-  participants: [string, string]
+  participants: [string, string]   // character keys
   location: string
   trigger: string
   turns: { speaker: string; line: string; tone?: string }[]
   simTime: string
 }): string {
-  const [a, b] = args.participants.map((k) => CHARACTER_NAMES[k] ?? k)
+  const [keyA, keyB] = args.participants
+  const [nameA, nameB] = args.participants.map((k) => CHARACTER_NAMES[k] ?? k)
 
   const payload = {
-    conversation_between: [a, b],
+    conversation_between: [
+      { key: keyA, name: nameA },
+      { key: keyB, name: nameB },
+    ],
     location: args.location,
     trigger: args.trigger,
     sim_time: args.simTime,
     transcript: args.turns,
     instructions: [
-      "Summarize this conversation and evaluate its emotional outcome.",
+      "Summarize this conversation and evaluate its emotional and relational outcome.",
+      "For PAD deltas: estimate how this conversation shifted each person's Pleasure, Arousal, and Dominance. Use small values (±0.1–0.3). Positive = more pleasure/arousal/dominance.",
+      "For need_deltas: estimate small changes (±0.05–0.15) to social, stress, energy as appropriate.",
       "Respond ONLY with a JSON object:",
       JSON.stringify({
         summary: "1–2 sentence neutral summary of what was discussed",
         valence: "positive | neutral | negative — overall emotional tone",
         relationship_delta: "improved | neutral | damaged — how the relationship changed",
         takeaway: "one-line memorable outcome e.g. 'Jim agreed to cover Stanley's client call'",
+        pad_delta_a: { pleasure: 0.0, arousal: 0.0, dominance: 0.0 },
+        pad_delta_b: { pleasure: 0.0, arousal: 0.0, dominance: 0.0 },
+        need_delta_a: { "social": 0.0, "stress": 0.0 },
+        need_delta_b: { "social": 0.0, "stress": 0.0 },
+        importance: 0.5,
+      }),
+    ],
+  }
+
+  return JSON.stringify(payload, null, 2)
+}
+
+// Builds the reflection/talking head prompt for end-of-hour or importance-triggered reflections.
+export function buildReflectionContext(args: {
+  characterKey: string
+  trigger: string        // "end_of_hour" or a short event description
+  recentLog: object[]
+  currentPad: { pleasure: number; arousal: number; dominance: number }
+  simTime: string
+}): string {
+  const payload = {
+    mode: "reflection",
+    character: CHARACTER_NAMES[args.characterKey],
+    sim_time: args.simTime,
+    trigger: args.trigger,
+    recent_memories: args.recentLog,
+    current_pad: args.currentPad,
+    instructions: [
+      "You are triggered to do a talking head — a direct-to-camera confessional moment.",
+      "Consult your memory database and narrative identity to write an authentic reflection.",
+      "Respond ONLY with a JSON object:",
+      JSON.stringify({
+        talking_head: "2–4 sentences, first person, to camera",
+        memory_write: {
+          title: "scene summary | emotional_tag, concept_tag",
+          characters_involved: CHARACTER_NAMES[args.characterKey],
+          given_circumstances: "what was happening when this was triggered",
+          full_dialogue: "the talking head text verbatim",
+          scene_arc: "one phrase — e.g. 'moment of self-recognition'",
+          motivation: "what you wanted or feared",
+          internal_thoughts: "what you didn't say to the camera",
+          reflection: "one sentence — what you'd tell yourself tomorrow",
+          importance: 0.0,
+          pleasure: 0.0,
+          arousal: 0.0,
+          dominance: 0.0,
+        },
+      }),
+    ],
+  }
+
+  return JSON.stringify(payload, null, 2)
+}
+
+// Builds the plan generation prompt for start-of-day or post-deviation replanning.
+export function buildPlanGenerationContext(args: {
+  characterKey: string
+  simDate: string
+  simTime: string
+  recentMemoriesSummary?: string
+}): string {
+  const payload = {
+    mode: "plan_generation",
+    character: CHARACTER_NAMES[args.characterKey],
+    sim_date: args.simDate,
+    sim_time: args.simTime,
+    recent_memories_summary: args.recentMemoriesSummary ?? null,
+    instructions: [
+      "Generate your daily plan for today.",
+      "Consult your Narrative Identity, Memory database, and Day Plan page.",
+      "Let your conscientiousness level shape how detailed the schedule is.",
+      "Respond ONLY with a JSON object:",
+      JSON.stringify({
+        daily_goals: ["goal one", "goal two"],
+        schedule: [
+          { time: "07:00–08:00", activity: "description", status: "planned" },
+        ],
       }),
     ],
   }
@@ -202,7 +306,7 @@ function tileDist(a: [number, number], b: [number, number]): number {
   return Math.round(Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2))
 }
 
-function formatRecentLog(log: LogEntry[], selfKey: string): object[] {
+function formatRecentLog(log: LogEntry[], _selfKey: string): object[] {
   return log.map((entry) => {
     if (entry.type === "action") {
       return {
@@ -213,12 +317,30 @@ function formatRecentLog(log: LogEntry[], selfKey: string): object[] {
         ...(entry.deviationReason ? { deviated_because: entry.deviationReason } : {}),
       }
     }
-    return {
-      type: "conversation",
-      with: CHARACTER_NAMES[entry.with] ?? entry.with,
-      summary: entry.summary,
-      tone: entry.appraisal.valence,
-      takeaway: entry.appraisal.takeaway,
+    if (entry.type === "dialogue") {
+      return {
+        type: "conversation",
+        with: CHARACTER_NAMES[entry.with] ?? entry.with,
+        summary: entry.summary,
+        tone: entry.appraisal.valence,
+        takeaway: entry.appraisal.takeaway,
+      }
     }
+    if (entry.type === "announcement") {
+      return {
+        type: "announcement",
+        from: CHARACTER_NAMES[entry.from] ?? entry.from,
+        message: entry.message,
+      }
+    }
+    if (entry.type === "meeting") {
+      return {
+        type: "meeting",
+        topic: entry.topic,
+        participants: entry.participants.length,
+        summary: entry.summary,
+      }
+    }
+    return entry
   })
 }
