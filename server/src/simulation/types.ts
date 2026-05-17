@@ -69,9 +69,11 @@ export interface CharacterStepState {
   animationKey: string
   facing: Facing
   needs: Record<string, number>
+  pad: PADState
   state: CharacterState
   currentPlanBlock?: PlanBlock  // what they were supposed to be doing this tick
   currently: string             // living one-sentence status
+  thinking?: string             // last interior deliberation from agent (persists until next perception round)
 }
 
 export interface ConversationTurn {
@@ -146,6 +148,7 @@ export interface SimulationMeta {
   secPerStep: number
   totalSteps: number
   characters: string[]
+  seed: number
 }
 
 // ── Live world state (in-memory only) ─────────────────────────────────────────
@@ -167,6 +170,8 @@ export interface LiveCharacter {
   state: CharacterState
   activeConversationId?: string
   plannedPath: [number, number][]
+  destinationId?: string          // locationId passed to setDestination — cleared when path empties
+  interruptedTaskDescription?: string  // what the character was doing before being interrupted
 
   // PAD emotional state (updated by appraisal after conversations)
   pad: PADState
@@ -186,4 +191,7 @@ export interface LiveCharacter {
 
   // Notion conversation thread
   threadId?: string
+
+  // Last interior deliberation from agent (written each perception round, read into step files)
+  lastThinking?: string
 }

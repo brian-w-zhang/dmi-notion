@@ -5,11 +5,12 @@ import {
   inferZoneFromTile,
   getAdvertisedActions,
   findActionsForNeeds,
+  getZoneAwareness,
+  getEntitiesNearby,
 } from "../simulation/WorldData.js"
 
 export function buildTickContext(characterKey: string, world: WorldState): string {
   const c = world.getCharacter(characterKey)
-  const nearby = world.getNearby(characterKey, 5)
   const currentBlock = world.getCurrentPlanBlock(characterKey)
   const nextBlock = world.getNextPlanBlock(characterKey)
   const recentLog = world.getRecentLog(characterKey, 5)
@@ -27,6 +28,45 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
   const currentZone = inferZoneFromTile(c.tile)
   const urgentNeeds = Object.entries(c.needs).filter(([, v]) => v < 0.4).map(([k]) => k)
 
+  // Build occupied-tiles map for zone awareness and radius perception
+  const occupiedTiles = new Map<string, string>()
+  for (const [key, ch] of world.characters) {
+    occupiedTiles.set(`${ch.tile[0]},${ch.tile[1]}`, key)
+  }
+
+  // ── Radius perception (8-tile detail layer) ───────────────────────────────
+  // Full appliance/object info for everything close enough to see clearly.
+  const nearbyEntities = getEntitiesNearby(c.tile, 8, occupiedTiles).map((e) => ({
+    name: e.name,
+    type: e.entityType,
+    zone: e.zone,
+    distance_tiles: e.distanceTiles,
+    occupied_by: e.occupiedBy ? (CHARACTER_NAMES[e.occupiedBy] ?? e.occupiedBy) : null,
+    available_actions: e.availableActions.map((a) => ({
+      action: a.name,
+      emoji: a.emoji,
+      duration_steps: a.durationSteps,
+      need_effects: a.needEffects,
+    })),
+  }))
+
+  // ── Zone awareness (coarse layer for connected zones) ─────────────────────
+  // Name + occupancy status for everything in your zone and adjacent zones.
+  // No need-delta detail — you know the coffee machine is free but not the exact effect.
+  const { visibleZones, entities: zoneEntities } = getZoneAwareness(currentZone, occupiedTiles)
+  const zoneAwareness = {
+    visible_zones: visibleZones,
+    entities: zoneEntities.map((e) => ({
+      name: e.name,
+      type: e.entityType,
+      zone: e.zone,
+      status: e.status,
+      occupied_by: e.occupiedBy ? (CHARACTER_NAMES[e.occupiedBy] ?? e.occupiedBy) : null,
+      action_names: e.actionNames,
+    })),
+  }
+
+  // ── Actions available in current zone ─────────────────────────────────────
   const actionsHere = getAdvertisedActions(currentZone).map((a) => ({
     appliance: a.appliance,
     action: a.action,
@@ -35,6 +75,7 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     need_effects: a.needDeltas,
   }))
 
+  // ── Need-scored action candidates (may require travel) ────────────────────
   const recommendedActions = urgentNeeds.length > 0
     ? findActionsForNeeds(urgentNeeds, c.tile, 5, c.needs).map((a) => ({
         appliance: a.appliance,
@@ -43,8 +84,38 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
         zone: a.zone,
         need_effects: a.needEffects,
         utility_score: a.utilityScore,
+        distance_tiles: a.distanceTiles,
       }))
     : []
+
+  // ── Nearby characters (zone-based, not just radius) ───────────────────────
+  // Include all characters in visible zones, not just a 5-tile circle.
+  const nearbyCharKeys = new Set(
+    zoneEntities
+      .filter((e) => e.occupiedBy)
+      .map((e) => e.occupiedBy!)
+  )
+  // Also include any within 8 tiles regardless of zone
+  for (const ch of world.getNearby(characterKey, 8)) {
+    nearbyCharKeys.add(ch.name)
+  }
+  nearbyCharKeys.delete(characterKey)
+
+  const nearbyChars = [...nearbyCharKeys]
+    .map((key) => {
+      const ch = world.characters.get(key)
+      if (!ch) return null
+      return {
+        key,
+        name: CHARACTER_NAMES[key] ?? key,
+        zone: inferZoneFromTile(ch.tile),
+        action: ch.action,
+        state: ch.state,
+        tile_distance: tileDist(c.tile, ch.tile),
+        on_cooldown: world.isOnCooldown(characterKey, key),
+      }
+    })
+    .filter(Boolean)
 
   const payload = {
     mode: "action",
@@ -73,6 +144,13 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       : null,
     plan_adherence: c.planAdherence,
 
+    // Navigation state — set when actively walking somewhere
+    in_transit_to: c.destinationId ?? null,
+    tiles_remaining: c.plannedPath.length > 0 ? c.plannedPath.length : null,
+
+    // Set when a conversation interrupted a task — resume it if appropriate
+    interrupted_task: c.interruptedTaskDescription ?? null,
+
     current_action: c.action,
     current_zone: currentZone,
 
@@ -81,6 +159,12 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       urgent: urgentNeeds,
       summary: needsToNaturalLanguage(c.needs),
     },
+
+    // Radius perception: full detail for objects within ~8 tiles
+    nearby_entities: nearbyEntities,
+
+    // Zone awareness: coarse occupancy for your zone + connected zones
+    zone_awareness: zoneAwareness,
 
     // What you can do right here without moving
     available_actions_here: actionsHere,
@@ -99,21 +183,19 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       ? { topic: world.activeMeeting.topic, called_by: CHARACTER_NAMES[world.activeMeeting.initiatorKey] }
       : null,
 
-    nearby_characters: nearby.map((n) => ({
-      key: n.name,
-      name: CHARACTER_NAMES[n.name] ?? n.name,
-      action: n.action,
-      tile_distance: tileDist(c.tile, n.tile),
-      on_cooldown: world.isOnCooldown(characterKey, n.name),
-    })),
+    nearby_characters: nearbyChars,
 
     instructions: [
       "You are a character in a simulation. Review your current situation and decide what to do next.",
       "If meeting_summoned is set, you MUST respond with action: 'move_to', target: 'conference_room'. No exceptions.",
+      "If in_transit_to is set, you are mid-walk. Respond 'continue' to keep going, or pick a new action to redirect.",
+      "If interrupted_task is set, you were stopped mid-task. Consider resuming it with 'move_to' or 'continue'.",
       "Check your needs — if urgent (listed in needs.urgent), they may override your plan.",
+      "Use nearby_entities for objects close enough to interact with directly.",
+      "Use zone_awareness to see what's available in connected zones without moving.",
       "Use available_actions_here for actions you can take without moving.",
       "Use recommended_for_urgent_needs if you need to address an urgent need (you may need to move first).",
-      "Check nearby_characters — initiate conversation if not on cooldown and it fits the moment.",
+      "Check nearby_characters — initiate conversation if not on cooldown and it fits the moment. Consider whether interrupting your current task is worth it.",
       "Michael may use 'announce' to broadcast a message or 'summon_meeting' to call everyone to the conference room.",
       "Consult your memory and relationship databases for relevant context before deciding.",
       "Respond ONLY with a valid JSON object. No prose, no markdown fences, no explanation.",

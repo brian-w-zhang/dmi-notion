@@ -4,6 +4,7 @@ import { buildTickContext, buildAppraisalContext, buildReflectionContext } from 
 import { runConversation } from "./ConversationFlow.js"
 import { runGroupConversation } from "./GroupConversationFlow.js"
 import { CHARACTER_AGENT_IDS, CHARACTER_NAMES } from "./characters.js"
+import { getActionNeedDeltas } from "../simulation/WorldData.js"
 
 interface AgentDecision {
   thinking?: string           // interior deliberation — stored in log for interpretability
@@ -95,6 +96,10 @@ export function applyDecisions(
   // ── Normal per-character decisions ────────────────────────────────────────
   for (const [key, decision] of decisions) {
     const c = world.getCharacter(key)
+
+    if (decision.thinking) {
+      world.getCharacter(key).lastThinking = decision.thinking
+    }
 
     if (decision.update_currently) {
       world.updateCurrently(key, decision.update_currently)
@@ -188,7 +193,26 @@ export function applyDecisions(
       continue
     }
 
-    // ── Standard action ────────────────────────────────────────────────────────
+    // ── Move to destination ───────────────────────────────────────────────────
+    if (decision.action === "move_to" && decision.target) {
+      const ok = world.setDestination(key, decision.target)
+      if (!ok) console.warn(`  [${key}] move_to: unknown locationId "${decision.target}"`)
+      else console.log(`  → ${CHARACTER_NAMES[key]} moving to ${decision.target} (${c.plannedPath.length} tiles)`)
+    }
+
+    // ── Use appliance ────────────────────────────────────────────────────────
+    if (decision.action === "use_appliance" && decision.target) {
+      if (decision.appliance_action) {
+        const deltas = getActionNeedDeltas(decision.target, decision.appliance_action)
+        if (deltas) {
+          world.applyNeedDeltas(key, deltas)
+          console.log(`  → ${CHARACTER_NAMES[key]} used ${decision.target}:${decision.appliance_action} — deltas applied`)
+        }
+      }
+      world.setDestination(key, decision.target)
+    }
+
+    // ── Standard action ───────────────────────────────────────────────────────
     applyActionToCharacter(c, decision)
     world.pushLogEntry(key, {
       type: "action",
@@ -343,7 +367,6 @@ function applyActionToCharacter(
 ): void {
   c.action = decision.description
   c.emoji = decision.emoji
-  if (decision.target) c.plannedPath = [] // reset path so Phaser recalculates
 }
 
 function parseDecision(raw: string, characterKey: string): AgentDecision {

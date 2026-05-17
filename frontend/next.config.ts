@@ -4,7 +4,9 @@ const nextConfig: NextConfig = {
   /* Phaser is loaded via next/dynamic(ssr: false), so we don't need 
      complex webpack externals in most cases with Next 16/Turbopack. */
   devIndicators: false,
-  turbopack: {}, 
+  turbopack: {
+    root: __dirname,
+  }, 
 };
 
 export default nextConfig;

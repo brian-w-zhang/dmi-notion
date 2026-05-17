@@ -8,6 +8,9 @@ import { buildRoutes } from "./api/routes.js"
 import { CHARACTER_NAMES } from "./agents/characters.js"
 import { CHARACTER_PLANS, PLAN_ADHERENCE, INITIAL_CURRENTLY } from "./simulation/character_plans.js"
 import { logDecayRates } from "./simulation/needsDecay.js"
+import initialNeedsJson from "./simulation/initial_needs.json" assert { type: "json" }
+
+const INITIAL_NEEDS = initialNeedsJson as Record<string, Record<string, number>>
 
 if (!process.env.NOTION_API_TOKEN) {
   console.error("NOTION_API_TOKEN not set")
@@ -34,14 +37,7 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
     emoji: "🚶",
     animationKey: "walk_front",
     facing: "front",
-    needs: {
-      hunger:  0.80,
-      thirst:  0.70,
-      energy:  0.90,
-      social:  0.50,
-      bladder: 0.90,
-      stress:  0.20,
-    },
+    needs: { ...INITIAL_NEEDS[key] },
     pad: { pleasure: 0.0, arousal: 0.0, dominance: 0.0 },
     state: "idle",            // starts idle; becomes active when plan begins
 
@@ -80,11 +76,14 @@ router.post("/simulation/start", async (req, res) => {
   res.json({ ok: true, totalRounds, delayBetweenRoundsMs, message: "Simulation started" })
 
   simulationRunning = true
+  const simCode = `run-${Date.now()}`
+  const seed = Math.floor(Math.random() * 2 ** 32)
   const writer = new StepWriter({
-    simCode: `run-${Date.now()}`,
+    simCode,
     startSimTime: SIM_START.toISOString(),
     secPerStep: SEC_PER_STEP,
     characters: Object.keys(CHARACTER_NAMES),
+    seed,
   })
   try {
     await runSimulation(world, writer, client, { totalRounds, delayBetweenRoundsMs })

@@ -4,6 +4,7 @@ import type {
 } from "./types.js"
 import { resolveLocationTile } from "./WorldData.js"
 import { decayNeeds } from "./needsDecay.js"
+import { findTilePath } from "./ServerPathfinder.js"
 
 export class WorldState {
   step = 0
@@ -167,6 +168,15 @@ export class WorldState {
       if (c) {
         c.state = "in_conversation"
         c.activeConversationId = id
+        // Pause movement for the duration of the conversation
+        if (c.plannedPath.length > 0) {
+          c.interruptedTaskDescription = c.destinationId
+            ? `heading to ${c.destinationId}`
+            : c.action
+          c.plannedPath = []
+          c.destinationId = undefined
+          c.animationKey = `idle_${c.facing}`
+        }
       }
     }
     this.addEvent({
@@ -192,6 +202,7 @@ export class WorldState {
         c.state = "active"
         c.activeConversationId = undefined
         c.threadId = undefined
+        c.interruptedTaskDescription = undefined
       }
       // Apply 60-minute interaction cooldown between both participants
       const other = record.participants.find(x => x !== p)
@@ -311,10 +322,14 @@ export class WorldState {
 
   // Advance all characters one step along their plannedPath.
   // Called every tick regardless of whether agents ran this round.
+  // Characters in conversation do not move.
   advancePhysics(): void {
     for (const c of this.characters.values()) {
       // Decay needs every tick
       decayNeeds(c.name, c.needs)
+
+      // Don't move while in conversation
+      if (c.state === "in_conversation") continue
 
       if (c.plannedPath.length === 0) continue
       c.tile = c.plannedPath[0]
@@ -332,8 +347,9 @@ export class WorldState {
         }
         c.animationKey = `walk_${c.facing}`
       } else {
-        // Reached destination — switch back to idle animation
+        // Reached destination
         c.animationKey = `idle_${c.facing}`
+        c.destinationId = undefined
         this.addEvent({ type: "action_complete", character: c.name, detail: "reached destination" })
       }
     }
@@ -367,7 +383,8 @@ export class WorldState {
     const c = this.getCharacter(characterName)
     const dest = resolveLocationTile(locationId)
     if (!dest) return false
-    c.plannedPath = generatePath(c.tile, dest)
+    c.plannedPath = findTilePath(c.tile, dest)
+    c.destinationId = locationId
     return true
   }
 
@@ -415,9 +432,11 @@ export class WorldState {
         animationKey: c.animationKey,
         facing: c.facing,
         needs: { ...c.needs },
+        pad: { ...c.pad },
         state: c.state,
         currentPlanBlock: this.getCurrentPlanBlock(name),
         currently: c.currently,
+        thinking: c.lastThinking,
       }
     }
     return {
@@ -433,20 +452,3 @@ export class WorldState {
   }
 }
 
-// ── Path generation ───────────────────────────────────────────────────────────
-// Generates a straight diagonal tile path from `from` to `to`.
-// No pathfinding — just a direct line. Phaser handles visual smoothing.
-
-function generatePath(from: [number, number], to: [number, number]): [number, number][] {
-  const path: [number, number][] = []
-  let [x, y] = from
-  const [tx, ty] = to
-  while ((x !== tx || y !== ty) && path.length < 300) {
-    if (x < tx) x++
-    else if (x > tx) x--
-    if (y < ty) y++
-    else if (y > ty) y--
-    path.push([x, y])
-  }
-  return path
-}

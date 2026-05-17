@@ -5,7 +5,7 @@ import { runTickRound, applyDecisions, runReflectionRound } from "../agents/orch
 
 // Agents are called every PERCEPTION_INTERVAL ticks.
 // Between calls, characters follow their last decision (path + action).
-const PERCEPTION_INTERVAL = 5
+const PERCEPTION_INTERVAL = 10
 
 interface RoundLoopOptions {
   totalRounds: number
@@ -68,6 +68,8 @@ export async function runSimulation(
 
   console.log(`\n${"═".repeat(60)}`)
   console.log(`Simulation complete. ${totalRounds} steps written.`)
+  console.log(`Run dir: ${writer.dir}`)
+  console.log(`Rebuild replay:  npx tsx src/scripts/buildReplay.ts ${writer.dir}`)
   console.log(`${"═".repeat(60)}\n`)
 }
 

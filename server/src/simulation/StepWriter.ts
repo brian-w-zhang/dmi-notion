@@ -2,30 +2,38 @@ import fs from "fs"
 import path from "path"
 import type { StepFile, SimulationMeta } from "./types.js"
 
-// Writes step files to frontend/public/assets/simulation/steps/
-// Phaser reads them as static assets for replay.
+// Each simulation run writes step files to its own subfolder:
+//   frontend/public/assets/simulation/steps/{simCode}/000001.json
+//   frontend/public/assets/simulation/steps/{simCode}/meta.json
+//
+// Run buildReplay.ts after a simulation to convert a simCode folder into replay.json.
+
 const SIM_DIR = path.resolve("../frontend/public/assets/simulation")
-const STEPS_DIR = path.join(SIM_DIR, "steps")
-const META_PATH = path.join(SIM_DIR, "meta.json")
+const STEPS_ROOT = path.join(SIM_DIR, "steps")
 
 export class StepWriter {
+  private readonly runDir: string
   private meta: SimulationMeta
 
   constructor(meta: Omit<SimulationMeta, "totalSteps">) {
     this.meta = { ...meta, totalSteps: 0 }
-    fs.mkdirSync(STEPS_DIR, { recursive: true })
+    this.runDir = path.join(STEPS_ROOT, meta.simCode)
+    fs.mkdirSync(this.runDir, { recursive: true })
     this.writeMeta()
-    console.log(`[StepWriter] Writing to ${SIM_DIR}`)
+    console.log(`[StepWriter] Run dir: ${this.runDir}`)
   }
 
   write(step: StepFile) {
     const filename = String(step.step).padStart(6, "0") + ".json"
-    fs.writeFileSync(path.join(STEPS_DIR, filename), JSON.stringify(step, null, 2))
+    fs.writeFileSync(path.join(this.runDir, filename), JSON.stringify(step))
     this.meta.totalSteps = step.step + 1
     this.writeMeta()
   }
 
+  /** Absolute path to this run's directory — printed at startup so you can pass it to buildReplay. */
+  get dir(): string { return this.runDir }
+
   private writeMeta() {
-    fs.writeFileSync(META_PATH, JSON.stringify(this.meta, null, 2))
+    fs.writeFileSync(path.join(this.runDir, "meta.json"), JSON.stringify(this.meta, null, 2))
   }
 }

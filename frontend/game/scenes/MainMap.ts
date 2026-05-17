@@ -179,6 +179,11 @@ export class MainMap extends Phaser.Scene {
     this.carAutoPark = new CarAutoParkSystem(worldData.parkingSpots);
     this.parkingSpots = worldData.parkingSpots;
 
+    // Static cast members only needed in sandbox — replay controller spawns its own sprites
+    if (!this._replayMode) {
+      this.castMembers = spawnStaticCastMembers(this, this.chairs, worldObjects);
+    }
+
     this.hud = new MainMapHud(
       this, sceneW, sceneH, worldObjects, this.cameraMode,
       () => this.toggleCameraMode(),
@@ -251,17 +256,8 @@ export class MainMap extends Phaser.Scene {
 
     // ── Replay mode — bypass input, NPC runners, and car driving ─────────────
     if (this._replayMode) {
-      registerAnimations(this, 'dwight-schrute');
-      const door = this.car.getDriverDoorPosition();
-      this.dwight = new Character({
-        scene:     this,
-        spriteKey: 'dwight-schrute',
-        x:         door.x,
-        y:         door.y,
-        depth:     SPRITE_WORLD_DEPTH,
-      });
-      this.hud.ignoreWorldObjects(this.dwight.sprite);
-      this.driving = false;
+      // Hide the sandbox car — replay controller manages its own car sprites
+      this.car.sprite.setVisible(false);
 
       this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
         const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
@@ -280,7 +276,7 @@ export class MainMap extends Phaser.Scene {
         EventBus.emit('object-inspect', key);
       });
 
-      this._replayCtrl = new MainMapReplayController(this, this.car, this.dwight, this.hud);
+      this._replayCtrl = new MainMapReplayController(this, this.hud);
       if (this._replayCtrl.isValid) {
         this._replayCtrl.start();
       } else {
