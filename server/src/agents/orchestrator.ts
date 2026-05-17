@@ -317,8 +317,11 @@ export async function runReflectionRound(
   client: NotionAgentsClient,
   trigger: string = "end_of_hour"
 ): Promise<void> {
-  const characters = [...world.characters.keys()]
-  console.log(`\n[Reflection] Firing talking heads for ${characters.length} characters — trigger: ${trigger}`)
+  const characters = [...world.characters.keys()].filter((key) => {
+    const state = world.characters.get(key)?.state
+    return state !== "pre_arrival" && state !== "commuting"
+  })
+  console.log(`\n[Reflection] Firing talking heads for ${characters.length} active characters — trigger: ${trigger}`)
 
   for (const characterKey of characters) {
     try {

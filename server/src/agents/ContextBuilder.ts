@@ -6,14 +6,13 @@ import {
   getAdvertisedActions,
   findActionsForNeeds,
   getZoneAwareness,
-  getEntitiesNearby,
 } from "../simulation/WorldData.js"
 
 export function buildTickContext(characterKey: string, world: WorldState): string {
   const c = world.getCharacter(characterKey)
   const currentBlock = world.getCurrentPlanBlock(characterKey)
   const nextBlock = world.getNextPlanBlock(characterKey)
-  const recentLog = world.getRecentLog(characterKey, 5)
+  const recentLog = world.getRecentLog(characterKey, 3)
 
   // Recent announcements this character heard (from dayLog)
   const heardAnnouncements = c.dayLog
@@ -28,41 +27,20 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
   const currentZone = inferZoneFromTile(c.tile)
   const urgentNeeds = Object.entries(c.needs).filter(([, v]) => v < 0.4).map(([k]) => k)
 
-  // Build occupied-tiles map for zone awareness and radius perception
+  // Build occupied-tiles map for zone awareness
   const occupiedTiles = new Map<string, string>()
   for (const [key, ch] of world.characters) {
     occupiedTiles.set(`${ch.tile[0]},${ch.tile[1]}`, key)
   }
 
-  // ── Radius perception (8-tile detail layer) ───────────────────────────────
-  // Full appliance/object info for everything close enough to see clearly.
-  const nearbyEntities = getEntitiesNearby(c.tile, 8, occupiedTiles).map((e) => ({
-    name: e.name,
-    type: e.entityType,
-    zone: e.zone,
-    distance_tiles: e.distanceTiles,
-    occupied_by: e.occupiedBy ? (CHARACTER_NAMES[e.occupiedBy] ?? e.occupiedBy) : null,
-    available_actions: e.availableActions.map((a) => ({
-      action: a.name,
-      emoji: a.emoji,
-      duration_steps: a.durationSteps,
-      need_effects: a.needEffects,
-    })),
-  }))
-
   // ── Zone awareness (coarse layer for connected zones) ─────────────────────
-  // Name + occupancy status for everything in your zone and adjacent zones.
-  // No need-delta detail — you know the coffee machine is free but not the exact effect.
   const { visibleZones, entities: zoneEntities } = getZoneAwareness(currentZone, occupiedTiles)
   const zoneAwareness = {
     visible_zones: visibleZones,
     entities: zoneEntities.map((e) => ({
       name: e.name,
-      type: e.entityType,
       zone: e.zone,
       status: e.status,
-      occupied_by: e.occupiedBy ? (CHARACTER_NAMES[e.occupiedBy] ?? e.occupiedBy) : null,
-      action_names: e.actionNames,
     })),
   }
 
@@ -72,7 +50,6 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     action: a.action,
     emoji: a.emoji,
     duration_steps: a.durationSteps,
-    need_effects: a.needDeltas,
   }))
 
   // ── Need-scored action candidates (may require travel) ────────────────────
@@ -159,64 +136,49 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     current_zone: currentZone,
 
     needs: {
-      raw: c.needs,
       urgent: urgentNeeds,
       summary: needsToNaturalLanguage(c.needs),
     },
 
-    // Radius perception: full detail for objects within ~8 tiles
-    nearby_entities: nearbyEntities,
-
     // Zone awareness: coarse occupancy for your zone + connected zones
     zone_awareness: zoneAwareness,
 
-    // What you can do right here without moving
+    // Actions you can take right here without moving
     available_actions_here: actionsHere,
 
-    // Best actions for urgent needs (may require moving to another zone)
+    // Best actions for urgent needs (may require moving)
     recommended_for_urgent_needs: recommendedActions,
 
     completed_this_hour: c.completedThisHour,
     recent_log: formatRecentLog(recentLog, characterKey),
-
-    // Announcements heard since last tick (empty array if none)
     heard_announcements: heardAnnouncements,
-
-    // Meeting override — if set, character MUST move to conference_room
     meeting_summoned: world.activeMeeting?.phase === "assembling"
       ? { topic: world.activeMeeting.topic, called_by: CHARACTER_NAMES[world.activeMeeting.initiatorKey] }
       : null,
-
     nearby_characters: nearbyChars,
 
     instructions: [
-      "You are a character in a simulation. Review your current situation and decide what to do next.",
-      "If meeting_summoned is set, you MUST respond with action: 'move_to', target: 'conference_room'. No exceptions.",
-      "If in_transit_to is set, you are mid-walk. Respond 'continue' to keep going, or pick a new action to redirect.",
-      "If interrupted_task is set, you were stopped mid-task. Consider resuming it with 'move_to' or 'continue'.",
-      "Check your needs — if urgent (listed in needs.urgent), they may override your plan.",
-      "Use nearby_entities for objects close enough to interact with directly.",
-      "Use zone_awareness to see what's available in connected zones without moving.",
-      "Use available_actions_here for actions you can take without moving.",
-      "Use recommended_for_urgent_needs if you need to address an urgent need (you may need to move first).",
-      "Check nearby_characters — initiate conversation if not on cooldown and it fits the moment. Consider whether interrupting your current task is worth it.",
-      "Michael may use 'announce' to broadcast a message or 'summon_meeting' to call everyone to the conference room.",
-      "Consult your memory and relationship databases for relevant context before deciding.",
-      "Respond ONLY with a valid JSON object. No prose, no markdown fences, no explanation.",
+      "Decide what to do next. Consult your memory and relationship databases for context.",
+      "meeting_summoned → MUST respond action:'move_to' target:'conference_room'.",
+      "in_transit_to set → respond 'continue' to keep walking, or pick a new action.",
+      "interrupted_task set → consider resuming with 'move_to' or 'continue'.",
+      "Urgent needs may override the plan. Use recommended_for_urgent_needs to address them.",
+      "Michael only: may use 'announce' or 'summon_meeting'.",
+      "Respond ONLY with valid JSON — no prose, no markdown.",
       JSON.stringify({
-        thinking: "one paragraph, first person, inner voice — your deliberation before deciding",
-        follow_plan: "boolean — true if following current_plan_block",
-        action: "continue | move_to | use_appliance | initiate_conversation | announce | summon_meeting | idle",
-        target: "zone name, appliance name, or character key — omit if not applicable",
-        appliance_action: "specific action name on the appliance — only if action is use_appliance",
-        description: "one sentence, third person, what you are doing",
-        emoji: "one emoji",
-        reasoning: "one sentence — why this action given needs, plan, and memory",
-        deviation_reason: "string — only if follow_plan is false",
-        update_currently: "string — only if something notable just changed, else omit",
-        want_to_talk: "{ character_key, opening_topic } — only if action is initiate_conversation",
-        announcement: "what you say out loud — only if action is announce",
-        meeting_topic: "topic string — only if action is summon_meeting",
+        thinking: "1–2 sentences first-person inner voice",
+        follow_plan: true,
+        action: "continue|move_to|use_appliance|initiate_conversation|announce|summon_meeting|idle",
+        target: "zone, appliance, or character_key — omit if unused",
+        appliance_action: "action name — only for use_appliance",
+        description: "one sentence third-person",
+        emoji: "🙂",
+        reasoning: "one sentence why",
+        deviation_reason: "only if follow_plan false",
+        update_currently: "only if something notable changed",
+        want_to_talk: "{ character_key, opening_topic } — only for initiate_conversation",
+        announcement: "only for announce",
+        meeting_topic: "only for summon_meeting",
       }),
     ],
   }

@@ -45,6 +45,9 @@ yarn-error.log*
 # --- Reference codebase (not our code) ---
 generative_agents/
 
+# --- Simulation step files ---
+frontend/public/assets/simulation/steps/
+
 # --- Build outputs ---
 frontend/build/
 backend/build/

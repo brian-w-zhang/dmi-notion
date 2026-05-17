@@ -44,6 +44,7 @@ export class MainMapHud {
   private readonly replayTrackFill:     Phaser.GameObjects.Graphics;
   private readonly replayPlayhead:      Phaser.GameObjects.Graphics;
   private readonly replayTimeLabel:     Phaser.GameObjects.Text;
+  private readonly simClock:            Phaser.GameObjects.Text;
   // Playback state
   private _onPlayPause: (() => void) | null = null;
   private _onSeek:      ((idx: number) => void) | null = null;
@@ -234,6 +235,15 @@ export class MainMapHud {
       this.replayTimeLabel, trackZone,
     ]).setVisible(false);
 
+    // Sim clock — top-center, shown only in replay mode
+    this.simClock = scene.add.text(sceneW / 2, 10, '', {
+      fontFamily: 'monospace',
+      fontSize:   '15px',
+      color:      '#e2e8f0',
+      backgroundColor: '#00000099',
+      padding:    { x: 10, y: 5 },
+    }).setOrigin(0.5, 0).setVisible(false);
+
     this.hudRoot = scene.add.container(0, 0, [
       homeBtn,
       this.positionText,
@@ -245,6 +255,7 @@ export class MainMapHud {
       this.mountHint,
       this.carControlsHint,
       this.replayBar,
+      this.simClock,
     ]);
     this.hudRoot.setDepth(HUD_DEPTH);
     this.wireCameraModeTogglePointer();
@@ -394,6 +405,11 @@ export class MainMapHud {
     this.hideContextHints();
     this.carControlsHint.setVisible(false);
     this.replayBar.setVisible(true);
+    this.simClock.setVisible(true);
+  }
+
+  setSimClock(timeStr: string): void {
+    this.simClock.setText(timeStr);
   }
 
   setPlayPaused(isPaused: boolean): void {
@@ -407,6 +423,7 @@ export class MainMapHud {
 
   exitReplayMode(): void {
     this.replayBar.setVisible(false);
+    this.simClock.setVisible(false);
     this._onPlayPause = null;
     this._onSeek = null;
     this._onSkip = null;

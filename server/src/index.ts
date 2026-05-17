@@ -6,7 +6,7 @@ import { StepWriter } from "./simulation/StepWriter.js"
 import { runSimulation } from "./simulation/RoundLoop.js"
 import { buildRoutes } from "./api/routes.js"
 import { CHARACTER_NAMES } from "./agents/characters.js"
-import { CHARACTER_PLANS, PLAN_ADHERENCE, INITIAL_CURRENTLY } from "./simulation/character_plans.js"
+import { CHARACTER_PLANS, PLAN_ADHERENCE, INITIAL_CURRENTLY, ARRIVAL_TIMES } from "./simulation/character_plans.js"
 import { logDecayRates } from "./simulation/needsDecay.js"
 import initialNeedsJson from "./simulation/initial_needs.json" assert { type: "json" }
 import { COMMUTE_STEPS } from "./simulation/CommuteSimulator.js"
@@ -23,7 +23,8 @@ const client = new NotionAgentsClient({ auth: process.env.NOTION_API_TOKEN })
 
 // ── World setup ───────────────────────────────────────────────────────────────
 
-const SIM_START = new Date("2023-02-13T07:00:00")  // 7 AM — covers Dwight's early arrival
+const SIM_START = new Date("2023-02-13T08:00:00")  // 8 AM — 31 min before first arrival (Dwight 8:31)
+const SIM_START_MINUTES = SIM_START.getHours() * 60 + SIM_START.getMinutes()  // 480
 
 logDecayRates()
 const world = new WorldState(SIM_START, SEC_PER_STEP)
@@ -57,10 +58,14 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
     needsPerception: false,
     lastPerceptionStep: 0,
 
-    // Commute starts COMMUTE_STEPS before first plan block; clamped to 0
-    commuteStartStep: Math.max(0,
-      Math.floor(((dayPlan[0]?.startMin ?? 0) * 60) / SEC_PER_STEP) - COMMUTE_STEPS
-    ),
+    // Commute starts COMMUTE_STEPS steps before the character's designated arrival time.
+    // arrivalMin is minutes-since-midnight; subtract SIM_START_MINUTES to get sim-relative minutes,
+    // then convert to steps.  Clamped to 0 so early arrivals start commuting from step 0.
+    commuteStartStep: (() => {
+      const arrivalMin = ARRIVAL_TIMES[key] ?? dayPlan[0]?.startMin ?? SIM_START_MINUTES
+      const stepsToArrival = Math.round((arrivalMin - SIM_START_MINUTES) * 60 / SEC_PER_STEP)
+      return Math.max(0, stepsToArrival - COMMUTE_STEPS)
+    })(),
   })
 }
 

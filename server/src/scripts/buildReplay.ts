@@ -54,7 +54,7 @@ import { getCarTextureKey } from "../simulation/CommuteSimulator.js"
 
 const TILE_SIZE = 32
 const OUTPUT_PATH = path.resolve("../frontend/public/assets/simulation/replay.json")
-const MS_PER_STEP = 83     // ~83ms per step → ~5 min for a full workday (3600 steps)
+const MS_PER_STEP = 185    // ~185ms per step → ~10 min for a full workday (3240 steps at 10s/step)
 
 // --------------------------------------------------------------------------
 

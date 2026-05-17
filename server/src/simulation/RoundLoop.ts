@@ -26,7 +26,8 @@ export async function runSimulation(
   console.log(`Sim time start: ${world.simTime.toISOString()}`)
   console.log(`${"═".repeat(60)}\n`)
 
-  let lastReflectionHour = -1
+  // Initialize to current hour so reflection fires at end of hour, not immediately.
+  let lastReflectionHour = Math.floor(world.simMinutes / 60)
 
   for (let round = 0; round < totalRounds; round++) {
     const roundStart = Date.now()
@@ -38,9 +39,12 @@ export async function runSimulation(
     // (handled inside advanceStep → tickArrivals + tickApplianceLocks)
 
     // ── 3. Event-driven cognition ─────────────────────────────────────────────
-    // Collect characters that need perception this step (event-triggered or fallback)
+    // Collect characters that need perception this step (event-triggered or fallback).
+    // Skip fallback tick for locked appliance users — they can't take new actions;
+    // needsPerception will fire when the lock expires naturally.
     const toTick = world.getActiveCharacters().filter((c) => {
       if (c.needsPerception) return true
+      if (c.state === "using_appliance") return false   // skip fallback; lock handles it
       if (world.step - c.lastPerceptionStep >= PERCEPTION_FALLBACK_INTERVAL) return true
       return false
     })

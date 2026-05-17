@@ -93,8 +93,11 @@ export class MainMapReplayController {
   private paused  = false;
   private stepTimer!: Phaser.Time.TimerEvent;
 
-  private sprites    = new Map<string, Phaser.GameObjects.Sprite>();
-  private carSprites = new Map<string, Phaser.GameObjects.Sprite>();
+  private sprites      = new Map<string, Phaser.GameObjects.Sprite>();
+  private carSprites   = new Map<string, Phaser.GameObjects.Sprite>();
+  // Speech bubbles: same white-bubble + emoji-text as sandbox ApplianceActionController.
+  // Per-frame sync via update() keeps the bubble glued to the sprite during tweens.
+  private emojiBubbles = new Map<string, { root: Phaser.GameObjects.Container; text: Phaser.GameObjects.Text; lastEmoji: string }>();
 
   // Active looping SFX
   private activeLoop:    Phaser.Sound.BaseSound | null = null;
@@ -182,10 +185,21 @@ export class MainMapReplayController {
     this.sprites.clear();
     this.carSprites.forEach(s => s.destroy());
     this.carSprites.clear();
+    this.emojiBubbles.forEach(b => b.root.destroy(true));
+    this.emojiBubbles.clear();
     this.activeLoop?.stop();
     this.activeLoop = null;
     this._povContainer?.destroy();
     this.inspectPanel?.destroy();
+  }
+
+  /** Called every frame from the scene update loop to keep speech bubbles pinned to sprites. */
+  update(): void {
+    for (const [key, bubble] of this.emojiBubbles) {
+      if (!bubble.root.visible) continue;
+      const sprite = this.sprites.get(key);
+      if (sprite) bubble.root.setPosition(sprite.x, sprite.y - 56);
+    }
   }
 
   // ── Spawn characters ─────────────────────────────────────────────────────────
@@ -205,8 +219,24 @@ export class MainMapReplayController {
       sprite.setVisible(c.visible);
       sprite.setInteractive();
       sprite.on('pointerdown', () => this._selectChar(key));
-      this.hud.ignoreWorldObjects(sprite);   // prevent uiCamera double-draw
+      this.hud.ignoreWorldObjects(sprite);
       this.sprites.set(key, sprite);
+
+      // Speech bubble — same white-bubble image as sandbox, emoji rendered as unicode text.
+      // The bubble image is 32×32 at scale 1.5 (48×48 display), origin (0.5,1).
+      // Emoji body-center sits at y=-26 inside the container (above the 4px tail).
+      // Container root is positioned at sprite.y-56 each frame via update().
+      const bubbleRoot = this.scene.add.container(c.x, c.y - 56);
+      const bubbleBg   = this.scene.add.image(0, 0, 'ui-bubble-white-1')
+        .setOrigin(0.5, 1).setScale(1.5);
+      const emojiText  = this.scene.add.text(0, -26, '', {
+        fontFamily: '"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",serif',
+        fontSize: '13px',
+      }).setOrigin(0.5, 0.5);
+      bubbleRoot.add([bubbleBg, emojiText]);
+      bubbleRoot.setDepth(CHAR_DEPTH + 2).setVisible(false);
+      this.hud.ignoreWorldObjects(bubbleRoot);
+      this.emojiBubbles.set(key, { root: bubbleRoot, text: emojiText, lastEmoji: '' });
     }
   }
 
@@ -255,6 +285,7 @@ export class MainMapReplayController {
     const ms = this.replay.meta.ms_per_step;
 
     this.hud.setReplayStatus(step.emoji ?? '🏢', step.sim_time ?? step.desc ?? '', step.step, this.replay.steps.length - 1, this.paused);
+    if (step.sim_time) this.hud.setSimClock(step.sim_time);
 
     // Cars
     this._applyCarStep(step, instant, ms);
@@ -266,11 +297,25 @@ export class MainMapReplayController {
 
       const wasVisible = sprite.visible;
       sprite.setVisible(c.visible);
+
+      // Speech bubble — show when character is visible and has a non-empty emoji
+      const bubble = this.emojiBubbles.get(key);
+      if (bubble) {
+        const show = c.visible && !!(c.emoji);
+        bubble.root.setVisible(show);
+        if (show && c.emoji !== bubble.lastEmoji) {
+          bubble.text.setText(c.emoji!);
+          bubble.lastEmoji = c.emoji!;
+        }
+        if (!show) bubble.lastEmoji = '';
+      }
+
       if (!c.visible) continue;
 
       // Teleport if instant OR first time becoming visible (sprite was at init position)
       if (instant || !wasVisible) {
         sprite.setPosition(c.x, c.y);
+        bubble?.root.setPosition(c.x, c.y - 56);
       } else {
         this.scene.tweens.add({
           targets:  sprite,
@@ -278,6 +323,7 @@ export class MainMapReplayController {
           duration: ms,
           ease:     'Linear',
         });
+        // Bubble follows via update() each frame — no extra tween needed
       }
 
       this._playCharAnim(sprite, SPRITE_KEY[key] ?? key, c.anim, c.facing);
@@ -301,8 +347,20 @@ export class MainMapReplayController {
     const carTextures = this.replay.meta.car_textures ?? {};
 
     for (const [key, c] of Object.entries(step.cars)) {
-      const sprite = this.carSprites.get(key);
-      if (!sprite) continue;
+      let sprite = this.carSprites.get(key);
+      if (!sprite) {
+        // Lazy-spawn: car didn't exist at step 0 (arrived later)
+        const textureKey = carTextures[key];
+        if (!textureKey) continue;
+        const sheetInfo = textureKey.startsWith('car-3') ? CAR_SHEET_6x6 : CAR_SHEET_5x5;
+        registerCarAnimations(this.scene, textureKey, sheetInfo);
+        sprite = this.scene.add.sprite(c.x, c.y, textureKey);
+        sprite.setDepth(CAR_DEPTH);
+        sprite.setOrigin(0.5, 0.5);
+        sprite.setVisible(false);
+        this.hud.ignoreWorldObjects(sprite);
+        this.carSprites.set(key, sprite);
+      }
 
       const wasVisible = sprite.visible;
       sprite.setVisible(c.visible);

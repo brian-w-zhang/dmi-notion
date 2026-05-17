@@ -53,6 +53,41 @@ const officeObjectsRaw = JSON.parse(
   fs.readFileSync(path.join(ASSETS, "office-objects.json"), "utf-8")
 )
 
+// Duration overrides. At SEC_PER_STEP=10 and MS_PER_STEP=185 in the replay:
+//   1 real second ≈ 5.4 steps  |  11 steps ≈ 2s  |  16 steps ≈ 3s  |  22 steps ≈ 4s  |  27 steps ≈ 5s
+// Rule: minimum 11 steps (2 s on-screen) so any action is visible; work actions 22–27 steps (4–5 s).
+const DURATION_OVERRIDES: Record<string, Record<string, number>> = {
+  // ── Deep work (4–5 s on screen, 4–5 sim-minutes) ─────────────────────────
+  "dwight_phone":            { "sales_call":         24 },   // 4.4 s
+  "dwight_pc":               { "client_research":    22 },   // 4.1 s
+  "conf_tv":                 { "present to group":   27, "watch screen": 16 },
+  "conf_easel":              { "present idea":       22, "brainstorm":   27 },
+  "water_cooler":            { "chat":               22, "get water":    11 },
+
+  // ── Medium utility (3–4 s, 3–4 sim-minutes) ──────────────────────────────
+  "kitchen_fridge":          { "get snack":          16 },   // 3.0 s
+  "coffee_machine":          { "get coffee":         16 },   // 3.0 s
+  "toaster":                 { "make toast":         18 },   // 3.3 s
+  "kitchen_microwave":       { "heat food":          22 },   // 4.1 s
+  "break_room_microwave":    { "heat food":          22 },   // 4.1 s
+  "accounting_printer":      { "print document": 16, "scan document": 18 },
+  "sales_printer":           { "print document": 16, "scan document": 18 },
+  "accounting_fire_hydrant": { "inspect hydrant": 16, "use hydrant": 22 },
+  "sales_fire_hydrant":      { "inspect hydrant": 16, "use hydrant": 22 },
+  "kitchen_fire_hydrant":    { "inspect hydrant": 16, "use hydrant": 22 },
+
+  // ── Quick utility (2–3 s, 2–3 sim-minutes) ───────────────────────────────
+  "vending_machines":        { "buy snack": 11, "buy drink": 11 },
+  "kitchen_sink":            { "wash hands":  11 },
+  "mens_sink1":              { "wash hands":  11 }, "mens_sink2":  { "wash hands": 11 },
+  "womens_sink1":            { "wash hands":  11 }, "womens_sink2": { "wash hands": 11 },
+  "urinal1":                 { "use restroom": 16 }, "urinal2": { "use restroom": 16 },
+  "mens_toilet":             { "use restroom": 18 },
+  "womens_toilet1":          { "use restroom": 18 },
+  "womens_toilet2":          { "use restroom": 18 },
+  "womens_toilet3":          { "use restroom": 18 },
+}
+
 export const APPLIANCES: Appliance[] = Object.values(
   officeObjectsRaw.entitiesById as Record<string, any>
 )
@@ -74,6 +109,17 @@ export const APPLIANCES: Appliance[] = Object.values(
       loadingPhrases: act.loadingPhrases ?? [],
     })),
   }))
+
+// Apply duration overrides post-load
+for (const appliance of APPLIANCES) {
+  const overrides = DURATION_OVERRIDES[appliance.objectName]
+  if (!overrides) continue
+  for (const action of appliance.actions) {
+    if (action.name in overrides) {
+      action.durationSteps = overrides[action.name]
+    }
+  }
+}
 
 // ── Pixel → tile coordinate ───────────────────────────────────────────────────
 

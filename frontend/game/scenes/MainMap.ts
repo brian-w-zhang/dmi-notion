@@ -568,6 +568,8 @@ export class MainMap extends Phaser.Scene {
   // ── Update loop ──────────────────────────────────────────────────────────
 
   update(_time: number, delta: number) {
+    // Replay speech bubbles need per-frame sync even in replay mode
+    this._replayCtrl?.update();
     // Replay mode: timer-driven step playback — no keyboard input, no NPC runners
     if (this._replayMode) return;
 

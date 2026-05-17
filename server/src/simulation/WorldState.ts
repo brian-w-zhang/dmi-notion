@@ -413,10 +413,11 @@ export class WorldState {
           c.emoji = "🚶"
           c.needsPerception = true
           c.commuteQueue = undefined
-          const firstBlock = c.dayPlan[0]
-          if (firstBlock) this.setDestination(key, firstBlock.locationId)
-          this.addEvent({ type: "action_complete", character: key, detail: "arrived — heading to desk" })
-          console.log(`  [Arrival] ${key} → dismounted, heading to ${c.dayPlan[0]?.locationId}`)
+          // Use the currently-active plan block, not dayPlan[0] which may be hours stale
+          const dest = (this.getCurrentPlanBlock(key) ?? this.getNextPlanBlock(key))?.locationId ?? `${key}_desk`
+          this.setDestination(key, dest)
+          this.addEvent({ type: "action_complete", character: key, detail: `arrived — heading to ${dest}` })
+          console.log(`  [Arrival] ${key} → dismounted, heading to ${dest}`)
         }
       }
     }
