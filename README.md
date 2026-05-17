@@ -1,6 +1,6 @@
 # Dunder Mifflin Infinity
 
-A psychologically grounded generative-agent simulation of the Scranton branch of Dunder Mifflin. A 2D top-down game sandbox built with Phaser, a hand-painted Tiled map, and LimeZu character assets. The Office cast runs forward from a canon seed state; identity is architecturally persistent, not just prompt-level, and emergent behavior is the point.
+A psychologically grounded generative-agent simulation of the Scranton branch of Dunder Mifflin. A 2D top-down sandbox built with Phaser, a hand-painted Tiled map, and LimeZu character assets, connected to a live Express backend that orchestrates 14 Notion custom agents — one per cast member. The Office cast runs forward from a canon seed state; identity is architecturally persistent, not just prompt-level, and emergent behavior is the point.
 
 This is not a reenactment. Canon is the seed, not the objective.
 
@@ -27,7 +27,6 @@ Characters don't invent actions from scratch. The world advertises affordances: 
 ### Psychological Grounding
 The memory and emotion systems are built around established cognitive science:
 
-- **OCC Model** (Ortony, Clore & Collins, 1988): emotions as appraisals of events relative to goals. Michael isn't "sad" randomly; he's sad because a specific goal ("be seen as the cool boss") was blocked by a specific event. Every memory row carries a `goal_status` field encoding the appraisal.
 - **Spreading Activation** (Collins & Loftus, 1975): memory retrieval expands along associative edges, not just keyword matches. A "Fixed Bag" of curated concept terms per character operationalizes this in the retrieval layer.
 - **PAD Model** (Pleasure-Arousal-Dominance): a continuous affective state that drifts based on events and shapes memory retrieval weighting.
 - **State-Dependent Memory** (Bower, 1981): memories encoded in a similar affective state are easier to retrieve. Retrieval scoring weights `state_match` alongside recency and importance.
@@ -39,15 +38,15 @@ The memory and emotion systems are built around established cognitive science:
 ## Architecture
 
 ```
-Phaser frontend  <── WebSocket ──>  Backend bridge  <──>  LLM agents
-  (body + world)                    (Node/Python)          (mind + memory)
+Phaser frontend  <── WebSocket ──>  Express backend  <──>  Notion custom agents
+  (body + world)                    (Node/TypeScript)        (mind + memory)
 ```
 
 **Phaser (body + world):** renders the tilemap, handles character movement and animation, manages needs decay, enforces world rules, assembles candidate action sets, and executes action chains (walk, face, animate, SFX, complete). Two modes: **Sandbox** (player-controlled, dev/testing) and **Simulation** (replay-driven, agent output).
 
-**LLM agents (mind + memory):** one agent per character (Michael, Dwight, Jim, Pam, etc.). Each runs a full cognitive pipeline in a single invocation: perception, needs appraisal, memory retrieval, action selection, dialogue, reflection.
+**Notion custom agents (mind + memory):** one agent per character (Michael, Dwight, Jim, Pam, and the full 14-person cast). Each runs a full cognitive pipeline in a single invocation: perception, needs appraisal, memory retrieval, action selection, dialogue, reflection. Agents are backed by Notion databases — World State, Conversations, Memory, Relationships — that are read and written during each tick. This requires alpha access to the Notion Agents SDK (`@notionhq/agents-client`).
 
-**Backend bridge (planned):** a thin Node/Python server that mediates between the agents and Phaser. Exposes REST endpoints and pushes state changes to the frontend over WebSocket.
+**Express backend:** a Node/TypeScript server (`server/`) that orchestrates the simulation. It maintains live world state (character positions, needs, active conversations, pathfinding), calls the Notion custom agents SDK to tick each character in parallel, writes per-step snapshots to disk, and exposes REST endpoints for status and manual control. The original plan used Notion Workers for the orchestration layer but was migrated to Express due to permission constraints with the Workers runtime.
 
 ---
 
@@ -69,7 +68,17 @@ frontend/              Next.js + Phaser frontend (the rendered simulation)
     sprites/           Character spritesheets (one per cast member, LimeZu format)
     sound effects/     SFX library
     simulation/        replay.json — serialized agent-driven simulation run
+      steps/           Per-run step file directories ({simCode}/000001.json …)
   public/data/         needs_config.json, personalities.json, character_need_overrides.json
+
+server/                Express backend + simulation orchestrator
+  src/
+    index.ts           Server entry point — world setup, Express app, /simulation/start
+    agents/            Notion agents client wrappers (orchestrator, ContextBuilder, ConversationFlow)
+    api/               REST route handlers (world state, perception, action submission)
+    simulation/        WorldState, StepWriter, RoundLoop, pathfinding, needs decay, config
+    scripts/
+      buildReplay.ts   Converts a step-file run folder into replay.json for the frontend
 
 generative_agents/     Park et al. reference implementation (Django + Python)
                        Kept as a reference; DMI's architecture diverges significantly.
@@ -87,9 +96,80 @@ scripts/               Code generation utilities
 
 ---
 
-## Running the Frontend
+## Notion Setup
 
-The Phaser game runs inside a Next.js app. The simulation backend is not yet connected; the frontend runs standalone against a pre-recorded `replay.json`.
+The simulation depends on a Notion workspace configured with:
+
+- **One custom agent page per cast member** (14 total) — each agent page contains a cognitive pipeline instruction document that governs how the agent perceives the world, appraises its needs, retrieves memories, selects actions, and generates dialogue. Agent page IDs are mapped in `server/src/agents/characters.ts`.
+- **World State database** — current simulation state readable by agents during tick.
+- **Conversations database** — multi-turn conversation threads with per-turn internal thought and emotional context.
+- **Memory database** — episodic memory log per character, seeded from canon S1–S2 events.
+- **Relationships database** — per-pair relationship summaries updated with deltas.
+
+The `@notionhq/agents-client` SDK (alpha access required) is used to invoke agents and stream their decisions back to the backend. Set `NOTION_API_TOKEN` in `server/.env` with an internal integration token that has access to all relevant pages and databases.
+
+---
+
+## Running the Simulation
+
+The full simulation pipeline is: start the backend → trigger a run → build the replay file → watch it in the frontend.
+
+### 1. Start the backend server
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+The server starts on `http://localhost:3001`. Requires `NOTION_API_TOKEN` in `server/.env`.
+
+### 2. Start the frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+### 3. Trigger a simulation run
+
+Send a POST request to start a simulation. The server will tick all 14 characters in parallel, writing one step file per round to `frontend/public/assets/simulation/steps/{simCode}/`.
+
+```bash
+curl -X POST http://localhost:3001/simulation/start \
+  -H "Content-Type: application/json" \
+  -d '{"totalRounds": 72}'
+```
+
+`totalRounds` controls how many simulation steps to run (each step = 5 real-world minutes of sim time by default). Check progress:
+
+```bash
+curl http://localhost:3001/simulation/status
+```
+
+### 4. Build the replay file
+
+Once the run finishes, note the `simCode` printed in the server logs (e.g. `run-1234567890`), then run the build script from the `server/` directory:
+
+```bash
+cd server
+npx tsx src/scripts/buildReplay.ts ../frontend/public/assets/simulation/steps/run-1234567890
+```
+
+This reads all step files and writes `frontend/public/assets/simulation/replay.json`.
+
+### 5. Watch the episode
+
+In the frontend at [http://localhost:3000](http://localhost:3000), select **SIMULATION** from the mode select screen. The replay plays back with all 14 characters moving, talking, and interacting autonomously against the full tilemap.
+
+---
+
+## Running the Frontend Standalone
+
+To run the frontend without the backend (using the pre-recorded `replay.json`):
 
 ```bash
 cd frontend
@@ -100,7 +180,7 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000). A mode-select screen appears with two options:
 
 - **SANDBOX** — player-controlled (WASD), used for dev and map testing.
-- **SIMULATION** — replay mode; plays back a pre-recorded agent-driven session with all 14 cast members moving, talking, and interacting autonomously.
+- **SIMULATION** — replay mode; plays back the most recent pre-recorded agent-driven session.
 
 The **dashboard** at [http://localhost:3000/dashboard](http://localhost:3000/dashboard) shows the full cast roster and links to per-character pages with needs curves, Big Five personality radar, and sprite preview.
 
@@ -120,7 +200,7 @@ The **dashboard** at [http://localhost:3000/dashboard](http://localhost:3000/das
 
 ## Milestones
 
-### ✅ 1. World Layer
+### 1. World Layer
 The office map as a structured affordance space, not just visuals.
 
 - Tiled map with named semantic zones (open plan, Michael's office, conference room, kitchen, reception, warehouse)
@@ -131,7 +211,7 @@ The office map as a structured affordance space, not just visuals.
 - Car system with mount/dismount, driving state, and auto-park
 - Collision and walkability zones; polygon-based pathfinding grid
 
-### ✅ 2. Character System
+### 2. Character System
 All 14 canon cast members running as independent agents in the same world.
 
 - All cast members spawned with individual spritesheets and animation registration
@@ -142,75 +222,71 @@ All 14 canon cast members running as independent agents in the same world.
 - Speech bubble overlays and talking-head emoji overlays during dialogue
 - Mode select screen: **Sandbox** (player-controlled) vs. **Simulation** (replay-driven)
 
-### 🔄 3. Needs System
+### 3. Needs System
 The Sims-style need decay creating constant action pressure.
 
 - Needs data layer: `needs_config.json` with decay curves and per-character overrides
 - Big Five personality data: `personalities.json` maps each character's OCEAN scores
 - Dashboard UI: per-character needs curves (graphed over time) and Big Five radar chart
-- *Not yet wired:* runtime need decay in the simulation loop; urgency-scored action candidate assembly
+- Runtime need decay applied by the backend on every simulation step
 
-### 🔄 4. DVR / Replay Layer
+### 4. DVR / Replay Layer
 Every simulation run is a replayable episode.
 
-- `replay.json` format: timestamped event log with character positions, facing, animation, action, emoji, PAD state, needs snapshot, and active conversation turns
+- Step file format: per-round JSON snapshots with character positions, facing, animation, action, emoji, PAD state, needs, and active conversations
+- `buildReplay.ts` converts a step-file run folder into `replay.json` for the Phaser frontend
 - `MainMapReplay` scene plays back a recorded run against the full tilemap with all 14 characters
-- *Not yet implemented:* scrub controls, timeline UI, auto POV "documentary crew" camera
+- Scrub controls and timeline UI: not yet implemented
 
-### ⬜ 5. Cognitive Loop
+### 5. Cognitive Loop
 The per-tick decision pipeline that runs inside each character agent.
 
-- Perception snapshot: what each character can currently see and hear within their radius
-- Memory retrieval: weighted score of `importance × 0.4 + recency × 0.3 + state_match × 0.3`
+- Perception snapshot: zone-aware visibility of characters and appliances, built by the backend and passed to each agent on every tick
+- Needs appraisal and urgency scoring fed into action candidate ranking
 - PAD (Pleasure-Arousal-Dominance) state tracking and baseline drift
-- OCC appraisal: emotions as goal-relative event evaluations, written into every memory row
 - Daily morning planning: character-specific intentions grounded in personality and current needs
-- Action selection: LLM receives needs vector, candidate actions, retrieved memories, current plan, relationship context → selects one
-- Post-action appraisal: fixed delta for physical actions; appraisal agent for social/dialogue outcomes
-- Micro-reflections after significant events; end-of-day synthesis into narrative identity updates
+- Action selection: Notion agent receives needs vector, candidate actions, day log, current plan, and relationship context → selects one
+- Post-action appraisal for social/dialogue outcomes
+- Micro-reflections after significant events
 
-### ⬜ 6. Memory Architecture
+### 6. Memory Architecture
 Episodic memory seeded from canon and extended by simulation — the core identity persistence layer.
 
-- Memory DB per character, seeded with annotated memories from S1–S2 canon dialogue
-- Memory write schema: content, importance score, PAD state at encoding, OCC `goal_status`, relational deltas
+- Memory DB per character in Notion, seeded with annotated memories from S1–S2 canon dialogue
 - Retrieval using Fixed Bag spreading activation (8–12 curated concept terms per character)
 - State-dependent retrieval: current PAD state weights `state_match` in retrieval scoring
 - Constructive simulation: retrieved memories passed as predictive priors, not just historical facts
 - Relationship DB: per-pair relationship summaries updated with deltas and triggering events
 
-### ⬜ 7. Notion Agents + Backend Bridge
-The mind-body connection: Notion agents handle cognition, the backend bridge relays decisions to Phaser.
+### 7. Notion Agents + Backend Bridge
+The mind-body connection: Notion agents handle cognition, the Express backend tracks world state.
 
 - One Notion custom agent per cast member with a full cognitive pipeline instruction page
-- Orchestrator using the Notion Agents SDK (`@notionhq/agents-client`) to invoke agents and stream decisions
-- `executeGameAction` worker: writes Notion DBs (World State, Conversations, Memory, Relationships) and forwards actions to backend
-- Backend bridge (Node/Python): REST endpoints (`POST /move`, `/dialogue`, `/event`) + WebSocket push to Phaser
-- Phaser subscribes to WebSocket and executes the visual side (movement, animation, SFX) independently of the decision loop
-- Inter-character dialogue mediated by the orchestrator: Character A's decision triggers Character B's context assembly and invocation
+- Orchestrator using the Notion Agents SDK (`@notionhq/agents-client`, alpha) invokes all agents in parallel on each step
+- `WorldState` server module tracks positions, needs, paths, conversations, and plan progress
+- REST endpoints for world state reads, action submission, perception queries, and needs-based action lookup
+- Notion databases for World State, Conversations, Memory, and Relationships — read and written by agents each tick
 
-### ⬜ 8. Conversation System
+### 8. Conversation System
 Character-to-character dialogue as a first-class mechanic, not a post-hoc text dump.
 
-- Proximity-triggered conversation initiation (Smallville-style)
-- Zone acoustics constraints (conversations leak or don't based on zone)
-- In-world dialogue bubbles + optional transcript panel
+- Proximity-triggered conversation initiation
 - Multi-turn conversation threads with `threadId` continuity across agent invocations
 - Conversation DB in Notion: both sides' internal thought, emotional state, and relationship context stored per turn
-- Talking heads: situation-triggered performative cutaways (not once-per-day) — audience-aware reflections distinct from private internal reflection
+- Talking heads: situation-triggered performative cutaways — audience-aware reflections distinct from private internal reflection
+- Zone acoustics constraints: not yet implemented
 
-### ⬜ 9. Inspectability Layer
+### 9. Inspectability Layer
 The research hook. Clicking any character at any moment reveals the full cognitive trace.
 
 - Needs vector snapshot at any timestamp
 - PAD/emotion trace over the day
 - Retrieved memories at decision time: which memories were pulled and why (score breakdown)
 - Action candidates considered and the selected action with rationale
-- Relationship context used in the decision
 - Internal thought vs. talking head (private vs. performative reflection)
 - Wiki-style character profiles: Big Five parameters, memory log, relationship graph, narrative identity summary
 
-### ⬜ 10. Episode Demos
+### 10. Episode Demos
 Pre-run simulation days seeded with a perturbation premise and hosted as interactive artifacts.
 
 - Perturbation seeds: downsizing rumor, corporate audit, HR crackdown, sales leaderboard contest, prank escalation chain
