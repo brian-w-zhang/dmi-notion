@@ -1,4 +1,8 @@
 # Dunder Mifflin Infinity
+<img width="975" height="545" alt="image" src="https://github.com/user-attachments/assets/4b4a45c2-1e01-4c07-90d7-932e4e176ccf" />
+<img width="638" height="500" alt="image" src="https://github.com/user-attachments/assets/b8aef978-ee22-4508-a2cb-5c7f2a9ad38a" />
+![Uploading image.png…]()
+
 
 A psychologically grounded generative-agent simulation of the Scranton branch of Dunder Mifflin. A 2D top-down sandbox built with Phaser, a hand-painted Tiled map, and LimeZu character assets, connected to a live Express backend that orchestrates 14 Notion custom agents — one per cast member. The Office cast runs forward from a canon seed state; identity is architecturally persistent, not just prompt-level, and emergent behavior is the point.
 
