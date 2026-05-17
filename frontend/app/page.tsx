@@ -39,6 +39,14 @@ export default function SimulationPage() {
           Actions ↗
         </a>
         <a
+          href="/dashboard/objects"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-3 py-1.5 bg-gray-900/80 border border-gray-700/60 rounded text-xs text-gray-400 hover:text-white hover:bg-gray-800 transition-colors backdrop-blur-sm"
+        >
+          Objects ↗
+        </a>
+        <a
           href="/dashboard"
           target="_blank"
           rel="noopener noreferrer"

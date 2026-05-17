@@ -1,0 +1,1582 @@
+{
+  "objects": {
+    "lobby_couch": {
+      "label": "Lobby Couch",
+      "zone": "lobby",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A wide, overstuffed couch near the building entrance. The upholstery is a neutral gray-blue that has faded slightly at the armrests. Cushions have softened from years of use. Visitors sit here while waiting to be let in; early-arriving employees sometimes park here before heading to their desks.",
+      "position": {
+        "x": 726,
+        "y": 433
+      },
+      "state": {
+        "sitPoints": [
+          false,
+          false,
+          false
+        ]
+      }
+    },
+    "lobby_chair": {
+      "label": "Lobby Chairs",
+      "zone": "lobby",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A pair of padded institutional chairs flanking the couch. Slightly stiff. The kind of seating that communicates you are welcome to wait, but not too comfortably.",
+      "position": {
+        "x": 896,
+        "y": 454
+      },
+      "state": {
+        "sitPoints": [
+          false,
+          false
+        ]
+      }
+    },
+    "far_lobby_couch": {
+      "label": "Far Lobby Couch",
+      "zone": "far lobby",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A longer couch set deeper in the lobby, away from the main entrance traffic. Quieter than the couch near the door. The armrests show more wear, suggesting it gets used more than it looks like it does. The corner spot is the most sought-after.",
+      "position": {
+        "x": 2299,
+        "y": 361
+      },
+      "state": {
+        "sitPoints": [
+          false,
+          false,
+          false
+        ]
+      }
+    },
+    "far_lobby_chair1": {
+      "label": "Far Lobby Chair (Left)",
+      "zone": "far lobby",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A padded chair positioned across from the far lobby couch. Part of a waiting area arrangement that nobody seems to have intentionally designed. The seat cushion has a slight tilt.",
+      "position": {
+        "x": 2417,
+        "y": 287
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "far_lobby_chair2": {
+      "label": "Far Lobby Chair (Right)",
+      "zone": "far lobby",
+      "entityType": "chair",
+      "owner": null,
+      "description": "Identical to its neighbor. The two chairs create a conversational arrangement that is rarely used for conversation.",
+      "position": {
+        "x": 2417,
+        "y": 319
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "reception_desk": {
+      "label": "Reception Desk",
+      "zone": "reception",
+      "entityType": "table",
+      "owner": "pam",
+      "description": "Pam's desk — a large, L-shaped reception counter that faces the entrance. A computer, a multi-line phone, and a sign-in sheet occupy the functional portions. The personal touches accumulate quietly: a small vase with a single flower, a framed drawing she made, a well-worn paperback tucked under the counter. The surface is organized but lived-in.",
+      "position": {
+        "x": 871,
+        "y": 640
+      }
+    },
+    "pam_chair": {
+      "label": "Pam's Chair",
+      "zone": "reception",
+      "entityType": "chair",
+      "owner": "pam",
+      "description": "Pam's desk chair, adjusted slightly lower than the default setting. A sketchbook is sometimes visible if the drawer is open. A mug of tea typically sits nearby — usually half-full, occasionally cold.",
+      "position": {
+        "x": 847,
+        "y": 640
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "reception_trash": {
+      "label": "Reception Trash",
+      "zone": "reception",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A small wastebasket beside the reception desk. Usually contains a modest amount of paper scraps, a used tea bag, and the occasional sticky note that didn't make it anywhere useful. Emptied at the end of most days.",
+      "position": {
+        "x": 849,
+        "y": 574
+      }
+    },
+    "michael_desk": {
+      "label": "Michael's Desk",
+      "zone": "michael's office",
+      "entityType": "table",
+      "owner": "michael",
+      "description": "Michael's large desk, positioned to face the glass wall overlooking the bullpen — a layout he selected himself. The surface is covered: a 'World's Best Boss' mug he bought himself, framed photos (predominantly of himself), a Newton's cradle he clicks when he's thinking, a stack of papers that rarely gets touched, and a stress ball shaped like a globe. The desk communicates authority with a credibility gap.",
+      "position": {
+        "x": 1040,
+        "y": 249
+      }
+    },
+    "michael_chair": {
+      "label": "Michael's Chair",
+      "zone": "michael's office",
+      "entityType": "chair",
+      "owner": "michael",
+      "description": "A high-backed executive chair, noticeably larger than anything else in the office. Michael sits in it with the posture of someone who has watched too many movies about CEOs. The armrests show heavy use.",
+      "position": {
+        "x": 1042,
+        "y": 196
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "michael_office_guest_chair": {
+      "label": "Guest Chair",
+      "zone": "michael's office",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A modest visitor's chair positioned across from Michael's desk. Slightly lower than Michael's chair, whether by accident or by Michael's design. Many difficult conversations have happened here. The seat is not particularly comfortable, which may not be coincidental.",
+      "position": {
+        "x": 913,
+        "y": 323
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "oscar_desk": {
+      "label": "Oscar's Desk",
+      "zone": "accounting",
+      "entityType": "table",
+      "owner": "oscar",
+      "description": "Oscar's desk is the neatest in accounting by a significant margin. A small potted plant occupies the far corner. His computer typically has multiple browser tabs open — news, a financial database, and something cultural. A stress ball sits near the keyboard, used most frequently when Angela says something factually incorrect.",
+      "position": {
+        "x": 881,
+        "y": 920
+      }
+    },
+    "oscar_chair": {
+      "label": "Oscar's Chair",
+      "zone": "accounting",
+      "entityType": "chair",
+      "owner": "oscar",
+      "description": "A standard ergonomic chair adjusted to precise specifications. Oscar once spent twenty minutes explaining the importance of lumbar support to Kevin, who did not retain this information.",
+      "position": {
+        "x": 944,
+        "y": 927
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "angela_desk": {
+      "label": "Angela's Desk",
+      "zone": "accounting",
+      "entityType": "table",
+      "owner": "angela",
+      "description": "The most organized desk in the office. Everything is labeled, color-coded, and in its designated place. A small framed photo of a cat — Sprinkles — is the only personal item permitted on the surface. There is a faint but persistent smell of cat hair. A cross-stitching project is sometimes visible in the bottom drawer.",
+      "position": {
+        "x": 769,
+        "y": 881
+      }
+    },
+    "angela_chair": {
+      "label": "Angela's Chair",
+      "zone": "accounting",
+      "entityType": "chair",
+      "owner": "angela",
+      "description": "A straight-backed chair kept at an exact, uncompromising height. Angela sits in it with perfect posture. The chair has never reclined.",
+      "position": {
+        "x": 784,
+        "y": 837
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "kevin_desk": {
+      "label": "Kevin's Desk",
+      "zone": "accounting",
+      "entityType": "table",
+      "owner": "kevin",
+      "description": "Kevin's desk is the only one in accounting with a snack-related item visible at all times — a bag of chips, an empty granola bar wrapper, a half-eaten pretzel. His monitor has a larger font than anyone else's. There's a calculator that gets used more than his computer. A photo of his band, Scrantonicity, is taped to the monitor's edge.",
+      "position": {
+        "x": 768,
+        "y": 953
+      }
+    },
+    "kevin_chair": {
+      "label": "Kevin's Chair",
+      "zone": "accounting",
+      "entityType": "chair",
+      "owner": "kevin",
+      "description": "A well-worn chair with a slight backward lean. The wheels squeak on the left side. Kevin has never noticed.",
+      "position": {
+        "x": 752,
+        "y": 999
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "accounting_printer": {
+      "label": "Accounting Printer",
+      "zone": "accounting",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A mid-range laser printer shared by the accounting team. Angela has instituted an informal permission system for its use that is not officially endorsed by HR. A queue printout is sometimes taped above it. The paper drawer is perpetually 30% full.",
+      "position": {
+        "x": 937,
+        "y": 775
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "accounting_fire_hydrant": {
+      "label": "Fire Hydrant",
+      "zone": "accounting",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A red fire hydrant in the corner of the accounting section, a remnant of the building's older plumbing infrastructure. Most staff have long since stopped registering it as unusual. Angela keeps the area around it swept.",
+      "position": {
+        "x": 879,
+        "y": 763
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "accounting_shelf": {
+      "label": "Accounting Shelf",
+      "zone": "accounting",
+      "entityType": "storage",
+      "owner": null,
+      "description": "A metal shelving unit with labeled binders organized by fiscal year and report type. Angela's filing system. The labels are consistent, the spines are aligned, and nothing is ever out of place. Do not rearrange anything on this shelf.",
+      "position": {
+        "x": 848,
+        "y": 782
+      }
+    },
+    "accounting_big_shelf": {
+      "label": "Accounting Archive Shelf",
+      "zone": "accounting",
+      "entityType": "storage",
+      "owner": null,
+      "description": "A larger shelving unit against the accounting wall holding archived files going back several years. The top shelf requires a step stool that lives leaning against the unit. The bottom shelf has a box of old forms nobody has touched since 2001.",
+      "position": {
+        "x": 896,
+        "y": 1072
+      }
+    },
+    "jim_desk": {
+      "label": "Jim's Desk",
+      "zone": "sales",
+      "entityType": "table",
+      "owner": "jim",
+      "description": "Jim's desk is loosely organized in a way that only makes sense to him. He knows where everything is. There's usually a crumpled note or two near the keyboard, a coffee mug at varying fill levels, and a phone with a long cord he sometimes wraps around his finger when he's thinking. His monitor is positioned with a clear sightline to Dwight's desk — not a coincidence.",
+      "position": {
+        "x": 1136,
+        "y": 627
+      }
+    },
+    "jim_chair": {
+      "label": "Jim's Chair",
+      "zone": "sales",
+      "entityType": "chair",
+      "owner": "jim",
+      "description": "A standard office chair Jim frequently reclines in at an angle that would make Dwight file a safety complaint. The armrests have been adjusted down to give him more desk space.",
+      "position": {
+        "x": 1136,
+        "y": 581
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "dwight_desk": {
+      "label": "Dwight's Desk",
+      "zone": "sales",
+      "entityType": "table",
+      "owner": "dwight",
+      "description": "The most defensible desk in the bullpen. The surface is organized with military logic: phone on the left, stapler centered, Schrute Farms paperwork in a visible stack. A small locked wooden box of unclear contents sits near the monitor. His screensaver is a rotating image of a beet. Everything on this desk is exactly where Dwight put it, which is why he notices immediately when it isn't.",
+      "position": {
+        "x": 1168,
+        "y": 730
+      }
+    },
+    "dwight_chair": {
+      "label": "Dwight's Chair",
+      "zone": "sales",
+      "entityType": "chair",
+      "owner": "dwight",
+      "description": "Dwight's chair is angled approximately eight degrees toward Jim's desk. This is not accidental. It is the optimal position for peripheral surveillance while maintaining plausible deniability of watching. The chair does not recline — Dwight disabled the mechanism.",
+      "position": {
+        "x": 1232,
+        "y": 735
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "dwight_pc": {
+      "label": "Dwight's PC",
+      "zone": "sales",
+      "entityType": "appliance",
+      "owner": "dwight",
+      "description": "A secondary workstation Dwight uses for what he calls 'intelligence gathering and client research.' The screen is not visible from Jim's desk — Dwight verified this. Multiple windows are usually open, including a Schrute Farms inventory spreadsheet and a message board for local law enforcement volunteers.",
+      "position": {
+        "x": 1165,
+        "y": 724
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "dwight_phone": {
+      "label": "Dwight's Phone",
+      "zone": "sales",
+      "entityType": "appliance",
+      "owner": "dwight",
+      "description": "Dwight's desk phone. He answers on the first ring. Always. He sometimes answers before the ring completes, which callers find disconcerting. The handset cord is unusually short because Dwight replaced it with a more 'tactically sound' length.",
+      "position": {
+        "x": 1199,
+        "y": 668
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "phyllis_desk": {
+      "label": "Phyllis's Desk",
+      "zone": "sales",
+      "entityType": "table",
+      "owner": "phyllis",
+      "description": "Warm and lived-in. Photos of Bob Vance occupy a corner of the desk alongside a small scented candle, a bowl of hard candies open to anyone passing by, and a cardigan draped over the back of her chair. Her phone has a list of client names written in looping cursive taped to the base. The desk feels like a place where actual work gets done without making a fuss about it.",
+      "position": {
+        "x": 1440,
+        "y": 697
+      }
+    },
+    "phyllis_chair": {
+      "label": "Phyllis's Chair",
+      "zone": "sales",
+      "entityType": "chair",
+      "owner": "phyllis",
+      "description": "A comfortable office chair Phyllis has personalized with a seat cushion cover in a floral pattern. The cushion has been there long enough that it's now just part of the chair.",
+      "position": {
+        "x": 1392,
+        "y": 703
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "stanley_desk": {
+      "label": "Stanley's Desk",
+      "zone": "sales",
+      "entityType": "table",
+      "owner": "stanley",
+      "description": "Anchored in the top-right corner by a crossword puzzle book. There is always a large coffee mug — usually full at 8am, empty by 10. A framed photo of his wife and daughter. A stack of sales reports processed with steady, mechanical efficiency. The desk communicates: I am here, I am doing my job, do not involve me in anything else.",
+      "position": {
+        "x": 1504,
+        "y": 697
+      }
+    },
+    "stanley_chair": {
+      "label": "Stanley's Chair",
+      "zone": "sales",
+      "entityType": "chair",
+      "owner": "stanley",
+      "description": "A solidly built chair Stanley settles into each morning with the air of a man who has made his peace with the situation. He has adjusted it once and has not touched the settings since.",
+      "position": {
+        "x": 1552,
+        "y": 703
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "meredith_desk": {
+      "label": "Meredith's Desk",
+      "zone": "sales",
+      "entityType": "table",
+      "owner": "meredith",
+      "description": "Less organized than most, in a way that suggests a busy life outside the office rather than negligence. There's a water bottle whose contents are ambiguous. A coat is usually slung over something. A child's drawing pinned to the wall beside the monitor. The desk has character. You would recognize it as hers without being told.",
+      "position": {
+        "x": 1184,
+        "y": 953
+      }
+    },
+    "meredith_chair": {
+      "label": "Meredith's Chair",
+      "zone": "sales",
+      "entityType": "chair",
+      "owner": "meredith",
+      "description": "A standard office chair with a small stain on the left armrest that has been there long enough to be considered a feature. The height setting is lower than ergonomically advised.",
+      "position": {
+        "x": 1136,
+        "y": 959
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "ryan_desk": {
+      "label": "Ryan's Desk",
+      "zone": "sales",
+      "entityType": "table",
+      "owner": "ryan",
+      "description": "The temp's desk, positioned near the annex door — not a prime location. Ryan has made few personal investments in the space: no photos, no decoration. An MBA textbook sometimes sits on the corner, a reminder that this is temporary by design. His notepad has the name of a startup written in the top margin and scratched out.",
+      "position": {
+        "x": 1248,
+        "y": 953
+      }
+    },
+    "ryan_chair": {
+      "label": "Ryan's Chair",
+      "zone": "sales",
+      "entityType": "chair",
+      "owner": "ryan",
+      "description": "An unmodified standard chair. Ryan sits slightly forward in it, as though he might be leaving soon. He has been saying this for a while.",
+      "position": {
+        "x": 1296,
+        "y": 959
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "creed_desk": {
+      "label": "Creed's Desk",
+      "zone": "sales",
+      "entityType": "table",
+      "owner": "creed",
+      "description": "The most mysterious desk in the office. A jar of something unidentifiable sits in one corner. His computer is open to a website that loads very slowly and appears to be a discussion forum of unclear purpose. A laminated card sits face-down near the phone. Nobody knows what Creed's job actually requires, but this is where he does it, and whatever it is, it seems to be going fine.",
+      "position": {
+        "x": 1472,
+        "y": 953
+      }
+    },
+    "creed_chair": {
+      "label": "Creed's Chair",
+      "zone": "sales",
+      "entityType": "chair",
+      "owner": "creed",
+      "description": "A chair that tilts slightly to the left due to a worn caster. Creed has been sitting in it for years and has either not noticed or prefers it.",
+      "position": {
+        "x": 1424,
+        "y": 959
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "water_cooler": {
+      "label": "Water Cooler",
+      "zone": "sales",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A freestanding water cooler at the edge of the sales floor, positioned between the sales bullpen and the hallway. A natural gathering point for brief conversations and the occasional piece of office gossip. The paper cup dispenser is occasionally empty. Someone has stuck a Post-it to the side that says 'HYDRATE' and has been there long enough that the adhesive is failing.",
+      "position": {
+        "x": 1647,
+        "y": 740
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "sales_printer": {
+      "label": "Sales Printer",
+      "zone": "sales",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The sales floor printer, shared among Jim, Dwight, Phyllis, Stanley, Meredith, Ryan, and Creed. Paper jams are handled by whoever is nearest and loses the ensuing stare-down. The paper tray is perpetually low. A list of error codes is taped to the side, most of which have been crossed out and re-added.",
+      "position": {
+        "x": 1652,
+        "y": 802
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "sales_fire_hydrant": {
+      "label": "Fire Hydrant",
+      "zone": "sales",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A red fire hydrant at the edge of the sales floor. Building infrastructure. Creed occasionally leans against it during extended phone calls. Everyone else treats it as furniture.",
+      "position": {
+        "x": 1650,
+        "y": 576
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "sales_shelf1": {
+      "label": "Sales Shelf (A)",
+      "zone": "sales",
+      "entityType": "storage",
+      "owner": null,
+      "description": "A metal shelving unit along the sales wall. Product binders, regional sales reports by quarter, and a few forgotten personal items from employees who no longer work here occupy the shelves. The bottom shelf has a box of paper nobody has opened.",
+      "position": {
+        "x": 1567,
+        "y": 434
+      }
+    },
+    "sales_shelf2": {
+      "label": "Sales Shelf (B)",
+      "zone": "sales",
+      "entityType": "storage",
+      "owner": null,
+      "description": "A second shelving unit adjacent to the first. Holds overflow documentation and a stack of Dunder Mifflin branded folders that arrived six months ago and have not been distributed.",
+      "position": {
+        "x": 1650,
+        "y": 537
+      }
+    },
+    "sales_shelf3": {
+      "label": "Sales Shelf (C)",
+      "zone": "sales",
+      "entityType": "storage",
+      "owner": null,
+      "description": "The third shelving unit. The top shelf has items that haven't been touched in over a year. A dead plant in a small pot occupies the corner of the middle shelf. Nobody has removed it.",
+      "position": {
+        "x": 1650,
+        "y": 913
+      }
+    },
+    "kelly_desk": {
+      "label": "Kelly's Desk",
+      "zone": "annex",
+      "entityType": "table",
+      "owner": "kelly",
+      "description": "Kelly's desk is a controlled explosion of personality. Magazine printouts, at least two different lip glosses, a small mirror, and a photo of Ryan prominently displayed — facing outward, so visitors will see it. Her phone screen is usually visible from across the room and is almost always open to a text conversation. Customer service tickets are present on the desk, occasionally addressed.",
+      "position": {
+        "x": 2640,
+        "y": 1002
+      }
+    },
+    "kelly_chair": {
+      "label": "Kelly's Chair",
+      "zone": "annex",
+      "entityType": "chair",
+      "owner": "kelly",
+      "description": "A standard office chair with a cushion Kelly brought from home in a pink patterned fabric that does not match the office decor. She does not care. The height is set high enough that her feet barely touch the floor.",
+      "position": {
+        "x": 2641,
+        "y": 965
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "toby_desk": {
+      "label": "Toby's Desk",
+      "zone": "annex",
+      "entityType": "table",
+      "owner": "toby",
+      "description": "Toby's desk is quieter than most. There's a notepad with HR notes in careful handwriting, a slightly wilted plant he waters faithfully, and a photo of his daughter. A self-help book is sometimes visible near the edge. The desk is organized in a way that suggests someone who has had a lot of time alone with it. It tries.",
+      "position": {
+        "x": 2672,
+        "y": 695
+      }
+    },
+    "toby_chair": {
+      "label": "Toby's Chair",
+      "zone": "annex",
+      "entityType": "chair",
+      "owner": "toby",
+      "description": "A chair positioned slightly away from the center of the annex. Toby's posture in it suggests someone who has learned, over many years, to take up a little less space than he's entitled to.",
+      "position": {
+        "x": 2608,
+        "y": 703
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table": {
+      "label": "Conference Table",
+      "zone": "conference_room",
+      "entityType": "table",
+      "owner": null,
+      "description": "A large rectangular table that anchors the conference room. The surface has absorbed years of meetings: coffee rings, pen impressions, the faint ghost of a whiteboard marker that bled through onto paper. Someone has drawn a small smiley face in pen on the underside, discoverable only if you drop something.",
+      "position": {
+        "x": 1440,
+        "y": 293
+      }
+    },
+    "conf_chair_michael": {
+      "label": "Michael's Conference Chair",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": "michael",
+      "description": "The chair at the head of the conference table. Slightly larger than the others — Michael either requested this or simply claimed the one that was already there. No one sits in this chair when Michael is in the building.",
+      "position": {
+        "x": 1263,
+        "y": 287
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair1": {
+      "label": "Conference Chair (Table, 1)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of twelve upholstered chairs arranged around the conference table. Positioned near the head of the table — considered a worse seat than the far end, due to proximity to Michael's monologues.",
+      "position": {
+        "x": 1328,
+        "y": 227
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair2": {
+      "label": "Conference Chair (Table, 2)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of twelve chairs around the conference table. The seat cushion has a slight depression from consistent use. A reasonable seat — not near Michael, not near the door.",
+      "position": {
+        "x": 1392,
+        "y": 227
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair3": {
+      "label": "Conference Chair (Table, 3)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A table chair with a small scuff on the left armrest. Indistinguishable from the others unless you're sitting in it.",
+      "position": {
+        "x": 1424,
+        "y": 228
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair4": {
+      "label": "Conference Chair (Table, 4)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of the table chairs facing the presentation wall. Good view of the TV and easel — which can be a curse depending on who's presenting.",
+      "position": {
+        "x": 1488,
+        "y": 228
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair5": {
+      "label": "Conference Chair (Table, 5)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A middle seat along the table. Surrounded on both sides, which limits exit options — a consideration during longer meetings.",
+      "position": {
+        "x": 1520,
+        "y": 228
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair6": {
+      "label": "Conference Chair (Table, 6)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "The seat directly opposite Michael's chair. Considered a power position or a liability, depending on the meeting.",
+      "position": {
+        "x": 1585,
+        "y": 255
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair7": {
+      "label": "Conference Chair (Table, 7)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A table chair near the far end. One of the more desirable seats — far from Michael, close to the door.",
+      "position": {
+        "x": 1585,
+        "y": 287
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair8": {
+      "label": "Conference Chair (Table, 8)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A table chair whose wheel on the right side catches slightly on the carpet. Most people don't notice until they try to push back.",
+      "position": {
+        "x": 1552,
+        "y": 325
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair9": {
+      "label": "Conference Chair (Table, 9)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A standard conference table chair. Nothing distinguishes it from its neighbors, which is the point.",
+      "position": {
+        "x": 1488,
+        "y": 325
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair10": {
+      "label": "Conference Chair (Table, 10)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A table chair near the projector side. Good view of whatever is being displayed. Bad seat if you need to slip out early.",
+      "position": {
+        "x": 1424,
+        "y": 325
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair11": {
+      "label": "Conference Chair (Table, 11)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of the last chairs filled when people choose seats. No obvious reason, but people consistently avoid it until forced.",
+      "position": {
+        "x": 1360,
+        "y": 325
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_table_chair12": {
+      "label": "Conference Chair (Table, 12)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "The twelfth table chair, at the far corner. The seat closest to the window. On sunny days the light hits the table surface at an angle that makes it difficult to see the presentation — nobody has adjusted the blinds.",
+      "position": {
+        "x": 1328,
+        "y": 325
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair1": {
+      "label": "Conference Chair (Wall, 1)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A chair positioned against the conference room wall, used for overflow when the table fills up. The degree of removal from the main table offers a measure of invisibility — which is why certain employees choose it.",
+      "position": {
+        "x": 1360,
+        "y": 163
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair2": {
+      "label": "Conference Chair (Wall, 2)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A wall chair near the door. The most strategic overflow seat: close enough to appear engaged, close enough to the exit to leave quickly.",
+      "position": {
+        "x": 1456,
+        "y": 164
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair3": {
+      "label": "Conference Chair (Wall, 3)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A wall chair with a clear view of the main table but no desk surface. People who take notes in these chairs have to balance their notepads on their knees.",
+      "position": {
+        "x": 1520,
+        "y": 163
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair4": {
+      "label": "Conference Chair (Wall, 4)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of the overflow chairs. Slightly off-angle from the TV screen.",
+      "position": {
+        "x": 1584,
+        "y": 163
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair5": {
+      "label": "Conference Chair (Wall, 5)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A wall chair near the far corner. The person sitting here is effectively invisible to the presenter, which has advantages.",
+      "position": {
+        "x": 1649,
+        "y": 223
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair6": {
+      "label": "Conference Chair (Wall, 6)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "An overflow chair along the back wall. A reasonable spot to wait out whatever is happening at the table.",
+      "position": {
+        "x": 1649,
+        "y": 255
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair7": {
+      "label": "Conference Chair (Wall, 7)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A wall chair. Like the others positioned here, it signals voluntary marginalization — present, but not participating.",
+      "position": {
+        "x": 1649,
+        "y": 287
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair8": {
+      "label": "Conference Chair (Wall, 8)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A wall chair with a slight list — one of the back legs is shorter than the others. This is not widely known.",
+      "position": {
+        "x": 1552,
+        "y": 389
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair9": {
+      "label": "Conference Chair (Wall, 9)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A wall chair on the window side of the conference room. Afternoon light comes through at an uncomfortable angle for anyone sitting here.",
+      "position": {
+        "x": 1456,
+        "y": 389
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair10": {
+      "label": "Conference Chair (Wall, 10)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of the last overflow chairs. Taking this seat communicates that the meeting is already at capacity and you arrived late.",
+      "position": {
+        "x": 1392,
+        "y": 389
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_outer_chair11": {
+      "label": "Conference Chair (Wall, 11)",
+      "zone": "conference_room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "The final overflow chair, tucked near the corner. If you are sitting here, you are either very late or very deliberately avoiding involvement.",
+      "position": {
+        "x": 1360,
+        "y": 389
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "conf_tv": {
+      "label": "Conference Room TV",
+      "zone": "conference_room",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A flatscreen TV mounted on the conference room wall, connected to a laptop via a cable that is never quite long enough. Used for PowerPoint presentations, corporate training videos, and the occasional clip Michael insists on showing the group. The remote is on top of the TV. The remote is always on top of the TV.",
+      "position": {
+        "x": 1230,
+        "y": 260
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "conf_easel": {
+      "label": "Whiteboard Easel",
+      "zone": "conference_room",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A whiteboard easel in the corner of the conference room. Markers are attached to it by a string — a system introduced after the markers kept disappearing. The board currently has some partially erased text and what might be a flow chart from a meeting two weeks ago. The erasing was incomplete.",
+      "position": {
+        "x": 1262,
+        "y": 164
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "coffee_machine": {
+      "label": "Coffee Machine",
+      "zone": "kitchen",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The most important appliance in the building. A standard commercial drip machine that runs near-continuously from 7:30am onward. The carafe is full at 8am and low by 10. A Post-it note reading 'Clean me :)' has been stuck to the side for several weeks and has generated no action. The smell of coffee from this machine is one of the few reliable sensory pleasures of the Scranton office.",
+      "position": {
+        "x": 1936,
+        "y": 519
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "kitchen_fridge": {
+      "label": "Kitchen Fridge",
+      "zone": "kitchen",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A full-size refrigerator shared by the entire office. The contents are a cross-section of fifteen people's dietary habits: labeled items, unlabeled items, something in the back of the bottom shelf that has been there since before anyone can remember. A handwritten sign on the door says 'PLEASE LABEL YOUR FOOD.' The sign has not resolved the situation.",
+      "position": {
+        "x": 2037,
+        "y": 535
+      },
+      "state": {
+        "open": false
+      }
+    },
+    "kitchen_sink": {
+      "label": "Kitchen Sink",
+      "zone": "kitchen",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A double sink along the kitchen wall. Usually contains one or two mugs in various stages of being washed. The dish soap is almost out. A sponge on the ledge has passed its recommended lifespan. A drying rack beside it holds whatever was washed and not yet put away.",
+      "position": {
+        "x": 1830,
+        "y": 525
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "kitchen_microwave": {
+      "label": "Kitchen Microwave",
+      "zone": "kitchen",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The primary kitchen microwave, used daily by most of the office for reheating lunches. Splatter marks on the interior ceiling indicate a recurring pattern of heating food without a cover. The door seal is slightly loose. The keypad's '0' button requires a firm press.",
+      "position": {
+        "x": 1904,
+        "y": 525
+      },
+      "state": {
+        "inUse": false,
+        "dirty": false
+      }
+    },
+    "toaster": {
+      "label": "Toaster",
+      "zone": "kitchen",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A four-slot toaster on the kitchen counter. Used by whoever is eating breakfast at the office — more people than you might expect. A bag of English muffins lives on top of it between uses. The toast settings range from 'barely warm' to 'smoke detector territory,' with limited in-between.",
+      "position": {
+        "x": 1716,
+        "y": 526
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "kitchen_fire_hydrant": {
+      "label": "Fire Hydrant",
+      "zone": "kitchen",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A fire hydrant tucked against the kitchen wall beside the counter. Old building infrastructure, now simply part of the landscape. The wall behind it is slightly discolored from a long-ago plumbing issue nobody fully understands.",
+      "position": {
+        "x": 2224,
+        "y": 513
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "kitchen_trash": {
+      "label": "Kitchen Trash",
+      "zone": "kitchen",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A tall kitchen trash can with a swing lid, positioned near the sink. Usually about two-thirds full. A recycling bin sits beside it that is used indiscriminately by most of the office. The distinction between the two containers has been the subject of at least one all-staff memo.",
+      "position": {
+        "x": 2257,
+        "y": 544
+      }
+    },
+    "kitchen_table": {
+      "label": "Kitchen Table",
+      "zone": "kitchen",
+      "entityType": "table",
+      "owner": null,
+      "description": "A round table in the kitchen area that seats four, uncomfortably, at five. The surface has accumulated the usual rings and minor stains of a shared lunch space. Conversations here have a different quality than conversations at desks — less performative, more human.",
+      "position": {
+        "x": 2144,
+        "y": 597
+      }
+    },
+    "kitchen_chair1": {
+      "label": "Kitchen Chair (1)",
+      "zone": "kitchen",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of four chairs around the kitchen table. This one has a slightly shorter leg that causes a faint rock on the tiled floor. Most regular users have learned to compensate.",
+      "position": {
+        "x": 2098,
+        "y": 583
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "kitchen_chair2": {
+      "label": "Kitchen Chair (2)",
+      "zone": "kitchen",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A kitchen chair with a small tear in the seat cushion fabric, repaired unevenly with electrical tape. Functional.",
+      "position": {
+        "x": 2158,
+        "y": 533
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "kitchen_chair3": {
+      "label": "Kitchen Chair (3)",
+      "zone": "kitchen",
+      "entityType": "chair",
+      "owner": null,
+      "description": "The most structurally sound of the kitchen chairs. Frequently taken first.",
+      "position": {
+        "x": 2190,
+        "y": 583
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "kitchen_chair4": {
+      "label": "Kitchen Chair (4)",
+      "zone": "kitchen",
+      "entityType": "chair",
+      "owner": null,
+      "description": "The kitchen chair closest to the window. In the afternoon it gets direct sunlight, which makes it either the best or worst seat depending on preference.",
+      "position": {
+        "x": 2127,
+        "y": 641
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "break_room_table1": {
+      "label": "Break Room Table (A)",
+      "zone": "break room",
+      "entityType": "table",
+      "owner": null,
+      "description": "One of two rectangular tables pushed together in the break room to form a larger surface. The laminate top has accumulated coffee rings, pen marks, and the remnants of several microwave explosions that didn't quite clean up fully. A well-used community space.",
+      "position": {
+        "x": 2535,
+        "y": 229
+      }
+    },
+    "break_room_table2": {
+      "label": "Break Room Table (B)",
+      "zone": "break room",
+      "entityType": "table",
+      "owner": null,
+      "description": "The second break room table, pushed against the first. Slightly wobblier than its neighbor. Together they form the unofficial social center of the floor.",
+      "position": {
+        "x": 2534,
+        "y": 325
+      }
+    },
+    "break_room_chair1": {
+      "label": "Break Room Chair (1)",
+      "zone": "break room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "One of seven mismatched chairs around the break room tables. This one has padded armrests that have flattened with use. Comfortable enough for a lunch break.",
+      "position": {
+        "x": 2514,
+        "y": 258
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "break_room_chair2": {
+      "label": "Break Room Chair (2)",
+      "zone": "break room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A break room chair with a slightly higher seat than the others, making the table surface feel lower. Sits at the end of the table nearest the vending machines.",
+      "position": {
+        "x": 2544,
+        "y": 221
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "break_room_chair3": {
+      "label": "Break Room Chair (3)",
+      "zone": "break room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A side chair with no armrests. The most portable of the break room chairs, occasionally moved elsewhere and returned.",
+      "position": {
+        "x": 2607,
+        "y": 258
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "break_room_chair4": {
+      "label": "Break Room Chair (4)",
+      "zone": "break room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A break room chair positioned with its back to the microwave. Sitting here means people walking to the microwave pass behind you.",
+      "position": {
+        "x": 2514,
+        "y": 354
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "break_room_chair5": {
+      "label": "Break Room Chair (5)",
+      "zone": "break room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A chair that sits lower than the rest due to a partially deflated pneumatic cylinder. You sink into it more than you expect.",
+      "position": {
+        "x": 2542,
+        "y": 377
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "break_room_chair6": {
+      "label": "Break Room Chair (6)",
+      "zone": "break room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A standard break room chair. The seat cover has a faint pattern under the wear. Nothing special, which is fine.",
+      "position": {
+        "x": 2576,
+        "y": 317
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "break_room_chair7": {
+      "label": "Break Room Chair (7)",
+      "zone": "break room",
+      "entityType": "chair",
+      "owner": null,
+      "description": "The chair at the far end of the tables, against the wall. The seat with the most personal space and the least involvement in whatever's happening at the table.",
+      "position": {
+        "x": 2607,
+        "y": 354
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    },
+    "vending_machines": {
+      "label": "Vending Machines",
+      "zone": "break room",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "Two side-by-side vending machines against the break room wall — one snacks, one drinks. The drink machine hums loudly and the compressor sometimes kicks in at irregular intervals. Several items in the snack machine have been sold out for days. Someone has stuck a motivational sticker on the side of the drinks machine that says 'YOU DESERVE THIS.'",
+      "position": {
+        "x": 2696,
+        "y": 252
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "break_room_microwave": {
+      "label": "Break Room Microwave",
+      "zone": "break room",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A compact microwave on the counter beside the vending machines. Cleaner than the kitchen microwave, possibly because fewer people know it exists or feel responsible for it. The turntable plate spins smoothly. The door beeps once when you open it.",
+      "position": {
+        "x": 2640,
+        "y": 429
+      },
+      "state": {
+        "inUse": false,
+        "dirty": false
+      }
+    },
+    "urinal1": {
+      "label": "Urinal (Left)",
+      "zone": "men's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The left urinal in the men's bathroom. A standard commercial fixture. The flush valve occasionally sticks and requires a second press.",
+      "position": {
+        "x": 1951,
+        "y": 912
+      },
+      "state": {
+        "inUse": false,
+        "dirty": false
+      }
+    },
+    "urinal2": {
+      "label": "Urinal (Right)",
+      "zone": "men's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The right urinal. In better condition than the left. The customary choice of most users.",
+      "position": {
+        "x": 1951,
+        "y": 976
+      },
+      "state": {
+        "inUse": false,
+        "dirty": false
+      }
+    },
+    "mens_toilet": {
+      "label": "Men's Toilet",
+      "zone": "men's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "A single-stall toilet. The latch on the door is slightly unreliable and benefits from being pushed firmly. A copy of Sports Illustrated has been on the tank for several weeks. The lighting in the stall is fluorescent and unflattering.",
+      "position": {
+        "x": 1872,
+        "y": 912
+      },
+      "state": {
+        "inUse": false,
+        "dirty": false
+      }
+    },
+    "mens_sink1": {
+      "label": "Men's Sink (Left)",
+      "zone": "men's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "One of two sinks in the men's bathroom. The hot tap runs warm rather than hot. A paper towel dispenser is mounted on the wall to the right. The mirror above both sinks reflects the fluorescent overhead light at an unflattering angle.",
+      "position": {
+        "x": 1734,
+        "y": 1005
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "mens_sink2": {
+      "label": "Men's Sink (Right)",
+      "zone": "men's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The second men's bathroom sink. The drain runs slightly slower than it should. The soap dispenser is nearly empty.",
+      "position": {
+        "x": 1798,
+        "y": 1005
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "womens_toilet1": {
+      "label": "Women's Toilet (1)",
+      "zone": "women's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The first stall in the women's bathroom. The door closes fully and the lock works without resistance. The most straightforwardly functional of the three.",
+      "position": {
+        "x": 2032,
+        "y": 880
+      },
+      "state": {
+        "inUse": false,
+        "dirty": false
+      }
+    },
+    "womens_toilet2": {
+      "label": "Women's Toilet (2)",
+      "zone": "women's bathroom",
+      "entityType": "chair",
+      "owner": null,
+      "description": "The middle stall. The toilet handle requires two flushes to fully clear. This is known.",
+      "position": {
+        "x": 2070,
+        "y": 880
+      },
+      "state": {
+        "sitPoints": []
+      }
+    },
+    "womens_toilet3": {
+      "label": "Women's Toilet (3)",
+      "zone": "women's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The end stall, the largest of the three. The lock is slightly stiff. A small hook on the back of the door holds a bag hook that someone installed and which has proven genuinely useful.",
+      "position": {
+        "x": 2108,
+        "y": 880
+      },
+      "state": {
+        "inUse": false,
+        "dirty": false
+      }
+    },
+    "womens_sink1": {
+      "label": "Women's Sink (Left)",
+      "zone": "women's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "One of two sinks in the women's bathroom. A small succulent in a clay pot sits on the ledge between the two sinks — nobody is sure who brought it, but it has been watered consistently. The soap dispenser is full.",
+      "position": {
+        "x": 2150,
+        "y": 1005
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "womens_sink2": {
+      "label": "Women's Sink (Right)",
+      "zone": "women's bathroom",
+      "entityType": "appliance",
+      "owner": null,
+      "description": "The second women's bathroom sink. The mirror above both sinks is cleaner than the one in the men's bathroom. A small shelf beside it holds a communal hand lotion that appeared without announcement and has been accepted.",
+      "position": {
+        "x": 2214,
+        "y": 1005
+      },
+      "state": {
+        "inUse": false
+      }
+    },
+    "womens_couch1": {
+      "label": "Bathroom Lounge Couch",
+      "zone": "women's bathroom",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A loveseat in the women's bathroom lounge area — an unusual amenity for a mid-size paper company branch. The cushions are a dusty rose color that has softened over the years. Kelly occasionally treats this as a secondary workspace. It is also the site of the best conversations that happen in the office, most of which are never repeated outside this room.",
+      "position": {
+        "x": 2083,
+        "y": 777
+      },
+      "state": {
+        "sitPoints": [
+          false,
+          false
+        ]
+      }
+    },
+    "womens_couch2": {
+      "label": "Bathroom Lounge Chair",
+      "zone": "women's bathroom",
+      "entityType": "chair",
+      "owner": null,
+      "description": "A smaller couch positioned across from the loveseat, creating an informal conversational layout. The two pieces of furniture face each other in a way that invites exactly the kind of candid talk that doesn't happen at desks.",
+      "position": {
+        "x": 2006,
+        "y": 798
+      },
+      "state": {
+        "sitPoints": [
+          false
+        ]
+      }
+    }
+  }
+}
