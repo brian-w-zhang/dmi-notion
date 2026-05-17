@@ -38,8 +38,12 @@ export class Preloader extends Phaser.Scene {
     const cx = width / 2;
     const cy = height / 2;
 
+    const pamBg = this.add.image(cx, cy, 'pam-bg')
+      .setDisplaySize(width, height)
+      .setOrigin(0.5);
+
     const bg = this.add.graphics();
-    bg.fillStyle(0x151f32, 1);
+    bg.fillStyle(0x151f32, 0.78);
     bg.fillRect(0, 0, width, height);
 
     const paperGrain = this.add.graphics();
@@ -71,7 +75,8 @@ export class Preloader extends Phaser.Scene {
         fontSize: '28px',
         color: '#cbd5e1',
       })
-      .setOrigin(0.5);
+      .setOrigin(0.5)
+      .setVisible(false);
 
     const barW = 320;
     const barH = 20;
@@ -150,7 +155,12 @@ export class Preloader extends Phaser.Scene {
     this.loaderStatus = status;
     this.loaderTipText = tipText;
     this.loaderPctText = pctText;
-    this.loaderObjects = [bg, paperGrain, barTrack, progressFill, title, subtitle, status, tipText, pctText];
+    this.loaderObjects = [pamBg, bg, paperGrain, barTrack, progressFill, title, subtitle, status, tipText, pctText];
+
+    // pam-bg may already be cached if Boot ran first; Phaser skips re-download
+    if (!this.textures.exists('pam-bg')) {
+      this.load.image('pam-bg', '/images/pam-art.png');
+    }
 
     // --- Load the embedded tilemap JSON ---
     // "infinite: true" maps use chunked data — Phaser handles this automatically
@@ -195,9 +205,7 @@ export class Preloader extends Phaser.Scene {
     this.loaderTipTimer.destroy();
     this.loaderTitle.setAlpha(1);
 
-    // Swap status + tip for mode-select UI
-    this.loaderStatus.setText('Ready');
-    this.loaderStatus.setColor('#94a3b8');
+    // Hide loading-only UI
     this.loaderTipText.setVisible(false);
     this.loaderPctText.setVisible(false);
 
@@ -220,18 +228,6 @@ export class Preloader extends Phaser.Scene {
       this.scene.start('SimulationMap');
     });
 
-    // Sub-labels
-    this.add.text(cx - btnW / 2 - gap / 2, btnY + 28, 'dev & testing', {
-      fontFamily: dmiPixelUiFont.style.fontFamily,
-      fontSize: '18px',
-      color: '#4A4A4A',
-    }).setOrigin(0.5, 0);
-
-    this.add.text(cx + btnW / 2 + gap / 2, btnY + 28, 'agent-driven run', {
-      fontFamily: dmiPixelUiFont.style.fontFamily,
-      fontSize: '18px',
-      color: '#2a5a2a',
-    }).setOrigin(0.5, 0);
   }
 
   private makeButton(

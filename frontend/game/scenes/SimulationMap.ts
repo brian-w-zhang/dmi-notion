@@ -43,7 +43,7 @@ export class SimulationMap extends Phaser.Scene {
 
     back.on('pointerover', () => back.setColor('#E8E8E8'));
     back.on('pointerout', () => back.setColor('#4A4A4A'));
-    back.on('pointerdown', () => this.scene.start('ModeSelect'));
+    back.on('pointerdown', () => this.scene.start('Preloader'));
 
     EventBus.emit('scene-ready', this);
   }

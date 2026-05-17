@@ -174,6 +174,7 @@ export class MainMap extends Phaser.Scene {
       this, sceneW, sceneH, worldObjects, this.cameraMode,
       () => this.toggleCameraMode(),
       () => this._simulationActive ? this.deactivateSimulation() : this.activateSimulation(),
+      () => this.scene.start('Preloader'),
     );
 
     this.pathfindingSystem = new PathfindingSystem(worldData.walkableZones, worldData.colliders);

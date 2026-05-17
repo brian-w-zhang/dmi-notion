@@ -25,6 +25,7 @@ export class MainMapHud {
   private readonly bottomHintY: number;
   private readonly onToggleCameraMode: () => void;
   private readonly onToggleSimulation: () => void;
+  private readonly onHome: () => void;
   private readonly hudRoot: Phaser.GameObjects.Container;
   private readonly positionText: Phaser.GameObjects.Text;
   private readonly cameraModeToggle: Phaser.GameObjects.Text;
@@ -45,13 +46,26 @@ export class MainMapHud {
     initialCameraMode: CameraMode,
     onToggleCameraMode: () => void,
     onToggleSimulation: () => void,
+    onHome: () => void,
   ) {
     this.onToggleCameraMode = onToggleCameraMode;
     this.onToggleSimulation = onToggleSimulation;
+    this.onHome = onHome;
     this.sceneW = sceneW;
     this.bottomHintY = sceneH - HUD_BOTTOM_HINT_OFFSET;
 
-    this.positionText = scene.add.text(8, 8, '', {
+    const homeBtn = scene.add.text(8, 8, '⌂  menu', {
+      fontSize: '13px',
+      fontFamily: 'monospace',
+      color: '#94a3b8',
+      backgroundColor: '#00000088',
+      padding: { x: 6, y: 4 },
+    }).setInteractive({ useHandCursor: true });
+    homeBtn.on('pointerover', () => homeBtn.setColor('#ffffff'));
+    homeBtn.on('pointerout', () => homeBtn.setColor('#94a3b8'));
+    homeBtn.on('pointerdown', () => this.onHome());
+
+    this.positionText = scene.add.text(8, 36, '', {
       fontSize: '13px',
       fontFamily: 'monospace',
       color: '#ffffff',
@@ -59,7 +73,7 @@ export class MainMapHud {
       padding: { x: 6, y: 4 },
     });
 
-    this.cameraModeToggle = scene.add.text(8, 36, '', {
+    this.cameraModeToggle = scene.add.text(8, 64, '', {
       fontSize: '13px',
       fontFamily: 'monospace',
       color: '#ffffff',
@@ -100,6 +114,7 @@ export class MainMapHud {
     ).setOrigin(0.5, 1).setVisible(true).setLineSpacing(3);
 
     this.hudRoot = scene.add.container(0, 0, [
+      homeBtn,
       this.positionText,
       this.cameraModeToggle,
       this.simulationToggle,

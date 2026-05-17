@@ -20,7 +20,7 @@ The simulation is **not a reenactment**. It runs forward from a canon seed state
 
 **Season cutoff: S2E21** — the simulation seed state is set immediately before *Casino Night*. Characters, relationships, and dynamics must be consistent with what was established through that episode. Characters introduced after S2E21 (Andy Bernard, Karen Filippelli, etc.) **do not exist in this simulation**.
 
-**Canonical cast (15 characters):**
+**Canonical cast (14 characters):**
 
 | Character | Role |
 |---|---|
@@ -38,7 +38,6 @@ The simulation is **not a reenactment**. It runs forward from a canon seed state
 | Meredith Palmer | Supplier Relations |
 | Creed Bratton | Quality Assurance |
 | Toby Flenderson | HR |
-| Darryl Philbin | Warehouse |
 
 When creating character actions, personality traits, relationships, or any character-specific content: verify the character and the dynamic existed before S2E21. If unsure, leave it out.
 

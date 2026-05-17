@@ -1,10 +1,15 @@
 {
+  "universalActions": {
+    "talk_to": {
+      "description": "Any character can initiate conversation with any other. Baseline deltas are a modest social gain for both. Actual outcome is fully determined by post-action appraisal — relationship state, personality, current needs, and dialogue content all shape the realized delta."
+    }
+  },
   "pairs": [
     {
       "id": "jim_dwight",
       "characters": ["jim", "dwight"],
       "label": "Jim & Dwight",
-      "blurb": "A slow-burn war of attrition. Jim treats Dwight as a prop for elaborate pranks; Dwight treats Jim as an enemy combatant who hasn't struck yet.",
+      "blurb": "A slow-burn war of attrition with genuine mutual respect buried underneath. Jim treats Dwight as a prop for elaborate pranks; Dwight treats Jim as an enemy combatant who hasn't struck yet. When the situation demands it, they are terrifyingly competent together.",
       "actions": [
         {
           "id": "jim_prank_dwight",
@@ -14,7 +19,6 @@
           "durationMs": 45000,
           "actorNeedDeltas": { "stimulation": 22, "social": 8, "productivity": -8 },
           "advertiserNeedDeltas": { "stress": 18, "esteem": -8, "stimulation": -5 },
-          "appraisalPending": true,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
         },
         {
@@ -24,19 +28,37 @@
           "name": "Impersonate",
           "durationMs": 20000,
           "actorNeedDeltas": { "stimulation": 18, "social": 6, "esteem": 5 },
-          "advertiserNeedDeltas": { "stress": 12, "esteem": -12 },
-          "appraisalPending": true,
+          "advertiserNeedDeltas": { "stress": 14, "esteem": -12 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "jim_dwight_team_up",
+          "actor": "jim",
+          "advertiser": "dwight",
+          "name": "Reluctant Teamwork",
+          "durationMs": 60000,
+          "actorNeedDeltas": { "productivity": 20, "esteem": 10, "stimulation": 10 },
+          "advertiserNeedDeltas": { "productivity": 20, "esteem": 14, "stimulation": 8 },
+          "preconditions": [{ "type": "same_zone" }]
+        },
+        {
+          "id": "jim_credit_dwight",
+          "actor": "jim",
+          "advertiser": "dwight",
+          "name": "Give Genuine Credit",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "belonging": 8, "esteem": 5, "social": 5 },
+          "advertiserNeedDeltas": { "esteem": 18, "belonging": 10, "stress": -5 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         },
         {
           "id": "dwight_assert_authority_jim",
           "actor": "dwight",
           "advertiser": "jim",
-          "name": "Assert Authority Over",
+          "name": "Assert Authority",
           "durationMs": 15000,
           "actorNeedDeltas": { "esteem": 8, "productivity": 5, "stimulation": 5 },
-          "advertiserNeedDeltas": { "stress": 5, "stimulation": 10 },
-          "appraisalPending": true,
+          "advertiserNeedDeltas": { "stress": 5, "stimulation": 12 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         },
         {
@@ -47,8 +69,17 @@
           "durationMs": 25000,
           "actorNeedDeltas": { "productivity": 12, "esteem": 8, "belonging": -5 },
           "advertiserNeedDeltas": { "stress": 8, "stimulation": 5 },
-          "appraisalPending": false,
           "preconditions": []
+        },
+        {
+          "id": "dwight_compete_sale_jim",
+          "actor": "dwight",
+          "advertiser": "jim",
+          "name": "Compete for Sale",
+          "durationMs": 40000,
+          "actorNeedDeltas": { "esteem": 10, "productivity": 12, "stimulation": 15 },
+          "advertiserNeedDeltas": { "stimulation": 12, "productivity": 8, "stress": 5 },
+          "preconditions": [{ "type": "same_zone" }]
         }
       ]
     },
@@ -56,7 +87,7 @@
       "id": "jim_pam",
       "characters": ["jim", "pam"],
       "label": "Jim & Pam",
-      "blurb": "The emotional core of the office. Long looks, shared eye-rolls, and a friendship that slowly became the point of everything.",
+      "blurb": "The emotional core of the office. Long looks, shared eye-rolls at Michael, and a slow-building friendship that both of them probably already know is something more.",
       "actions": [
         {
           "id": "jim_chat_pam",
@@ -66,7 +97,6 @@
           "durationMs": 30000,
           "actorNeedDeltas": { "social": 15, "belonging": 10, "stress": -10, "productivity": -5 },
           "advertiserNeedDeltas": { "social": 12, "belonging": 10, "stress": -8 },
-          "appraisalPending": false,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
         },
         {
@@ -75,21 +105,9 @@
           "advertiser": "pam",
           "name": "Share a Look",
           "durationMs": 5000,
-          "actorNeedDeltas": { "belonging": 8, "social": 5, "stimulation": 5 },
-          "advertiserNeedDeltas": { "belonging": 8, "social": 5 },
-          "appraisalPending": false,
+          "actorNeedDeltas": { "belonging": 10, "social": 6, "stimulation": 5 },
+          "advertiserNeedDeltas": { "belonging": 10, "social": 6 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 10 }]
-        },
-        {
-          "id": "pam_cover_for_jim",
-          "actor": "pam",
-          "advertiser": "jim",
-          "name": "Cover For",
-          "durationMs": 10000,
-          "actorNeedDeltas": { "belonging": 10, "social": 5, "stress": 5 },
-          "advertiserNeedDeltas": { "stress": -8, "belonging": 10 },
-          "appraisalPending": false,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
         },
         {
           "id": "jim_confide_pam",
@@ -99,8 +117,85 @@
           "durationMs": 25000,
           "actorNeedDeltas": { "belonging": 14, "stress": -12, "fulfillment": 8 },
           "advertiserNeedDeltas": { "belonging": 12, "fulfillment": 6, "social": 8 },
-          "appraisalPending": false,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
+        },
+        {
+          "id": "jim_encourage_pam",
+          "actor": "jim",
+          "advertiser": "pam",
+          "name": "Encourage Her Dreams",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "belonging": 12, "fulfillment": 10, "social": 8 },
+          "advertiserNeedDeltas": { "esteem": 15, "fulfillment": 12, "stress": -8, "belonging": 10 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
+        },
+        {
+          "id": "pam_cover_for_jim",
+          "actor": "pam",
+          "advertiser": "jim",
+          "name": "Cover For",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "belonging": 10, "social": 5, "stress": 5 },
+          "advertiserNeedDeltas": { "stress": -10, "belonging": 12 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "pam_tease_jim",
+          "actor": "pam",
+          "advertiser": "jim",
+          "name": "Tease",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "stimulation": 12, "social": 10, "stress": -8 },
+          "advertiserNeedDeltas": { "stimulation": 10, "social": 8, "belonging": 8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        }
+      ]
+    },
+    {
+      "id": "jim_michael",
+      "characters": ["jim", "michael"],
+      "label": "Jim & Michael",
+      "blurb": "Jim tolerates Michael better than anyone except Dwight. He can't fully suppress his genuine amusement. Occasionally, when Michael is less ridiculous than usual, something resembling real connection happens.",
+      "actions": [
+        {
+          "id": "jim_talk_michael_off_ledge",
+          "actor": "jim",
+          "advertiser": "michael",
+          "name": "Talk Off Ledge",
+          "durationMs": 25000,
+          "actorNeedDeltas": { "productivity": 15, "stress": 8, "esteem": 8 },
+          "advertiserNeedDeltas": { "stress": -12, "belonging": 8, "esteem": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "michael_overshare_jim",
+          "actor": "michael",
+          "advertiser": "jim",
+          "name": "Overshare About Jan",
+          "durationMs": 30000,
+          "actorNeedDeltas": { "social": 12, "belonging": 8, "stress": -10 },
+          "advertiserNeedDeltas": { "stress": 10, "stimulation": 8, "productivity": -8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "michael_single_out_jim",
+          "actor": "michael",
+          "advertiser": "jim",
+          "name": "Single Out in Front of Group",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 8, "social": 5 },
+          "advertiserNeedDeltas": { "stress": 12, "esteem": -8, "stimulation": 5 },
+          "preconditions": [{ "type": "others_in_zone", "minCount": 2 }]
+        },
+        {
+          "id": "jim_commiserate_michael",
+          "actor": "jim",
+          "advertiser": "michael",
+          "name": "Commiserate",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "belonging": 8, "fulfillment": 5, "social": 6 },
+          "advertiserNeedDeltas": { "belonging": 14, "stress": -10, "social": 10 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         }
       ]
     },
@@ -108,7 +203,7 @@
       "id": "michael_dwight",
       "characters": ["michael", "dwight"],
       "label": "Michael & Dwight",
-      "blurb": "Michael's greatest need is to be loved; Dwight's is to serve. They found each other and call it friendship.",
+      "blurb": "Michael's greatest need is to be loved; Dwight's is to serve. They found each other and call it friendship. It works better than it should.",
       "actions": [
         {
           "id": "michael_declare_best_friends",
@@ -118,7 +213,6 @@
           "durationMs": 15000,
           "actorNeedDeltas": { "belonging": 15, "social": 12, "esteem": 10 },
           "advertiserNeedDeltas": { "belonging": 18, "esteem": 12, "fulfillment": 8 },
-          "appraisalPending": false,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         },
         {
@@ -129,7 +223,16 @@
           "durationMs": 20000,
           "actorNeedDeltas": { "esteem": 8, "productivity": 10, "fulfillment": 5 },
           "advertiserNeedDeltas": { "esteem": 15, "productivity": 18, "fulfillment": 10 },
-          "appraisalPending": false,
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "michael_ignore_dwights_advice",
+          "actor": "michael",
+          "advertiser": "dwight",
+          "name": "Ignore Dwight's Advice",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "esteem": 5, "stimulation": 5 },
+          "advertiserNeedDeltas": { "esteem": -10, "stress": 10, "belonging": -5 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         },
         {
@@ -140,8 +243,47 @@
           "durationMs": 20000,
           "actorNeedDeltas": { "belonging": 10, "esteem": 8, "productivity": 5 },
           "advertiserNeedDeltas": { "esteem": 10, "social": 8 },
-          "appraisalPending": true,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
+        },
+        {
+          "id": "dwight_cover_for_michael",
+          "actor": "dwight",
+          "advertiser": "michael",
+          "name": "Cover For",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "belonging": 12, "esteem": 10, "productivity": 8 },
+          "advertiserNeedDeltas": { "stress": -12, "belonging": 10, "esteem": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "dwight_report_infraction_michael",
+          "actor": "dwight",
+          "advertiser": "michael",
+          "name": "Report Infraction",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "productivity": 15, "esteem": 12, "stress": -10 },
+          "advertiserNeedDeltas": { "stress": 8, "stimulation": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
+        },
+        {
+          "id": "dwight_defend_michael_honor",
+          "actor": "dwight",
+          "advertiser": "michael",
+          "name": "Defend His Authority",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 14, "belonging": 10, "fulfillment": 8 },
+          "advertiserNeedDeltas": { "esteem": 12, "belonging": 10, "stress": -8 },
+          "preconditions": [{ "type": "others_in_zone", "minCount": 1 }]
+        },
+        {
+          "id": "dwight_brief_michael",
+          "actor": "dwight",
+          "advertiser": "michael",
+          "name": "Deliver Office Intelligence",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 10, "productivity": 12, "fulfillment": 8 },
+          "advertiserNeedDeltas": { "stimulation": 8, "esteem": 5, "stress": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         },
         {
           "id": "michael_dwight_bro_time",
@@ -151,7 +293,6 @@
           "durationMs": 60000,
           "actorNeedDeltas": { "social": 20, "belonging": 15, "stress": -15, "productivity": -10 },
           "advertiserNeedDeltas": { "social": 15, "belonging": 18, "stress": -10, "productivity": -5 },
-          "appraisalPending": false,
           "preconditions": [{ "type": "same_zone" }]
         }
       ]
@@ -160,7 +301,7 @@
       "id": "michael_toby",
       "characters": ["michael", "toby"],
       "label": "Michael & Toby",
-      "blurb": "Michael has declared Toby his mortal enemy for unclear reasons. Toby keeps showing up anyway.",
+      "blurb": "Michael has declared Toby his mortal enemy for unclear reasons. Toby keeps showing up anyway because HR requires it. Their interactions are a study in one-sided cruelty and muted endurance.",
       "actions": [
         {
           "id": "michael_dismiss_toby",
@@ -170,19 +311,27 @@
           "durationMs": 10000,
           "actorNeedDeltas": { "esteem": 5, "stress": -5, "belonging": -5 },
           "advertiserNeedDeltas": { "stress": 15, "esteem": -12, "belonging": -8 },
-          "appraisalPending": false,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
         },
         {
           "id": "michael_mock_toby",
           "actor": "michael",
           "advertiser": "toby",
-          "name": "Mock",
+          "name": "Mock Publicly",
           "durationMs": 15000,
           "actorNeedDeltas": { "stimulation": 10, "esteem": 5, "belonging": -8 },
-          "advertiserNeedDeltas": { "stress": 20, "esteem": -15, "belonging": -10 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+          "advertiserNeedDeltas": { "stress": 22, "esteem": -15, "belonging": -10 },
+          "preconditions": [{ "type": "others_in_zone", "minCount": 1 }]
+        },
+        {
+          "id": "michael_blame_toby",
+          "actor": "michael",
+          "advertiser": "toby",
+          "name": "Blame",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "stress": -8, "esteem": 5 },
+          "advertiserNeedDeltas": { "stress": 18, "esteem": -10, "belonging": -8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
         },
         {
           "id": "toby_deliver_hr_notice",
@@ -192,7 +341,16 @@
           "durationMs": 20000,
           "actorNeedDeltas": { "productivity": 10, "stress": 10, "esteem": -5 },
           "advertiserNeedDeltas": { "stress": 18, "esteem": -5 },
-          "appraisalPending": true,
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "toby_enforce_policy",
+          "actor": "toby",
+          "advertiser": "michael",
+          "name": "Enforce Policy",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "productivity": 12, "stress": 12, "esteem": -5 },
+          "advertiserNeedDeltas": { "stress": 20, "esteem": -8, "stimulation": 5 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         },
         {
@@ -203,7 +361,6 @@
           "durationMs": 15000,
           "actorNeedDeltas": { "social": -5, "belonging": -8, "stress": 8 },
           "advertiserNeedDeltas": { "stress": 10, "social": -5 },
-          "appraisalPending": true,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         }
       ]
@@ -212,7 +369,7 @@
       "id": "michael_ryan",
       "characters": ["michael", "ryan"],
       "label": "Michael & Ryan",
-      "blurb": "Michael sees Ryan as his cool young protégé. Ryan sees Michael as an obstacle to surviving the workday.",
+      "blurb": "Michael sees Ryan as his cool young protégé and a reflection of who he wishes he was. Ryan sees Michael as an obstacle to surviving the workday and, occasionally, a useful idiot.",
       "actions": [
         {
           "id": "michael_mentor_ryan",
@@ -222,7 +379,6 @@
           "durationMs": 30000,
           "actorNeedDeltas": { "esteem": 15, "fulfillment": 10, "social": 8 },
           "advertiserNeedDeltas": { "stress": 12, "stimulation": -5, "productivity": -8 },
-          "appraisalPending": false,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
         },
         {
@@ -233,7 +389,16 @@
           "durationMs": 20000,
           "actorNeedDeltas": { "esteem": 10, "social": 8, "stimulation": 8 },
           "advertiserNeedDeltas": { "stress": 8, "stimulation": 5 },
-          "appraisalPending": true,
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "michael_invite_ryan_hang",
+          "actor": "michael",
+          "advertiser": "ryan",
+          "name": "Invite to Hang Out",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "belonging": 8, "social": 8, "esteem": 5 },
+          "advertiserNeedDeltas": { "stress": 12, "belonging": -5 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
         },
         {
@@ -244,231 +409,16 @@
           "durationMs": 10000,
           "actorNeedDeltas": { "stress": -10, "productivity": 5, "belonging": -5 },
           "advertiserNeedDeltas": { "belonging": -8, "esteem": -5 },
-          "appraisalPending": false,
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
-        }
-      ]
-    },
-    {
-      "id": "dwight_angela",
-      "characters": ["dwight", "angela"],
-      "label": "Dwight & Angela",
-      "blurb": "A secret kept poorly. Stolen glances, coded notes, and a mutual severity that somehow became love.",
-      "actions": [
-        {
-          "id": "dwight_pass_note_angela",
-          "actor": "dwight",
-          "advertiser": "angela",
-          "name": "Pass Note",
-          "durationMs": 10000,
-          "actorNeedDeltas": { "belonging": 12, "social": 8, "stimulation": 8 },
-          "advertiserNeedDeltas": { "belonging": 12, "social": 8, "stress": -5 },
-          "appraisalPending": false,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
         },
         {
-          "id": "dwight_angela_stolen_glance",
-          "actor": "dwight",
-          "advertiser": "angela",
-          "name": "Stolen Glance",
-          "durationMs": 5000,
-          "actorNeedDeltas": { "belonging": 8, "social": 5, "fulfillment": 5 },
-          "advertiserNeedDeltas": { "belonging": 8, "social": 5 },
-          "appraisalPending": false,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 10 }]
-        },
-        {
-          "id": "dwight_angela_private_meeting",
-          "actor": "dwight",
-          "advertiser": "angela",
-          "name": "Private Meeting",
-          "durationMs": 60000,
-          "actorNeedDeltas": { "belonging": 20, "social": 15, "fulfillment": 12, "stress": -12 },
-          "advertiserNeedDeltas": { "belonging": 20, "social": 15, "fulfillment": 10, "stress": -10 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "same_zone" }, { "type": "others_not_in_zone" }]
-        }
-      ]
-    },
-    {
-      "id": "kelly_ryan",
-      "characters": ["kelly", "ryan"],
-      "label": "Kelly & Ryan",
-      "blurb": "Kelly is obsessed with Ryan. Ryan is trying to exist. They are very much in a relationship.",
-      "actions": [
-        {
-          "id": "kelly_monologue_ryan",
-          "actor": "kelly",
-          "advertiser": "ryan",
-          "name": "Monologue At",
-          "durationMs": 40000,
-          "actorNeedDeltas": { "social": 18, "belonging": 10, "stimulation": 15, "stress": -10 },
-          "advertiserNeedDeltas": { "stress": 20, "stimulation": -10, "productivity": -12 },
-          "appraisalPending": false,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
-        },
-        {
-          "id": "kelly_demand_attention",
-          "actor": "kelly",
-          "advertiser": "ryan",
-          "name": "Demand Attention",
-          "durationMs": 20000,
-          "actorNeedDeltas": { "social": 10, "belonging": 5, "stress": -5 },
-          "advertiserNeedDeltas": { "stress": 15, "esteem": -5, "belonging": -5 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
-        },
-        {
-          "id": "ryan_placate_kelly",
+          "id": "ryan_give_advice_michael",
           "actor": "ryan",
-          "advertiser": "kelly",
-          "name": "Placate",
-          "durationMs": 15000,
-          "actorNeedDeltas": { "stress": 10, "productivity": -8, "belonging": -5 },
-          "advertiserNeedDeltas": { "social": 8, "belonging": 8, "stress": -8 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
-        },
-        {
-          "id": "kelly_give_silent_treatment",
-          "actor": "kelly",
-          "advertiser": "ryan",
-          "name": "Silent Treatment",
-          "durationMs": 30000,
-          "actorNeedDeltas": { "stress": 8, "stimulation": 10, "belonging": -5 },
-          "advertiserNeedDeltas": { "stress": -12, "productivity": 8, "belonging": -8 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "same_zone" }]
-        }
-      ]
-    },
-    {
-      "id": "oscar_angela",
-      "characters": ["oscar", "angela"],
-      "label": "Oscar & Angela",
-      "blurb": "A clash of worldviews dressed as a debate about facts. Reluctant professional respect buried under genuine mutual irritation.",
-      "actions": [
-        {
-          "id": "oscar_fact_check_angela",
-          "actor": "oscar",
-          "advertiser": "angela",
-          "name": "Fact-Check",
-          "durationMs": 20000,
-          "actorNeedDeltas": { "esteem": 12, "stimulation": 10, "productivity": 5 },
-          "advertiserNeedDeltas": { "stress": 12, "esteem": -8, "stimulation": 8 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
-        },
-        {
-          "id": "angela_moralize_oscar",
-          "actor": "angela",
-          "advertiser": "oscar",
-          "name": "Moralize At",
-          "durationMs": 20000,
-          "actorNeedDeltas": { "esteem": 8, "fulfillment": 5, "social": -5 },
-          "advertiserNeedDeltas": { "stress": 10, "esteem": -5, "stimulation": 8 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
-        }
-      ]
-    },
-    {
-      "id": "stanley_michael",
-      "characters": ["stanley", "michael"],
-      "label": "Stanley & Michael",
-      "blurb": "Stanley has long since stopped pretending. Michael hasn't noticed.",
-      "actions": [
-        {
-          "id": "stanley_ignore_briefing",
-          "actor": "stanley",
           "advertiser": "michael",
-          "name": "Ignore Briefing",
-          "durationMs": 30000,
-          "actorNeedDeltas": { "stress": -15, "stimulation": 10, "productivity": -5, "belonging": -5 },
-          "advertiserNeedDeltas": { "esteem": -8, "stress": 8 },
-          "appraisalPending": false,
-          "preconditions": [{ "type": "same_zone" }]
-        },
-        {
-          "id": "stanley_push_back_michael",
-          "actor": "stanley",
-          "advertiser": "michael",
-          "name": "Push Back",
-          "durationMs": 15000,
-          "actorNeedDeltas": { "esteem": 10, "stress": -8, "belonging": -5 },
-          "advertiserNeedDeltas": { "stress": 12, "esteem": -10 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
-        },
-        {
-          "id": "michael_rally_stanley",
-          "actor": "michael",
-          "advertiser": "stanley",
-          "name": "Attempt to Rally",
+          "name": "Give Business Advice",
           "durationMs": 20000,
-          "actorNeedDeltas": { "esteem": 5, "social": 5, "fulfillment": 5 },
-          "advertiserNeedDeltas": { "stress": 8, "stimulation": -5 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
-        }
-      ]
-    },
-    {
-      "id": "kevin_oscar",
-      "characters": ["kevin", "oscar"],
-      "label": "Kevin & Oscar",
-      "blurb": "Oscar barely tolerates Kevin's gaps in logic. Kevin doesn't notice Oscar's frustration. A genuine if lopsided friendship.",
-      "actions": [
-        {
-          "id": "kevin_ask_oscar_math",
-          "actor": "kevin",
-          "advertiser": "oscar",
-          "name": "Ask About Math",
-          "durationMs": 20000,
-          "actorNeedDeltas": { "productivity": 8, "belonging": 5, "stimulation": 5 },
-          "advertiserNeedDeltas": { "stress": 8, "esteem": 5, "productivity": -5 },
-          "appraisalPending": false,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
-        },
-        {
-          "id": "oscar_explain_kevin",
-          "actor": "oscar",
-          "advertiser": "kevin",
-          "name": "Patiently Explain",
-          "durationMs": 25000,
-          "actorNeedDeltas": { "esteem": 8, "productivity": 5, "stress": 5 },
-          "advertiserNeedDeltas": { "productivity": 10, "belonging": 8, "stimulation": 5 },
-          "appraisalPending": false,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
-        }
-      ]
-    },
-    {
-      "id": "phyllis_angela",
-      "characters": ["phyllis", "angela"],
-      "label": "Phyllis & Angela",
-      "blurb": "Phyllis has Exactly enough self-respect to push back on Angela. Angela has not accepted this.",
-      "actions": [
-        {
-          "id": "phyllis_tease_angela",
-          "actor": "phyllis",
-          "advertiser": "angela",
-          "name": "Tease",
-          "durationMs": 15000,
-          "actorNeedDeltas": { "stimulation": 12, "esteem": 8, "social": 5 },
-          "advertiserNeedDeltas": { "stress": 12, "esteem": -8 },
-          "appraisalPending": true,
-          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
-        },
-        {
-          "id": "angela_criticize_phyllis",
-          "actor": "angela",
-          "advertiser": "phyllis",
-          "name": "Criticize",
-          "durationMs": 15000,
-          "actorNeedDeltas": { "esteem": 8, "stress": -5, "belonging": -5 },
-          "advertiserNeedDeltas": { "stress": 10, "esteem": -5 },
-          "appraisalPending": true,
+          "actorNeedDeltas": { "esteem": 12, "productivity": 8, "fulfillment": 5 },
+          "advertiserNeedDeltas": { "stimulation": 5, "esteem": -5 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         }
       ]
@@ -477,7 +427,7 @@
       "id": "michael_pam",
       "characters": ["michael", "pam"],
       "label": "Michael & Pam",
-      "blurb": "Pam manages Michael more than he manages her. She's kind about it, which he mistakes for friendship.",
+      "blurb": "Pam manages Michael more than he manages her. She's kind about it, which he mistakes for deep friendship. She's one of the few people in the building he treats with consistent warmth.",
       "actions": [
         {
           "id": "michael_confide_pam",
@@ -487,7 +437,16 @@
           "durationMs": 25000,
           "actorNeedDeltas": { "belonging": 12, "stress": -10, "social": 8 },
           "advertiserNeedDeltas": { "belonging": 5, "stress": 8, "productivity": -5 },
-          "appraisalPending": false,
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
+        },
+        {
+          "id": "michael_ask_pam_to_lie",
+          "actor": "michael",
+          "advertiser": "pam",
+          "name": "Ask to Cover For Him",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "stress": -8, "belonging": 5 },
+          "advertiserNeedDeltas": { "stress": 8, "esteem": -5 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
         },
         {
@@ -498,38 +457,459 @@
           "durationMs": 20000,
           "actorNeedDeltas": { "productivity": 12, "esteem": 8, "stress": 5 },
           "advertiserNeedDeltas": { "stress": -8, "esteem": 5, "productivity": 8 },
-          "appraisalPending": false,
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "pam_redirect_michael",
+          "actor": "pam",
+          "advertiser": "michael",
+          "name": "Redirect Before Disaster",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "productivity": 15, "stress": 5, "esteem": 8 },
+          "advertiserNeedDeltas": { "stress": -10, "esteem": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
+        }
+      ]
+    },
+    {
+      "id": "dwight_angela",
+      "characters": ["dwight", "angela"],
+      "label": "Dwight & Angela",
+      "blurb": "A secret kept poorly. Stolen glances, coded notes, and a mutual severity that somehow became love. Their relationship is built on shared values: discipline, order, and an unwillingness to show vulnerability.",
+      "actions": [
+        {
+          "id": "dwight_pass_note_angela",
+          "actor": "dwight",
+          "advertiser": "angela",
+          "name": "Pass Note",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "belonging": 12, "social": 8, "stimulation": 8 },
+          "advertiserNeedDeltas": { "belonging": 12, "social": 8, "stress": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "dwight_angela_stolen_glance",
+          "actor": "dwight",
+          "advertiser": "angela",
+          "name": "Stolen Glance",
+          "durationMs": 5000,
+          "actorNeedDeltas": { "belonging": 10, "social": 6, "fulfillment": 6 },
+          "advertiserNeedDeltas": { "belonging": 10, "social": 6 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 12 }]
+        },
+        {
+          "id": "dwight_angela_private_meeting",
+          "actor": "dwight",
+          "advertiser": "angela",
+          "name": "Private Meeting",
+          "durationMs": 60000,
+          "actorNeedDeltas": { "belonging": 20, "social": 15, "fulfillment": 12, "stress": -12 },
+          "advertiserNeedDeltas": { "belonging": 20, "social": 15, "fulfillment": 10, "stress": -10 },
+          "preconditions": [{ "type": "same_zone" }, { "type": "others_not_in_zone" }]
+        },
+        {
+          "id": "dwight_defend_angela",
+          "actor": "dwight",
+          "advertiser": "angela",
+          "name": "Defend Her Honor",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 12, "belonging": 10, "fulfillment": 8 },
+          "advertiserNeedDeltas": { "belonging": 15, "esteem": 8, "stress": -8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
+        },
+        {
+          "id": "angela_assign_dwight_cat_duty",
+          "actor": "angela",
+          "advertiser": "dwight",
+          "name": "Assign Cat Duty",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "esteem": 8, "belonging": 10, "stress": -5 },
+          "advertiserNeedDeltas": { "belonging": 12, "fulfillment": 8, "productivity": -5 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         }
       ]
     },
     {
-      "id": "dwight_jim_collaboration",
-      "characters": ["dwight", "jim"],
-      "label": "Dwight & Jim — Reluctant Allies",
-      "blurb": "When the situation demands it, they are terrifyingly competent together. Neither will admit this.",
+      "id": "kelly_ryan",
+      "characters": ["kelly", "ryan"],
+      "label": "Kelly & Ryan",
+      "blurb": "Kelly is obsessed with Ryan. Ryan is trying to exist. They are very much in a relationship. Ryan periodically uses this to his advantage and then feels bad about it.",
       "actions": [
         {
-          "id": "dwight_jim_truce",
-          "actor": "dwight",
-          "advertiser": "jim",
-          "name": "Declare Truce",
-          "durationMs": 15000,
-          "actorNeedDeltas": { "stress": -8, "esteem": -5, "belonging": 5 },
-          "advertiserNeedDeltas": { "stress": -8, "stimulation": 8, "belonging": 5 },
-          "appraisalPending": true,
+          "id": "kelly_monologue_ryan",
+          "actor": "kelly",
+          "advertiser": "ryan",
+          "name": "Monologue At",
+          "durationMs": 40000,
+          "actorNeedDeltas": { "social": 18, "belonging": 10, "stimulation": 15, "stress": -10 },
+          "advertiserNeedDeltas": { "stress": 20, "stimulation": -10, "productivity": -12 },
           "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
         },
         {
-          "id": "jim_dwight_team_up",
-          "actor": "jim",
-          "advertiser": "dwight",
-          "name": "Team Up",
-          "durationMs": 60000,
-          "actorNeedDeltas": { "productivity": 20, "esteem": 10, "stimulation": 10 },
-          "advertiserNeedDeltas": { "productivity": 20, "esteem": 12, "stimulation": 8 },
-          "appraisalPending": false,
+          "id": "kelly_demand_attention",
+          "actor": "kelly",
+          "advertiser": "ryan",
+          "name": "Demand Attention",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "social": 10, "belonging": 5, "stress": -5 },
+          "advertiserNeedDeltas": { "stress": 15, "esteem": -5, "belonging": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "kelly_give_silent_treatment",
+          "actor": "kelly",
+          "advertiser": "ryan",
+          "name": "Silent Treatment",
+          "durationMs": 30000,
+          "actorNeedDeltas": { "stress": 8, "stimulation": 10, "belonging": -5 },
+          "advertiserNeedDeltas": { "stress": -12, "productivity": 8, "belonging": -8 },
           "preconditions": [{ "type": "same_zone" }]
+        },
+        {
+          "id": "ryan_placate_kelly",
+          "actor": "ryan",
+          "advertiser": "kelly",
+          "name": "Placate",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "stress": 10, "productivity": -8, "belonging": -5 },
+          "advertiserNeedDeltas": { "social": 8, "belonging": 8, "stress": -8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "ryan_use_kelly",
+          "actor": "ryan",
+          "advertiser": "kelly",
+          "name": "Use Her When Convenient",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "productivity": 10, "esteem": -5, "social": 5 },
+          "advertiserNeedDeltas": { "belonging": 10, "social": 8, "esteem": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        }
+      ]
+    },
+    {
+      "id": "oscar_angela",
+      "characters": ["oscar", "angela"],
+      "label": "Oscar & Angela",
+      "blurb": "A clash of worldviews dressed as a debate about facts. Their accounting partnership works despite genuine mutual irritation. They have reluctant professional respect they would never acknowledge.",
+      "actions": [
+        {
+          "id": "oscar_fact_check_angela",
+          "actor": "oscar",
+          "advertiser": "angela",
+          "name": "Fact-Check",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 12, "stimulation": 10, "productivity": 5 },
+          "advertiserNeedDeltas": { "stress": 12, "esteem": -8, "stimulation": 8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "angela_moralize_oscar",
+          "actor": "angela",
+          "advertiser": "oscar",
+          "name": "Moralize At",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 8, "fulfillment": 5, "social": -5 },
+          "advertiserNeedDeltas": { "stress": 10, "esteem": -5, "stimulation": 8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "oscar_angela_accounting_dispute",
+          "actor": "oscar",
+          "advertiser": "angela",
+          "name": "Dispute a Number",
+          "durationMs": 25000,
+          "actorNeedDeltas": { "productivity": 12, "esteem": 8, "stimulation": 10 },
+          "advertiserNeedDeltas": { "stress": 12, "productivity": 5, "esteem": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "oscar_angela_reluctant_agreement",
+          "actor": "oscar",
+          "advertiser": "angela",
+          "name": "Reluctant Agreement",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "productivity": 10, "esteem": 5, "belonging": 5 },
+          "advertiserNeedDeltas": { "esteem": 10, "productivity": 8, "belonging": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        }
+      ]
+    },
+    {
+      "id": "pam_angela",
+      "characters": ["pam", "angela"],
+      "label": "Pam & Angela",
+      "blurb": "A cold war conducted entirely through pleasantries and passive aggression. Party Planning Committee meetings are the main battlefield. Pam is relaxed and optimistic; Angela finds this offensive.",
+      "actions": [
+        {
+          "id": "pam_angela_party_dispute",
+          "actor": "angela",
+          "advertiser": "pam",
+          "name": "Veto Party Idea",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 8, "productivity": 5, "stress": -5 },
+          "advertiserNeedDeltas": { "stress": 10, "esteem": -8, "fulfillment": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "angela_criticize_pams_work",
+          "actor": "angela",
+          "advertiser": "pam",
+          "name": "Criticize Her Work",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "esteem": 8, "stress": -5 },
+          "advertiserNeedDeltas": { "stress": 12, "esteem": -10, "fulfillment": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "pam_cold_shoulder_angela",
+          "actor": "pam",
+          "advertiser": "angela",
+          "name": "Cold Shoulder",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "stress": -5, "esteem": 5, "belonging": -5 },
+          "advertiserNeedDeltas": { "stress": 8, "esteem": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
+        },
+        {
+          "id": "pam_angela_forced_cooperation",
+          "actor": "pam",
+          "advertiser": "angela",
+          "name": "Force Cooperation",
+          "durationMs": 25000,
+          "actorNeedDeltas": { "productivity": 12, "stress": 8, "esteem": 8 },
+          "advertiserNeedDeltas": { "productivity": 10, "stress": 8, "esteem": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        }
+      ]
+    },
+    {
+      "id": "stanley_michael",
+      "characters": ["stanley", "michael"],
+      "label": "Stanley & Michael",
+      "blurb": "Stanley has long since stopped pretending. He does his work, does his crossword, and waits for the day to end. Michael keeps trying. Stanley occasionally, involuntarily, cracks.",
+      "actions": [
+        {
+          "id": "stanley_ignore_briefing",
+          "actor": "stanley",
+          "advertiser": "michael",
+          "name": "Ignore Briefing",
+          "durationMs": 30000,
+          "actorNeedDeltas": { "stress": -15, "stimulation": 10, "productivity": -5, "belonging": -5 },
+          "advertiserNeedDeltas": { "esteem": -8, "stress": 8 },
+          "preconditions": [{ "type": "same_zone" }]
+        },
+        {
+          "id": "stanley_push_back_michael",
+          "actor": "stanley",
+          "advertiser": "michael",
+          "name": "Push Back",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "esteem": 10, "stress": -8, "belonging": -5 },
+          "advertiserNeedDeltas": { "stress": 12, "esteem": -10 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "stanley_threaten_quit",
+          "actor": "stanley",
+          "advertiser": "michael",
+          "name": "Threaten to Quit",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "esteem": 12, "stress": -10, "belonging": -8 },
+          "advertiserNeedDeltas": { "stress": 18, "esteem": -12, "belonging": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "michael_rally_stanley",
+          "actor": "michael",
+          "advertiser": "stanley",
+          "name": "Attempt to Rally",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 5, "social": 5, "fulfillment": 5 },
+          "advertiserNeedDeltas": { "stress": 8, "stimulation": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "michael_accidentally_amuse_stanley",
+          "actor": "michael",
+          "advertiser": "stanley",
+          "name": "Accidentally Amuse",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "esteem": 12, "belonging": 8, "social": 10 },
+          "advertiserNeedDeltas": { "stimulation": 15, "stress": -10, "belonging": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 6 }]
+        }
+      ]
+    },
+    {
+      "id": "kevin_oscar",
+      "characters": ["kevin", "oscar"],
+      "label": "Kevin & Oscar",
+      "blurb": "Oscar barely tolerates Kevin's gaps in logic and table manners. Kevin doesn't notice. A genuine, if lopsided, friendship built on proximity and Oscar's bottomless capacity for explanation.",
+      "actions": [
+        {
+          "id": "kevin_ask_oscar_math",
+          "actor": "kevin",
+          "advertiser": "oscar",
+          "name": "Ask About Math",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "productivity": 8, "belonging": 5, "stimulation": 5 },
+          "advertiserNeedDeltas": { "stress": 8, "esteem": 5, "productivity": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "oscar_explain_kevin",
+          "actor": "oscar",
+          "advertiser": "kevin",
+          "name": "Patiently Explain",
+          "durationMs": 25000,
+          "actorNeedDeltas": { "esteem": 8, "productivity": 5, "stress": 5 },
+          "advertiserNeedDeltas": { "productivity": 10, "belonging": 8, "stimulation": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "kevin_share_food_oscar",
+          "actor": "kevin",
+          "advertiser": "oscar",
+          "name": "Share Food",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "belonging": 12, "social": 8, "hunger": -5 },
+          "advertiserNeedDeltas": { "belonging": 8, "social": 5, "hunger": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
+        },
+        {
+          "id": "oscar_cover_kevin_mistake",
+          "actor": "oscar",
+          "advertiser": "kevin",
+          "name": "Cover Kevin's Mistake",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 5, "productivity": 8, "stress": 8 },
+          "advertiserNeedDeltas": { "stress": -10, "belonging": 12, "esteem": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        }
+      ]
+    },
+    {
+      "id": "phyllis_angela",
+      "characters": ["phyllis", "angela"],
+      "label": "Phyllis & Angela",
+      "blurb": "Phyllis has exactly enough self-respect to push back on Angela's condescension. Angela has not accepted this arrangement. Their tension plays out slowly, through Party Planning meetings and sales floor proximity.",
+      "actions": [
+        {
+          "id": "phyllis_tease_angela",
+          "actor": "phyllis",
+          "advertiser": "angela",
+          "name": "Tease",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "stimulation": 12, "esteem": 8, "social": 5 },
+          "advertiserNeedDeltas": { "stress": 12, "esteem": -8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "angela_criticize_phyllis",
+          "actor": "angela",
+          "advertiser": "phyllis",
+          "name": "Criticize",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "esteem": 8, "stress": -5, "belonging": -5 },
+          "advertiserNeedDeltas": { "stress": 10, "esteem": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "phyllis_stand_up_angela",
+          "actor": "phyllis",
+          "advertiser": "angela",
+          "name": "Stand Up to Her",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 15, "stress": -10, "belonging": -5 },
+          "advertiserNeedDeltas": { "stress": 14, "esteem": -12 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
+        },
+        {
+          "id": "angela_assign_phyllis_bad_task",
+          "actor": "angela",
+          "advertiser": "phyllis",
+          "name": "Assign Bad Task",
+          "durationMs": 15000,
+          "actorNeedDeltas": { "esteem": 10, "productivity": 5 },
+          "advertiserNeedDeltas": { "stress": 12, "esteem": -8, "productivity": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        }
+      ]
+    },
+    {
+      "id": "toby_pam",
+      "characters": ["toby", "pam"],
+      "label": "Toby & Pam",
+      "blurb": "Toby has a quiet, unrequited crush on Pam that he has never come close to acting on. Pam is genuinely kind to him because she's kind to everyone, which he has definitely noticed too much.",
+      "actions": [
+        {
+          "id": "toby_confide_pam",
+          "actor": "toby",
+          "advertiser": "pam",
+          "name": "Confide in Her",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "belonging": 10, "stress": -8, "social": 8 },
+          "advertiserNeedDeltas": { "belonging": 6, "stress": 5, "social": 5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 3 }]
+        },
+        {
+          "id": "pam_kind_to_toby",
+          "actor": "pam",
+          "advertiser": "toby",
+          "name": "Be Kind",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "belonging": 8, "fulfillment": 8, "social": 5 },
+          "advertiserNeedDeltas": { "belonging": 15, "stress": -12, "esteem": 8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "toby_invite_pam_lunch",
+          "actor": "toby",
+          "advertiser": "pam",
+          "name": "Invite to Lunch",
+          "durationMs": 10000,
+          "actorNeedDeltas": { "social": 5, "belonging": -5, "stress": 8 },
+          "advertiserNeedDeltas": { "stress": 5, "belonging": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        }
+      ]
+    },
+    {
+      "id": "ryan_jim",
+      "characters": ["ryan", "jim"],
+      "label": "Ryan & Jim",
+      "blurb": "Ryan sees Jim as the person who figured out how to survive here without losing his mind, which is exactly what Ryan is trying to do. Jim sees Ryan as a younger version of himself who still cares too much.",
+      "actions": [
+        {
+          "id": "ryan_ask_jim_sales_advice",
+          "actor": "ryan",
+          "advertiser": "jim",
+          "name": "Ask for Sales Advice",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "productivity": 10, "esteem": 5, "belonging": 5 },
+          "advertiserNeedDeltas": { "esteem": 8, "social": 6, "productivity": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "jim_give_ryan_perspective",
+          "actor": "jim",
+          "advertiser": "ryan",
+          "name": "Give Life Perspective",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "esteem": 10, "fulfillment": 8, "social": 6 },
+          "advertiserNeedDeltas": { "stimulation": 10, "fulfillment": 8, "stress": -5 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 4 }]
+        },
+        {
+          "id": "jim_ryan_bond_over_normal",
+          "actor": "jim",
+          "advertiser": "ryan",
+          "name": "Bond Over Being Normal",
+          "durationMs": 20000,
+          "actorNeedDeltas": { "social": 12, "belonging": 8, "stress": -8 },
+          "advertiserNeedDeltas": { "social": 12, "belonging": 10, "stress": -8 },
+          "preconditions": [{ "type": "nearby_character", "radiusTiles": 5 }]
         }
       ]
     }

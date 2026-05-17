@@ -14,14 +14,14 @@ const CHARACTER_LABELS: Record<string, string> = {
   jim: 'Jim', dwight: 'Dwight', michael: 'Michael', pam: 'Pam',
   toby: 'Toby', ryan: 'Ryan', kelly: 'Kelly', oscar: 'Oscar',
   angela: 'Angela', stanley: 'Stanley', kevin: 'Kevin',
-  phyllis: 'Phyllis', creed: 'Creed', meredith: 'Meredith', darryl: 'Darryl',
+  phyllis: 'Phyllis', creed: 'Creed', meredith: 'Meredith',
 }
 
 const CHARACTER_COLORS: Record<string, string> = {
   jim: '#60a5fa', dwight: '#facc15', michael: '#f97316', pam: '#f9a8d4',
   toby: '#94a3b8', ryan: '#a78bfa', kelly: '#fb7185', oscar: '#34d399',
   angela: '#c084fc', stanley: '#fb923c', kevin: '#6ee7b7',
-  phyllis: '#f472b6', creed: '#a3e635', meredith: '#fcd34d', darryl: '#4ade80',
+  phyllis: '#f472b6', creed: '#a3e635', meredith: '#fcd34d',
 }
 
 interface SitPoint {
@@ -58,7 +58,6 @@ interface CharacterAction {
   durationMs?: number
   actorNeedDeltas?: Record<string, number>
   advertiserNeedDeltas?: Record<string, number>
-  appraisalPending?: boolean
   preconditions?: { type: string; [key: string]: unknown }[]
 }
 
@@ -311,9 +310,19 @@ function WorldActionsView({ selectedZone }: { selectedZone: string | null }) {
 
 function CharacterActionsView() {
   const pairs = characterActionsData.pairs as CharacterPair[]
+  const universalDesc = (characterActionsData as { universalActions?: { talk_to?: { description?: string } } }).universalActions?.talk_to?.description ?? ''
 
   return (
     <div className="flex-1 overflow-y-auto min-h-0 space-y-3 no-scrollbar" style={{ scrollbarWidth: 'none' }}>
+      {/* Universal implied action */}
+      <div className="px-4 py-2.5 backdrop-blur-md bg-black/45 border border-[#383838]/60 rounded-xl flex items-start gap-3">
+        <span className="text-[10px] font-medium tracking-widest uppercase text-[#4A4A4A] shrink-0 mt-px">Implied</span>
+        <p className="text-[11px] text-[#5A5A5A] leading-relaxed">
+          <span className="text-[#6B6B6B] font-medium">Talk To</span>
+          {' — '}{universalDesc}
+        </p>
+      </div>
+
       {pairs.map((pair) => (
         <div
           key={pair.id}
@@ -348,15 +357,6 @@ function CharacterActionsView() {
                   </td>
                   <td className="py-1.5 pr-4 align-top">
                     <span className="text-[#E8E8E8]">{action.name}</span>
-                    {action.appraisalPending && (
-                      <span
-                        className="ml-1.5 text-[9px] px-1 py-px rounded"
-                        style={{ color: '#a78bfa', backgroundColor: '#a78bfa18' }}
-                        title="Outcome subject to post-action appraisal"
-                      >
-                        appraisal
-                      </span>
-                    )}
                   </td>
                   <td className="py-1.5 pr-4 text-[#9B9B9B] tabular-nums align-top">
                     {action.durationMs != null

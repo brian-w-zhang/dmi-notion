@@ -25,7 +25,7 @@ export default function SimulationPage() {
   }, []);
 
   return (
-    <main className="flex h-screen w-screen bg-black overflow-hidden relative">
+    <main className="flex h-full w-full bg-black overflow-hidden relative">
       <section className="flex-1 right-0 h-full w-full">
         <PhaserGame onSceneReady={handleSceneReady} />
       </section>
