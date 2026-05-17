@@ -3,6 +3,7 @@ import type {
   CharacterStepState, StepFile, LogEntry, PlanBlock,
 } from "./types.js"
 import { resolveLocationTile } from "./WorldData.js"
+import { decayNeeds } from "./needsDecay.js"
 
 export class WorldState {
   step = 0
@@ -233,6 +234,9 @@ export class WorldState {
   // Called every tick regardless of whether agents ran this round.
   advancePhysics(): void {
     for (const c of this.characters.values()) {
+      // Decay needs every tick
+      decayNeeds(c.name, c.needs)
+
       if (c.plannedPath.length === 0) continue
       c.tile = c.plannedPath[0]
       c.plannedPath = c.plannedPath.slice(1)

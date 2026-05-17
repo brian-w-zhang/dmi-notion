@@ -251,8 +251,13 @@ export default function ObjectInspectModal() {
 
   useEffect(() => {
     const handler = (key: string) => setObjectKey(key);
+    const closeOnCharacter = () => setObjectKey(null);
     EventBus.on('object-inspect', handler);
-    return () => { EventBus.off('object-inspect', handler); };
+    EventBus.on('character-inspect', closeOnCharacter);
+    return () => {
+      EventBus.off('object-inspect', handler);
+      EventBus.off('character-inspect', closeOnCharacter);
+    };
   }, []);
 
   if (!objectKey) return null;

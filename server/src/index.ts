@@ -7,6 +7,7 @@ import { runSimulation } from "./simulation/RoundLoop.js"
 import { buildRoutes } from "./api/routes.js"
 import { CHARACTER_NAMES } from "./agents/characters.js"
 import { CHARACTER_PLANS, PLAN_ADHERENCE, INITIAL_CURRENTLY } from "./simulation/character_plans.js"
+import { logDecayRates } from "./simulation/needsDecay.js"
 
 if (!process.env.NOTION_API_TOKEN) {
   console.error("NOTION_API_TOKEN not set")
@@ -20,6 +21,7 @@ const client = new NotionAgentsClient({ auth: process.env.NOTION_API_TOKEN })
 const SIM_START = new Date("2023-02-13T07:00:00")  // 7 AM — covers Dwight's early arrival
 const SEC_PER_STEP = 300  // 5 sim minutes per round
 
+logDecayRates()
 const world = new WorldState(SIM_START, SEC_PER_STEP)
 
 for (const [key] of Object.entries(CHARACTER_NAMES)) {

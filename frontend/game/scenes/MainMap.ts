@@ -270,12 +270,14 @@ export class MainMap extends Phaser.Scene {
       this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
         if (pointer.button !== 0) return;
         if (!this.hoveredTarget) return;
+        if (this.hoveredTarget.kind === 'person') {
+          EventBus.emit('character-inspect', this.hoveredTarget.item.config.owner);
+          return;
+        }
         const key = this.hoveredTarget.kind === 'appliance'
           ? this.hoveredTarget.item.objectName
-          : this.hoveredTarget.kind === 'chair'
-          ? this.hoveredTarget.item.name
-          : null;
-        if (key) EventBus.emit('object-inspect', key);
+          : this.hoveredTarget.item.name;
+        EventBus.emit('object-inspect', key);
       });
 
       this._replayCtrl = new MainMapReplayController(this, this.car, this.dwight, this.hud);

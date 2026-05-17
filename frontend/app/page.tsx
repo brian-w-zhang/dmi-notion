@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
 const ObjectInspectModal = dynamic(() => import('../game/ui/ObjectInspectModal'), { ssr: false });
+const CharacterInspectModal = dynamic(() => import('../game/ui/CharacterInspectModal'), { ssr: false });
 
 // Phaser can ONLY run client-side (it uses the DOM/WebGL directly).
 // next/dynamic with ssr: false prevents it from being server-rendered.
@@ -30,6 +31,7 @@ export default function SimulationPage() {
       <section className="flex-1 right-0 h-full w-full">
         <PhaserGame onSceneReady={handleSceneReady} />
         <ObjectInspectModal />
+        <CharacterInspectModal />
       </section>
       <div className="absolute bottom-3 right-3 z-50 flex gap-2">
         <a

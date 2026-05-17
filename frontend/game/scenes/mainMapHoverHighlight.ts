@@ -50,7 +50,7 @@ export function hitTestTarget(
 
 export function drawTargetHighlight(
   graphics: Phaser.GameObjects.Graphics,
-  hit: QueueTarget | null
+  hit: QueueTarget | null,
 ): void {
   graphics.clear();
   if (!hit) return;

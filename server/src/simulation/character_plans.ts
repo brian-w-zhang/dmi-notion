@@ -9,7 +9,6 @@ export const PLAN_ADHERENCE: Record<string, number> = {
   angela:   0.91,
   stanley:  0.80,
   oscar:    0.78,
-  darryl:   0.70,
   toby:     0.72,
   phyllis:  0.68,
   pam:      0.65,
@@ -41,7 +40,6 @@ export const INITIAL_CURRENTLY: Record<string, string> = {
   michael:  "Rolling in with energy, planning to make today legendary.",
   kelly:    "Bursting in with news — unclear what the news is yet.",
   creed:    "Present. Or nearby.",
-  darryl:   "Warehouse is running, checking in with the office floor.",
 }
 
 // ── Daily plans ───────────────────────────────────────────────────────────────
@@ -217,14 +215,4 @@ export const CHARACTER_PLANS: Record<string, PlanBlock[]> = {
     { action: "wind_down",        description: "Creed leaves before the end of the day.",        locationId: "creed_desk",       emoji: "🌫️", startMin: h(16,0),  durationMin: 30 },
   ],
 
-  darryl: [
-    { action: "warehouse_ops",    description: "Running the warehouse morning operations",        locationId: "warehouse",        emoji: "📦", startMin: h(8,30),  durationMin: 90 },
-    { action: "inventory",        description: "Inventory check and shipment scheduling",         locationId: "warehouse",        emoji: "📋", startMin: h(10,0),  durationMin: 60 },
-    { action: "break_room",       description: "Upstairs for coffee, quick office check-in",     locationId: "break_room",       emoji: "☕", startMin: h(11,0),  durationMin: 20 },
-    { action: "warehouse_ops",    description: "Coordinating afternoon shipments",               locationId: "warehouse",        emoji: "🚚", startMin: h(11,20), durationMin: 40 },
-    { action: "lunch",            description: "Lunch break",                                    locationId: "break_room",       emoji: "🥙", startMin: h(12,0),  durationMin: 60 },
-    { action: "warehouse_ops",    description: "Afternoon warehouse management",                  locationId: "warehouse",        emoji: "📦", startMin: h(13,0),  durationMin: 120 },
-    { action: "michael_meeting",  description: "Occasional upstairs meeting with Michael",       locationId: "michael_office",   emoji: "🤝", startMin: h(15,0),  durationMin: 30 },
-    { action: "warehouse_ops",    description: "End-of-day warehouse wrap-up",                   locationId: "warehouse",        emoji: "🔒", startMin: h(15,30), durationMin: 90 },
-  ],
 }
