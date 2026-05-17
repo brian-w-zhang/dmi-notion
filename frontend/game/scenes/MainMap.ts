@@ -37,6 +37,7 @@ import { NpcActionRunner } from '../systems/NpcActionRunner';
 import { NpcDialogueCoordinator } from '../systems/NpcDialogueCoordinator';
 import { NPC_ACTION_LOOPS } from '../config/npcActionLoops';
 import type { CharacterOwner } from '../config/characters';
+import { MainMapReplayController } from './MainMapReplay';
 
 type InputDirection = keyof CharacterKeys;
 type CameraMode = 'manual' | 'follow';
@@ -139,8 +140,16 @@ export class MainMap extends Phaser.Scene {
   /** Shared across all NpcActionRunners: objectName of appliances currently in use. */
   private readonly _npcApplianceOccupancy: Set<string> = new Set();
 
+  // ── Replay mode ──────────────────────────────────────────────────────────
+  private _replayMode   = false;
+  private _replayCtrl:  MainMapReplayController | null = null;
+
   constructor() {
     super('MainMap');
+  }
+
+  init(data?: { replayMode?: boolean }) {
+    this._replayMode = data?.replayMode ?? false;
   }
 
   create() {
@@ -238,6 +247,30 @@ export class MainMap extends Phaser.Scene {
       }).setDepth(9998).setVisible(false);
       this.hud.ignoreWorldObjects(label);
       this.debugSpotLabels.push(label);
+    }
+
+    // ── Replay mode — bypass input, NPC runners, and car driving ─────────────
+    if (this._replayMode) {
+      registerAnimations(this, 'dwight-schrute');
+      const door = this.car.getDriverDoorPosition();
+      this.dwight = new Character({
+        scene:     this,
+        spriteKey: 'dwight-schrute',
+        x:         door.x,
+        y:         door.y,
+        depth:     SPRITE_WORLD_DEPTH,
+      });
+      this.hud.ignoreWorldObjects(this.dwight.sprite);
+      this.driving = false;
+
+      this._replayCtrl = new MainMapReplayController(this, this.car, this.dwight, this.hud);
+      if (this._replayCtrl.isValid) {
+        this._replayCtrl.start();
+      } else {
+        console.error('[MainMap] replay.json missing or empty — switch to sandbox mode');
+      }
+      EventBus.emit('scene-ready', this);
+      return;
     }
 
     this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
@@ -524,6 +557,9 @@ export class MainMap extends Phaser.Scene {
   // ── Update loop ──────────────────────────────────────────────────────────
 
   update(_time: number, delta: number) {
+    // Replay mode: timer-driven step playback — no keyboard input, no NPC runners
+    if (this._replayMode) return;
+
     const xPressed = Phaser.Input.Keyboard.JustDown(this.xKey);
     const tPressed = Phaser.Input.Keyboard.JustDown(this.tKey);
     const inputKeys: CharacterKeys = {

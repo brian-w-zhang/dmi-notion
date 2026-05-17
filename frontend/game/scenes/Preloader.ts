@@ -175,6 +175,7 @@ export class Preloader extends Phaser.Scene {
     // --- World data ---
     this.load.json('office-objects', '/assets/world/office-objects.json');
     this.load.json('appliances', '/assets/world/appliances.json');
+    this.load.json('replay', '/assets/simulation/replay.json');
     this.load.image('emoji16-question', '/assets/ui/emojis_16x16/question.png');
     this.load.image('emoji16-phone', '/assets/ui/emojis_16x16/phone.png');
     this.load.image('emoji16-talk', '/assets/ui/emojis_16x16/talk.png');
@@ -225,7 +226,7 @@ export class Preloader extends Phaser.Scene {
 
     this.makeButton(cx + btnW / 2 + gap / 2, btnY, btnW, btnH, 'SIMULATION', 0x0d1a0d, 0x2a4a2a, () => {
       this.loaderObjects.forEach(o => o.destroy());
-      this.scene.start('SimulationMap');
+      this.scene.start('MainMap', { replayMode: true });
     });
 
   }

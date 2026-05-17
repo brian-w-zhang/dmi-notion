@@ -7,7 +7,6 @@ import { Boot } from './scenes/Boot';
 import { Preloader } from './scenes/Preloader';
 import { ModeSelect } from './scenes/ModeSelect';
 import { MainMap } from './scenes/MainMap';
-import { SimulationMap } from './scenes/SimulationMap';
 import { EventBus } from './EventBus';
 
 function patchClosedAudioContextGuard() {
@@ -74,7 +73,7 @@ export default function PhaserGame({ onSceneReady }: PhaserGameProps) {
       width: '100%',
       height: '100%',
       backgroundColor: '#151f32',
-      scene: [Boot, Preloader, ModeSelect, MainMap, SimulationMap],
+      scene: [Boot, Preloader, ModeSelect, MainMap],
       pixelArt: true,               // crisp pixel rendering for 32px tiles
       antialias: false,
       roundPixels: true,

@@ -38,7 +38,7 @@ export class ModeSelect extends Phaser.Scene {
 
     // Simulation button
     this.makeButton(cx + 90, cy, 'SIMULATION', '#E8E8E8', '#1a2a1a', '#2a4a2a', () => {
-      this.scene.start('SimulationMap');
+      this.scene.start('MainMap', { replayMode: true });
     });
 
     // Labels under buttons

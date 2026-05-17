@@ -22,6 +22,7 @@ const CONTEXT_HINT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
 
 export class MainMapHud {
   private readonly sceneW: number;
+  private readonly sceneH: number;
   private readonly bottomHintY: number;
   private readonly onToggleCameraMode: () => void;
   private readonly onToggleSimulation: () => void;
@@ -35,6 +36,9 @@ export class MainMapHud {
   private readonly entranceHint: Phaser.GameObjects.Text;
   private readonly mountHint: Phaser.GameObjects.Text;
   private readonly carControlsHint: Phaser.GameObjects.Text;
+  // Replay-mode UI (hidden in sandbox, shown during replay playback)
+  private readonly replayStatusText: Phaser.GameObjects.Text;
+  private readonly replayStepLabel: Phaser.GameObjects.Text;
   private readonly uiCamera: Phaser.Cameras.Scene2D.Camera;
   private hudChromeVisible = true;
 
@@ -52,6 +56,7 @@ export class MainMapHud {
     this.onToggleSimulation = onToggleSimulation;
     this.onHome = onHome;
     this.sceneW = sceneW;
+    this.sceneH = sceneH;
     this.bottomHintY = sceneH - HUD_BOTTOM_HINT_OFFSET;
 
     const homeBtn = scene.add.text(8, 8, '⌂  menu', {
@@ -113,6 +118,15 @@ export class MainMapHud {
       }
     ).setOrigin(0.5, 1).setVisible(true).setLineSpacing(3);
 
+    this.replayStatusText = scene.add.text(sceneW / 2, sceneH - 14, '', {
+      fontFamily: 'monospace', fontSize: '11px', color: '#e2e8f0',
+      backgroundColor: '#00000099', padding: { x: 10, y: 5 },
+    }).setOrigin(0.5, 1).setVisible(false);
+
+    this.replayStepLabel = scene.add.text(sceneW - 10, 14, '', {
+      fontFamily: 'monospace', fontSize: '9px', color: '#475569',
+    }).setOrigin(1, 0).setVisible(false);
+
     this.hudRoot = scene.add.container(0, 0, [
       homeBtn,
       this.positionText,
@@ -123,6 +137,8 @@ export class MainMapHud {
       this.entranceHint,
       this.mountHint,
       this.carControlsHint,
+      this.replayStatusText,
+      this.replayStepLabel,
     ]);
     this.hudRoot.setDepth(HUD_DEPTH);
     this.wireCameraModeTogglePointer();
@@ -249,6 +265,35 @@ export class MainMapHud {
     this.hideActionHint();
     this.hideEntranceHint();
     this.hideMountHint();
+  }
+
+  // ── Replay mode ─────────────────────────────────────────────────────────────
+
+  /** Switch the HUD from sandbox controls to replay playback UI. */
+  enterReplayMode(totalSteps: number): void {
+    // Hide all sandbox-specific elements
+    this.positionText.setVisible(false);
+    this.cameraModeToggle.setVisible(false);
+    this.simulationToggle.setVisible(false);
+    this.hideContextHints();
+    this.carControlsHint.setVisible(false);
+    // Show replay elements
+    this.replayStatusText.setVisible(true);
+    this.replayStepLabel.setText(`step 0 / ${totalSteps}`).setVisible(true);
+  }
+
+  setReplayStatus(emoji: string, desc: string, step: number, total: number): void {
+    this.replayStatusText.setText(`${emoji}  ${desc}`);
+    this.replayStepLabel.setText(`step ${step} / ${total}`);
+  }
+
+  exitReplayMode(): void {
+    this.replayStatusText.setVisible(false);
+    this.replayStepLabel.setVisible(false);
+    this.positionText.setVisible(true);
+    this.cameraModeToggle.setVisible(true);
+    this.simulationToggle.setVisible(true);
+    this.showCarControls();
   }
 
   private layoutBottomContextHints(): void {
