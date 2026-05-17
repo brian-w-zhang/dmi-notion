@@ -18,7 +18,7 @@ export interface CarStepState {
 export interface PlanBlock {
   action: string        // e.g. "sales_call"
   description: string   // e.g. "Making outbound calls to paper clients"
-  locationId: string    // zone name — Phaser resolves to tile coords
+  locationId: string    // zone or appliance name — resolved to pixel coords by server
   emoji: string
   startMin: number      // minutes since midnight
   durationMin: number
@@ -35,12 +35,12 @@ export interface ActionLogEntry {
   endMin: number
   followedPlan: boolean
   deviationReason?: string
-  thinking?: string           // interior deliberation from agent — for interpretability display
+  thinking?: string
 }
 
 export interface DialogueLogEntry {
   type: "dialogue"
-  with: string          // character key
+  with: string
   startMin: number
   endMin: number
   summary: string
@@ -53,7 +53,7 @@ export interface DialogueLogEntry {
 
 export interface AnnouncementLogEntry {
   type: "announcement"
-  from: string          // character key of announcer
+  from: string
   message: string
   simMin: number
 }
@@ -61,7 +61,7 @@ export interface AnnouncementLogEntry {
 export interface MeetingLogEntry {
   type: "meeting"
   topic: string
-  participants: string[]  // character keys
+  participants: string[]
   simMin: number
   summary?: string
 }
@@ -71,7 +71,7 @@ export type LogEntry = ActionLogEntry | DialogueLogEntry | AnnouncementLogEntry 
 // ── Character step state (in step files) ──────────────────────────────────────
 
 export interface CharacterStepState {
-  tile: [number, number]
+  pos: [number, number]   // pixel coords [x, y]
   action: string
   emoji: string
   animationKey: string
@@ -79,10 +79,10 @@ export interface CharacterStepState {
   needs: Record<string, number>
   pad: PADState
   state: CharacterState
-  currentPlanBlock?: PlanBlock  // what they were supposed to be doing this tick
-  currently: string             // living one-sentence status
-  thinking?: string             // last interior deliberation from agent (persists until next perception round)
-  applianceAction?: {           // set while state === "using_appliance"
+  currentPlanBlock?: PlanBlock
+  currently: string
+  thinking?: string
+  applianceAction?: {
     applianceName: string
     actionName: string
     lockedUntilStep: number
@@ -94,7 +94,7 @@ export interface ConversationTurn {
   line: string
   tone?: string
   nonverbal?: string
-  thinking?: string           // interior state before speaking — not shown to other characters
+  thinking?: string
 }
 
 export interface ConversationRecord {
@@ -123,8 +123,8 @@ export interface MeetingState {
   topic: string
   initiatorKey: string
   startStep: number
-  assemblyDueStep: number   // step at which meeting starts regardless of who arrived
-  participants: string[]    // character keys who have been included
+  assemblyDueStep: number
+  participants: string[]
   phase: MeetingPhase
   conversationId?: string
 }
@@ -142,14 +142,22 @@ export interface GroupConversationRecord {
   endStep: number
 }
 
+export interface ActiveConversationSnapshot {
+  id: string
+  participants: [string, string]
+  location: string
+  turns: { speaker: string; line: string; tone?: string }[]
+}
+
 export interface StepFile {
   step: number
   simTime: string
   realTimestamp: string
   characters: Record<string, CharacterStepState>
-  cars: Record<string, CarStepState>           // keyed by character key
+  cars: Record<string, CarStepState>
   conversations: ConversationRecord[]
   groupConversations: GroupConversationRecord[]
+  activeConversations: ActiveConversationSnapshot[]
   announcements: { from: string; message: string }[]
   events: WorldEvent[]
 }
@@ -175,7 +183,7 @@ export interface PADState {
 
 export interface LiveCharacter {
   name: string
-  tile: [number, number]
+  pos: [number, number]   // pixel coords [x, y]
   action: string
   emoji: string
   animationKey: string
@@ -183,22 +191,18 @@ export interface LiveCharacter {
   needs: Record<string, number>
   state: CharacterState
   activeConversationId?: string
-  plannedPath: [number, number][]
-  destinationId?: string            // locationId passed to setDestination — cleared when path empties
-  interruptedDestinationId?: string // raw locationId saved when a conversation interrupts transit
-                                    // persists until setDestination is called with a new destination
+  path: [number, number][]          // pixel waypoints remaining to destination
+  destinationId?: string
+  interruptedDestinationId?: string
 
   // Commute — scripted car sequence before the character becomes active
-  commuteStartStep: number     // sim step at which commute animation begins
-  commuteQueue?: { frames: import("./CommuteSimulator.js").CarFrame[]; idx: number; walkOutTile: [number, number] }
-  carState?: CarStepState      // current car pixel position — included in step files while commuting
+  commuteStartStep: number
+  commuteQueue?: { frames: import("./CommuteSimulator.js").CarFrame[]; idx: number; walkOutPos: [number, number] }
+  carState?: CarStepState
 
-  // Event-driven perception flag — set when a task completes or character arrives.
-  // RoundLoop fires a perception tick for this character on the next step, then clears it.
   needsPerception: boolean
-  lastPerceptionStep: number   // step of most recent perception — used for fallback interval
+  lastPerceptionStep: number
 
-  // Appliance action in progress — character is locked until lockedUntilStep
   activeApplianceAction?: {
     applianceName: string
     actionName: string
@@ -206,25 +210,26 @@ export interface LiveCharacter {
     pendingNeedDeltas: Record<string, number>
   }
 
-  // PAD emotional state (updated by appraisal after conversations)
   pad: PADState
 
   // Planning
   dayPlan: PlanBlock[]
-  planIndex: number             // index into dayPlan of currently active block
-  planAdherence: number         // 0–1; from Big Five conscientiousness
-  completedThisHour: string[]   // action keys done in last 60 sim minutes; cleared hourly
+  planIndex: number
+  planAdherence: number
+  completedThisHour: string[]
 
   // Day memory
   dayLog: LogEntry[]
-  currently: string             // living status updated by agent after notable events
+  currently: string
+  recentInteractions: Record<string, number>
 
-  // Short-term interaction cooldown
-  recentInteractions: Record<string, number>  // characterKey → minutes remaining
-
-  // Notion conversation thread
   threadId?: string
-
-  // Last interior deliberation from agent (written each perception round, read into step files)
   lastThinking?: string
+  lastCompletedAppliance?: string
+  arrivalWaypoints?: ArrivalWaypoint[]
+}
+
+export interface ArrivalWaypoint {
+  kind: "walk" | "teleport"
+  pos: [number, number]   // pixel coords
 }

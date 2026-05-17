@@ -65,7 +65,7 @@ export interface CarFrame {
 
 export interface CommuteSequence {
   frames: CarFrame[]
-  walkOutTile: [number, number]  // tile where character spawns after parking
+  walkOutPos: [number, number]  // pixel coords where character spawns after parking
 }
 
 // ── Builder ───────────────────────────────────────────────────────────────────
@@ -82,11 +82,12 @@ export function buildCommuteFrames(characterKey: string): CommuteSequence | null
   const laneX  = spot.pathX
   const targetY = Math.round(spot.pathY + SPOT_Y_OFF)
 
-  // Phase 1 — drive left to lane entry x
+  // Phase 1 — drive left to lane entry x (off-screen; car hidden until it reaches the lane)
+  const VISIBLE_THRESHOLD = laneX + 200  // car becomes visible ~6 tiles before entering lane
   while (Math.abs(x - laneX) > ARRIVE_TOL) {
     const dx = laneX - x
     x = Math.round(x + Math.sign(dx) * Math.min(CAR_PX_STEP, Math.abs(dx)))
-    frames.push({ x, y: Math.round(y), facing: "left", anim: "drive", visible: true })
+    frames.push({ x, y: Math.round(y), facing: "left", anim: "drive", visible: x <= VISIBLE_THRESHOLD })
   }
 
   // Phase 2 — adjust y to the parking row
@@ -107,18 +108,22 @@ export function buildCommuteFrames(characterKey: string): CommuteSequence | null
   frames.push({ x: spot.x, y: spot.y, facing: "left", anim: "idle", visible: true })
 
   // Character walks out to the right of the parking spot
-  const walkOutTile: [number, number] = [
-    Math.floor((spot.x + cfg.halfLong + TILE_SIZE) / TILE_SIZE),
-    Math.floor(spot.y / TILE_SIZE),
-  ]
+  const walkOutPos: [number, number] = [spot.x + cfg.halfLong + TILE_SIZE, spot.y]
 
-  return { frames, walkOutTile }
+  return { frames, walkOutPos }
 }
 
 export function getCarTextureKey(characterKey: string): string | undefined {
-  // Read from character_cars.json via import; this is a runtime lookup.
-  // Returns undefined if not configured.
   return CHAR_CAR_TEXTURES[characterKey]
+}
+
+// Returns the static parked car state for a character (car already in spot, not animating).
+export function getParkedCarState(characterKey: string): CarFrame | null {
+  const cfg = COMMUTE_CFG[characterKey]
+  if (!cfg) return null
+  const spot = SPOTS[cfg.spotKey]
+  if (!spot) return null
+  return { x: spot.x, y: spot.y, facing: "left", anim: "idle", visible: true }
 }
 
 // Inline texture map (mirrors public/data/character_cars.json)

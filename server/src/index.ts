@@ -6,10 +6,11 @@ import { StepWriter } from "./simulation/StepWriter.js"
 import { runSimulation } from "./simulation/RoundLoop.js"
 import { buildRoutes } from "./api/routes.js"
 import { CHARACTER_NAMES } from "./agents/characters.js"
-import { CHARACTER_PLANS, PLAN_ADHERENCE, INITIAL_CURRENTLY, ARRIVAL_TIMES } from "./simulation/character_plans.js"
+import { CHARACTER_PLANS, PLAN_ADHERENCE, INITIAL_CURRENTLY } from "./simulation/character_plans.js"
 import { logDecayRates } from "./simulation/needsDecay.js"
 import initialNeedsJson from "./simulation/initial_needs.json" assert { type: "json" }
-import { COMMUTE_STEPS } from "./simulation/CommuteSimulator.js"
+import { getParkedCarState } from "./simulation/CommuteSimulator.js"
+import { getCharDeskPos, getCharDeskFacing } from "./simulation/WorldData.js"
 import { SEC_PER_STEP } from "./simulation/config.js"
 
 const INITIAL_NEEDS = initialNeedsJson as Record<string, Record<string, number>>
@@ -23,25 +24,27 @@ const client = new NotionAgentsClient({ auth: process.env.NOTION_API_TOKEN })
 
 // ── World setup ───────────────────────────────────────────────────────────────
 
-const SIM_START = new Date("2023-02-13T08:00:00")  // 8 AM — 31 min before first arrival (Dwight 8:31)
-const SIM_START_MINUTES = SIM_START.getHours() * 60 + SIM_START.getMinutes()  // 480
+// Start at 10 AM — everyone already at their desk, cars parked, no arrival sequence.
+const SIM_START = new Date("2023-02-13T10:00:00")
 
 logDecayRates()
 const world = new WorldState(SIM_START, SEC_PER_STEP)
 
 for (const [key] of Object.entries(CHARACTER_NAMES)) {
   const dayPlan = CHARACTER_PLANS[key] ?? []
+  const facing = getCharDeskFacing(key) as "front" | "back" | "left" | "right"
+  const deskPos = getCharDeskPos(key) ?? [784, 720]
 
   world.characters.set(key, {
     name: key,
-    tile: [0, 0],            // off-screen until arrival; tickArrivals() places at parking spot
-    action: "commuting",
-    emoji: "🚗",
-    animationKey: "idle_front",
-    facing: "front",
+    pos: deskPos,
+    action: "sitting at desk",
+    emoji: "💼",
+    animationKey: `sit_${facing}`,
+    facing,
     needs: { ...INITIAL_NEEDS[key] },
     pad: { pleasure: 0.0, arousal: 0.0, dominance: 0.0 },
-    state: "pre_arrival",    // excluded from ticking until first plan block's startMin
+    state: "active",
 
     // Planning
     dayPlan,
@@ -54,18 +57,13 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
     currently: INITIAL_CURRENTLY[key] ?? "Starting the day.",
     recentInteractions: {},
 
-    plannedPath: [],
-    needsPerception: false,
+    path: [],
+    needsPerception: true,   // perceive immediately on step 1
     lastPerceptionStep: 0,
+    commuteStartStep: Number.MAX_SAFE_INTEGER,  // never triggers
 
-    // Commute starts COMMUTE_STEPS steps before the character's designated arrival time.
-    // arrivalMin is minutes-since-midnight; subtract SIM_START_MINUTES to get sim-relative minutes,
-    // then convert to steps.  Clamped to 0 so early arrivals start commuting from step 0.
-    commuteStartStep: (() => {
-      const arrivalMin = ARRIVAL_TIMES[key] ?? dayPlan[0]?.startMin ?? SIM_START_MINUTES
-      const stepsToArrival = Math.round((arrivalMin - SIM_START_MINUTES) * 60 / SEC_PER_STEP)
-      return Math.max(0, stepsToArrival - COMMUTE_STEPS)
-    })(),
+    // Car already parked in designated spot
+    carState: getParkedCarState(key) ?? undefined,
   })
 }
 

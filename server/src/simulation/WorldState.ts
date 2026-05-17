@@ -2,10 +2,11 @@ import type {
   LiveCharacter, ConversationRecord, GroupConversationRecord, WorldEvent,
   CharacterStepState, StepFile, LogEntry, PlanBlock, PADState, MeetingState,
 } from "./types.js"
-import { resolveLocationTile, getArrivalTile } from "./WorldData.js"
+import { resolveLocationPos, inferZoneFromPos } from "./WorldData.js"
 import { buildCommuteFrames, COMMUTE_STEPS } from "./CommuteSimulator.js"
 import { decayNeeds } from "./needsDecay.js"
-import { findTilePath } from "./ServerPathfinder.js"
+import { findPixelPath } from "./ServerPathfinder.js"
+import { MOVE_SPEED_PX } from "./config.js"
 
 export class WorldState {
   step = 0
@@ -59,13 +60,13 @@ export class WorldState {
 
   // ── Perception ──────────────────────────────────────────────────────────────
 
-  getNearby(characterName: string, radiusTiles = 5): LiveCharacter[] {
-    const origin = this.getCharacter(characterName).tile
+  getNearby(characterName: string, radiusPx = 160): LiveCharacter[] {
+    const origin = this.getCharacter(characterName).pos
     return [...this.characters.values()].filter((c) => {
       if (c.name === characterName) return false
-      const dx = c.tile[0] - origin[0]
-      const dy = c.tile[1] - origin[1]
-      return Math.sqrt(dx * dx + dy * dy) <= radiusTiles
+      const dx = c.pos[0] - origin[0]
+      const dy = c.pos[1] - origin[1]
+      return Math.sqrt(dx * dx + dy * dy) <= radiusPx
     })
   }
 
@@ -163,6 +164,18 @@ export class WorldState {
 
   // ── Conversation state ──────────────────────────────────────────────────────
 
+  // Called by onTurnComplete callback — appends a turn and updates speaker's visible action.
+  pushConversationTurn(id: string, turn: import("./types.js").ConversationTurn): void {
+    const record = this.activeConversations.get(id)
+    if (!record) return
+    record.turns.push(turn)
+    const c = this.characters.get(turn.speaker)
+    if (c) {
+      const preview = turn.line.length > 60 ? turn.line.slice(0, 58) + "…" : turn.line
+      c.action = `"${preview}"`
+    }
+  }
+
   startConversation(id: string, record: ConversationRecord) {
     this.activeConversations.set(id, record)
     for (const p of record.participants) {
@@ -170,6 +183,7 @@ export class WorldState {
       if (c) {
         c.state = "in_conversation"
         c.activeConversationId = id
+        c.emoji = "🗣️"
         // Save where the character was headed (or where they currently are) so
         // they can resume after the conversation. Persists through endConversation —
         // cleared only when setDestination is called with a new destination.
@@ -178,8 +192,8 @@ export class WorldState {
           ?? this.getCurrentPlanBlock(p)?.locationId  // idle at plan location: resume plan
           ?? undefined
         // Stop movement for the duration of the conversation
-        if (c.plannedPath.length > 0) {
-          c.plannedPath = []
+        if (c.path.length > 0) {
+          c.path = []
           c.destinationId = undefined
           c.animationKey = `idle_${c.facing}`
         }
@@ -208,7 +222,9 @@ export class WorldState {
         c.state = "active"
         c.activeConversationId = undefined
         c.threadId = undefined
+        c.emoji = "💭"            // brief post-conversation thinking state
         c.needsPerception = true  // conversation done — agent decides what to do next
+        c.lastCompletedAppliance = undefined  // social contact resets repeat-block
         // interruptedDestinationId intentionally kept — agent reads it on next tick
       }
       // Apply 60-minute interaction cooldown between both participants
@@ -354,6 +370,7 @@ export class WorldState {
 
       // Lock expired — apply need deltas, release, trigger perception
       c.needsPerception = true
+      c.lastCompletedAppliance = c.activeApplianceAction.actionName
       this.applyNeedDeltas(c.name, c.activeApplianceAction.pendingNeedDeltas)
       this.pushLogEntry(c.name, {
         type: "action",
@@ -382,12 +399,12 @@ export class WorldState {
         const seq = buildCommuteFrames(key)
         if (seq) {
           c.state = "commuting"
-          c.commuteQueue = { frames: seq.frames, idx: 0, walkOutTile: seq.walkOutTile }
+          c.commuteQueue = { frames: seq.frames, idx: 0, walkOutPos: seq.walkOutPos }
           c.carState = { ...seq.frames[0], visible: true }
-          console.log(`  [Commute] ${key} → ${seq.frames.length} frames, parks at tile ${seq.walkOutTile}`)
+          console.log(`  [Commute] ${key} → ${seq.frames.length} frames, parks at ${seq.walkOutPos}`)
         } else {
-          // No car config — fall back to foot arrival
-          c.tile = getArrivalTile(key)
+          // No car config — fall back to foot arrival at elevator exit pixel
+          c.pos = [768, 704]
           c.state = "active"
           c.facing = "front"
           c.animationKey = "walk_front"
@@ -403,63 +420,66 @@ export class WorldState {
         if (q.idx < q.frames.length) {
           c.carState = { ...q.frames[q.idx] }
         } else {
-          // Commute complete — character dismounts and becomes active
+          // Commute complete — place character inside office and fire perception.
+          // The frontend replay controller handles the visual entrance animation.
           c.carState = { ...q.frames[q.frames.length - 1], visible: true }  // parked
-          c.tile = q.walkOutTile
+          c.commuteQueue = undefined
           c.state = "active"
           c.facing = "front"
-          c.animationKey = "walk_front"
-          c.action = "arriving at the office"
-          c.emoji = "🚶"
+          c.animationKey = "idle_front"
+          c.action = "arrived at the office"
+          c.emoji = "🏢"
+          c.pos = c.commuteQueue!.walkOutPos
+          c.arrivalWaypoints = undefined
           c.needsPerception = true
-          c.commuteQueue = undefined
-          // Use the currently-active plan block, not dayPlan[0] which may be hours stale
-          const dest = (this.getCurrentPlanBlock(key) ?? this.getNextPlanBlock(key))?.locationId ?? `${key}_desk`
-          this.setDestination(key, dest)
-          this.addEvent({ type: "action_complete", character: key, detail: `arrived — heading to ${dest}` })
-          console.log(`  [Arrival] ${key} → dismounted, heading to ${dest}`)
+          console.log(`  [Arrival] ${key} → commute complete, active at ${c.pos}`)
         }
       }
+
     }
   }
 
   // ── Physics ──────────────────────────────────────────────────────────────────
 
-  // Advance all characters one step along their plannedPath.
+  // Advance all characters MOVE_SPEED_PX pixels toward the next path waypoint.
   // Called every tick regardless of whether agents ran this round.
-  // Characters in conversation or using an appliance do not move.
   advancePhysics(): void {
     for (const c of this.characters.values()) {
-      // Characters not yet on-site or in their car don't decay needs or tile-move
       if (c.state === "pre_arrival" || c.state === "commuting") continue
 
-      // Decay needs every tick
       decayNeeds(c.name, c.needs)
 
-      // Don't move while in conversation or locked to an appliance
       if (c.state === "in_conversation" || c.state === "using_appliance") continue
+      if (c.path.length === 0) continue
 
-      if (c.plannedPath.length === 0) continue
-      c.tile = c.plannedPath[0]
-      c.plannedPath = c.plannedPath.slice(1)
+      const [wx, wy] = c.path[0]
+      const dx = wx - c.pos[0]
+      const dy = wy - c.pos[1]
+      const dist = Math.sqrt(dx * dx + dy * dy)
 
-      // Update facing based on movement direction
-      if (c.plannedPath.length > 0) {
-        const [nx, ny] = c.plannedPath[0]
-        const dx = nx - c.tile[0]
-        const dy = ny - c.tile[1]
-        if (Math.abs(dx) >= Math.abs(dy)) {
-          c.facing = dx > 0 ? "right" : "left"
-        } else {
-          c.facing = dy > 0 ? "front" : "back"
-        }
-        c.animationKey = `walk_${c.facing}`
+      if (dist <= MOVE_SPEED_PX) {
+        // Snap to waypoint and advance
+        c.pos = [wx, wy]
+        c.path = c.path.slice(1)
       } else {
-        // Reached destination — trigger perception so agent decides what to do next
+        const scale = MOVE_SPEED_PX / dist
+        c.pos = [Math.round(c.pos[0] + dx * scale), Math.round(c.pos[1] + dy * scale)]
+      }
+
+      // Update facing from movement direction (toward current or next waypoint)
+      if (Math.abs(dx) >= Math.abs(dy)) {
+        c.facing = dx > 0 ? "right" : "left"
+      } else {
+        c.facing = dy > 0 ? "front" : "back"
+      }
+
+      if (c.path.length === 0) {
         c.animationKey = `idle_${c.facing}`
         c.destinationId = undefined
         c.needsPerception = true
         this.addEvent({ type: "action_complete", character: c.name, detail: "reached destination" })
+      } else {
+        c.animationKey = `walk_${c.facing}`
       }
     }
   }
@@ -486,15 +506,15 @@ export class WorldState {
     }
   }
 
-  // Sets a character's planned path toward a zone or locationId.
-  // Generates a straight-line tile path from current position.
+  // Sets a pixel path toward a locationId (desk, zone, or appliance name).
+  // The exact pixel from the location data becomes the final path waypoint.
   setDestination(characterName: string, locationId: string): boolean {
     const c = this.getCharacter(characterName)
-    const dest = resolveLocationTile(locationId)
+    const dest = resolveLocationPos(locationId)
     if (!dest) return false
-    c.plannedPath = findTilePath(c.tile, dest)
+    c.path = findPixelPath(c.pos, dest, dest)
     c.destinationId = locationId
-    c.interruptedDestinationId = undefined  // consumed — character is now navigating
+    c.interruptedDestinationId = undefined
     return true
   }
 
@@ -544,7 +564,7 @@ export class WorldState {
     for (const [name, c] of this.characters) {
       if (c.carState) cars[name] = { ...c.carState }
       characters[name] = {
-        tile: c.tile,
+        pos: c.pos,
         action: c.action,
         emoji: c.emoji,
         animationKey: c.animationKey,
@@ -564,6 +584,13 @@ export class WorldState {
           : undefined,
       }
     }
+    const activeConversations = [...this.activeConversations.values()].map((r) => ({
+      id: r.id,
+      participants: r.participants,
+      location: r.location,
+      turns: r.turns.map((t) => ({ speaker: t.speaker, line: t.line, tone: t.tone })),
+    }))
+
     return {
       step: this.step,
       simTime: this.simTime.toISOString(),
@@ -572,6 +599,7 @@ export class WorldState {
       cars,
       conversations: completedConversations,
       groupConversations: completedGroupConversations,
+      activeConversations,
       announcements,
       events,
     }

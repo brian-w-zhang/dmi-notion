@@ -45,6 +45,7 @@ export async function runSimulation(
     const toTick = world.getActiveCharacters().filter((c) => {
       if (c.needsPerception) return true
       if (c.state === "using_appliance") return false   // skip fallback; lock handles it
+      if (c.path.length > 0) return false        // skip fallback while walking; arrival fires needsPerception
       if (world.step - c.lastPerceptionStep >= PERCEPTION_FALLBACK_INTERVAL) return true
       return false
     })

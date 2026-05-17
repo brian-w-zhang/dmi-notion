@@ -2,7 +2,7 @@ import type { LogEntry } from "../simulation/types.js"
 import type { WorldState } from "../simulation/WorldState.js"
 import { CHARACTER_NAMES } from "./characters.js"
 import {
-  inferZoneFromTile,
+  inferZoneFromPos,
   getAdvertisedActions,
   findActionsForNeeds,
   getZoneAwareness,
@@ -24,17 +24,17 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     ? (currentBlock.startMin + currentBlock.durationMin) - world.simMinutes
     : null
 
-  const currentZone = inferZoneFromTile(c.tile)
+  const currentZone = inferZoneFromPos(c.pos)
   const urgentNeeds = Object.entries(c.needs).filter(([, v]) => v < 0.4).map(([k]) => k)
 
-  // Build occupied-tiles map for zone awareness
-  const occupiedTiles = new Map<string, string>()
+  // Build appliance-occupancy map for zone awareness
+  const occupiedAppliances = new Map<string, string>()
   for (const [key, ch] of world.characters) {
-    occupiedTiles.set(`${ch.tile[0]},${ch.tile[1]}`, key)
+    if (ch.activeApplianceAction) occupiedAppliances.set(ch.activeApplianceAction.applianceName, key)
   }
 
   // ── Zone awareness (coarse layer for connected zones) ─────────────────────
-  const { visibleZones, entities: zoneEntities } = getZoneAwareness(currentZone, occupiedTiles)
+  const { visibleZones, entities: zoneEntities } = getZoneAwareness(currentZone, occupiedAppliances)
   const zoneAwareness = {
     visible_zones: visibleZones,
     entities: zoneEntities.map((e) => ({
@@ -54,14 +54,14 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
 
   // ── Need-scored action candidates (may require travel) ────────────────────
   const recommendedActions = urgentNeeds.length > 0
-    ? findActionsForNeeds(urgentNeeds, c.tile, 5, c.needs).map((a) => ({
+    ? findActionsForNeeds(urgentNeeds, c.pos, 5, c.needs).map((a) => ({
         appliance: a.appliance,
         action: a.action,
         emoji: a.emoji,
         zone: a.zone,
         need_effects: a.needEffects,
         utility_score: a.utilityScore,
-        distance_tiles: a.distanceTiles,
+        distance_px: a.distance,
       }))
     : []
 
@@ -72,8 +72,8 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       .filter((e) => e.occupiedBy)
       .map((e) => e.occupiedBy!)
   )
-  // Also include any within 8 tiles regardless of zone
-  for (const ch of world.getNearby(characterKey, 8)) {
+  // Also include any within 256px (~8 tiles) regardless of zone
+  for (const ch of world.getNearby(characterKey, 256)) {
     nearbyCharKeys.add(ch.name)
   }
   nearbyCharKeys.delete(characterKey)
@@ -85,23 +85,36 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       return {
         key,
         name: CHARACTER_NAMES[key] ?? key,
-        zone: inferZoneFromTile(ch.tile),
+        zone: inferZoneFromPos(ch.pos),
         action: ch.action,
         state: ch.state,
-        tile_distance: tileDist(c.tile, ch.tile),
+        distance_px: pixelDist(c.pos, ch.pos),
         on_cooldown: world.isOnCooldown(characterKey, key),
       }
     })
     .filter(Boolean)
 
+  // Characters who are available for conversation RIGHT NOW — must be physically close (≤10 tiles).
+  // Excludes zone-visible-but-far characters so the agent only gets this option when it makes sense.
+  const socialOpportunities = [...nearbyCharKeys]
+    .map((key) => world.characters.get(key))
+    .filter((ch) =>
+      ch &&
+      (ch.state === "active" || ch.state === "idle") &&
+      !world.isOnCooldown(characterKey, ch.name) &&
+      pixelDist(c.pos, ch.pos) <= 320
+    )
+    .map((ch) => ({ key: ch!.name, name: CHARACTER_NAMES[ch!.name] ?? ch!.name }))
+
   const payload = {
     mode: "action",
     character: CHARACTER_NAMES[characterKey],
     sim_time: world.simTimeString(),
-    step: world.step,
 
     currently: c.currently,
-    pad: c.pad,
+
+    // The most recently completed appliance action — DO NOT repeat this immediately.
+    last_completed_action: c.lastCompletedAppliance ?? null,
 
     current_plan_block: currentBlock
       ? {
@@ -123,7 +136,7 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
 
     // Navigation state — set when actively walking somewhere
     in_transit_to: c.destinationId ?? null,
-    tiles_remaining: c.plannedPath.length > 0 ? c.plannedPath.length : null,
+    waypoints_remaining: c.path.length > 0 ? c.path.length : null,
 
     // Set after a conversation that interrupted a task.
     // resume_target is a locationId you can pass directly to move_to.
@@ -137,11 +150,13 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
 
     needs: {
       urgent: urgentNeeds,
-      summary: needsToNaturalLanguage(c.needs),
     },
 
     // Zone awareness: coarse occupancy for your zone + connected zones
-    zone_awareness: zoneAwareness,
+    zone_awareness: {
+      visible_zones: zoneAwareness.visible_zones,
+      entities: zoneAwareness.entities.map((e) => ({ name: e.name, zone: e.zone })),
+    },
 
     // Actions you can take right here without moving
     available_actions_here: actionsHere,
@@ -156,6 +171,8 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       ? { topic: world.activeMeeting.topic, called_by: CHARACTER_NAMES[world.activeMeeting.initiatorKey] }
       : null,
     nearby_characters: nearbyChars,
+    // Characters available for conversation RIGHT NOW (active, not on cooldown)
+    available_to_talk: socialOpportunities,
 
     instructions: [
       "Decide what to do next. Consult your memory and relationship databases for context.",
@@ -163,6 +180,9 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       "in_transit_to set → respond 'continue' to keep walking, or pick a new action.",
       "interrupted_task set → consider resuming with 'move_to' or 'continue'.",
       "Urgent needs may override the plan. Use recommended_for_urgent_needs to address them.",
+      "CONVERSATION PRIORITY: if available_to_talk is non-empty and social < 0.65, STRONGLY prefer initiate_conversation over solo work.",
+      "REPEAT BLOCK: last_completed_action must NOT be your next action — choose anything different.",
+      "VARIETY: avoid doing the same action more than once per hour. Check completed_this_hour.",
       "Michael only: may use 'announce' or 'summon_meeting'.",
       "Respond ONLY with valid JSON — no prose, no markdown.",
       JSON.stringify({
@@ -183,7 +203,7 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     ],
   }
 
-  return JSON.stringify(payload, null, 2)
+  return JSON.stringify(payload)
 }
 
 export function buildConversationTurnContext(args: {
@@ -351,7 +371,7 @@ function needsToNaturalLanguage(needs: Record<string, number>): string {
   return parts.join("; ") || "all needs satisfied"
 }
 
-function tileDist(a: [number, number], b: [number, number]): number {
+function pixelDist(a: [number, number], b: [number, number]): number {
   return Math.round(Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2))
 }
 

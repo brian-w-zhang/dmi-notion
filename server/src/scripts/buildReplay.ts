@@ -52,18 +52,8 @@ import fs from "fs"
 import path from "path"
 import { getCarTextureKey } from "../simulation/CommuteSimulator.js"
 
-const TILE_SIZE = 32
 const OUTPUT_PATH = path.resolve("../frontend/public/assets/simulation/replay.json")
 const MS_PER_STEP = 185    // ~185ms per step → ~10 min for a full workday (3240 steps at 10s/step)
-
-// --------------------------------------------------------------------------
-
-function tileToPixel(tile: [number, number]): { x: number; y: number } {
-  return {
-    x: tile[0] * TILE_SIZE + TILE_SIZE / 2,   // center of tile column
-    y: (tile[1] + 1) * TILE_SIZE,              // bottom of tile row (sprite origin = feet)
-  }
-}
 
 function animBase(animationKey: string): "walk" | "idle" | "sit" {
   if (animationKey.startsWith("walk")) return "walk"
@@ -117,7 +107,7 @@ const replaySteps = stepFiles.map(filename => {
 
   const chars: Record<string, object> = {}
   for (const [key, c] of Object.entries(raw.characters as Record<string, any>)) {
-    const { x, y } = tileToPixel(c.tile as [number, number])
+    const [x, y] = c.pos as [number, number]
     chars[key] = {
       x,
       y,
@@ -135,13 +125,14 @@ const replaySteps = stepFiles.map(filename => {
   }
 
   return {
-    step:          raw.step,
-    sim_time:      simTime,
+    step:                raw.step,
+    sim_time:            simTime,
     chars,
-    cars:          raw.cars ?? {},
-    conversations:  raw.conversations  ?? [],
-    announcements:  raw.announcements  ?? [],
-    events:         raw.events         ?? [],
+    cars:                raw.cars               ?? {},
+    conversations:       raw.conversations      ?? [],
+    activeConversations: raw.activeConversations ?? [],
+    announcements:       raw.announcements       ?? [],
+    events:              raw.events              ?? [],
   }
 })
 

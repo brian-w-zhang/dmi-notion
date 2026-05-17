@@ -38,6 +38,9 @@ export class MainMapHud {
   private readonly mountHint: Phaser.GameObjects.Text;
   private readonly carControlsHint: Phaser.GameObjects.Text;
   // Replay-mode UI (hidden in sandbox, shown during replay playback)
+  private replayPickerContainer:        Phaser.GameObjects.Container | null = null;
+  private _onReplayChange: ((index: number) => void) | null = null;
+  private _currentReplayIndex = 0;
   private readonly replayBar:           Phaser.GameObjects.Container;
   private readonly replayStatusLine:    Phaser.GameObjects.Text;
   private readonly replayPlayPauseBtn:  Phaser.GameObjects.Text;
@@ -386,6 +389,68 @@ export class MainMapHud {
 
   // ── Replay mode ─────────────────────────────────────────────────────────────
 
+  /** Render/re-render the replay picker button row (called on enter + after selection). */
+  private _renderReplayPicker(count: number): void {
+    if (this.replayPickerContainer) {
+      this.replayPickerContainer.destroy(true);
+      this.replayPickerContainer = null;
+    }
+
+    // Position right of the home button (home button ends around x=72)
+    const startX = 80;
+    const y      = 8;
+    const btnW   = 24;
+    const gap    = 4;
+
+    const items: Phaser.GameObjects.GameObject[] = [];
+
+    const label = this.scene.add.text(startX, y + 4, 'run:', {
+      fontFamily: 'monospace', fontSize: '11px', color: '#475569',
+      backgroundColor: '#00000088', padding: { x: 4, y: 2 },
+    });
+    items.push(label);
+
+    for (let i = 0; i < count; i++) {
+      const bx = startX + label.width + gap + i * (btnW + gap);
+      const isActive = i === this._currentReplayIndex;
+      const btn = this.scene.add.text(bx, y, `${i}`, {
+        fontFamily: 'monospace', fontSize: '12px',
+        color:           isActive ? '#ffffff' : '#475569',
+        backgroundColor: isActive ? '#1d4ed8'  : '#00000088',
+        padding: { x: 5, y: 3 },
+      }).setInteractive({ useHandCursor: true });
+
+      const idx = i;
+      btn.on('pointerover',  () => { if (idx !== this._currentReplayIndex) btn.setColor('#94a3b8'); });
+      btn.on('pointerout',   () => { if (idx !== this._currentReplayIndex) btn.setColor('#475569'); });
+      btn.on('pointerdown',  () => {
+        if (idx === this._currentReplayIndex) return;
+        this._currentReplayIndex = idx;
+        this._onReplayChange?.(idx);
+        this._renderReplayPicker(count);
+      });
+      items.push(btn);
+    }
+
+    this.replayPickerContainer = this.scene.add.container(0, 0, items)
+      .setScrollFactor(0).setDepth(HUD_DEPTH + 1);
+    this.scene.cameras.main.ignore(this.replayPickerContainer);
+  }
+
+  showReplayPicker(initialIndex: number, count: number, onChange: (index: number) => void): void {
+    this._currentReplayIndex = initialIndex;
+    this._onReplayChange     = onChange;
+    this._renderReplayPicker(count);
+  }
+
+  hideReplayPicker(): void {
+    if (this.replayPickerContainer) {
+      this.replayPickerContainer.destroy(true);
+      this.replayPickerContainer = null;
+    }
+    this._onReplayChange = null;
+  }
+
   /** Switch the HUD from sandbox controls to replay playback UI. */
   enterReplayMode(
     totalSteps: number,
@@ -427,6 +492,7 @@ export class MainMapHud {
     this._onPlayPause = null;
     this._onSeek = null;
     this._onSkip = null;
+    this.hideReplayPicker();
     this.positionText.setVisible(true);
     this.cameraModeToggle.setVisible(true);
     this.simulationToggle.setVisible(true);

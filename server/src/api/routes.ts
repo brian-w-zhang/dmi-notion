@@ -3,12 +3,12 @@ import type { NotionAgentsClient } from "@notionhq/agents-client"
 import type { WorldState } from "../simulation/WorldState.js"
 import {
   getAdvertisedActions, getAllZonesWithActions, getActionNeedDeltas,
-  getEntitiesNearby, getZoneAwareness, inferZoneFromTile, findActionsForNeeds,
+  getZoneAwareness, inferZoneFromPos, findActionsForNeeds,
 } from "../simulation/WorldData.js"
 import { CHARACTER_NAMES } from "../agents/characters.js"
 import { applyDecisions } from "../agents/orchestrator.js"
 
-function tileDist(a: [number, number], b: [number, number]): number {
+function pixelDist(a: [number, number], b: [number, number]): number {
   return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
 }
 
@@ -98,38 +98,31 @@ export function buildRoutes(world: WorldState, client: NotionAgentsClient): Rout
   router.get("/perception/:character", (req, res) => {
     try {
       const charKey = req.params.character
-      // Radius for vision layer — full detail on nearby objects. Default 10 tiles.
-      const radius = Number(req.query.radius ?? 10)
+      const radiusPx = Number(req.query.radius ?? 320)
       const c = world.getCharacter(charKey)
 
-      // Build occupied-tile map from all character positions (used by both layers)
-      const occupiedTiles = new Map<string, string>()
-      for (const [key, other] of world.characters) {
-        if (key === charKey) continue
-        occupiedTiles.set(`${other.tile[0]},${other.tile[1]}`, key)
+      // Build appliance-occupancy map
+      const occupiedAppliances = new Map<string, string>()
+      for (const [key, ch] of world.characters) {
+        if (ch.activeApplianceAction) occupiedAppliances.set(ch.activeApplianceAction.applianceName, key)
       }
 
-      // Infer current zone from tile position
-      const currentZone = inferZoneFromTile(c.tile)
+      const currentZone = inferZoneFromPos(c.pos)
+      const zoneAwareness = getZoneAwareness(currentZone, occupiedAppliances)
 
-      // ── Layer 1: Zone awareness (coarse) ────────────────────────────────────
-      // Everything in your zone + connected zones — name, status, action names only.
-      const zoneAwareness = getZoneAwareness(currentZone, occupiedTiles)
-
-      // Characters in visible zones (zone-level awareness, not just nearby)
       const zoneCharacters = [...world.characters.values()]
         .filter((other) => {
           if (other.name === charKey) return false
-          const otherZone = inferZoneFromTile(other.tile)
+          const otherZone = inferZoneFromPos(other.pos)
           return zoneAwareness.visibleZones
-            .map((z) => z.toLowerCase().trim())
+            .map((z: string) => z.toLowerCase().trim())
             .includes(otherZone.toLowerCase().trim())
         })
         .map((other) => ({
           key: other.name,
           name: CHARACTER_NAMES[other.name] ?? other.name,
-          zone: inferZoneFromTile(other.tile),
-          tile: other.tile,
+          zone: inferZoneFromPos(other.pos),
+          pos: other.pos,
           action: other.action,
           emoji: other.emoji,
           state: other.state,
@@ -138,59 +131,41 @@ export function buildRoutes(world: WorldState, client: NotionAgentsClient): Rout
           in_conversation: other.state === "in_conversation",
         }))
 
-      // ── Layer 2: Radius vision (full detail) ────────────────────────────────
-      // Objects within N tiles — complete action list, need effects, exact tile.
-      const visionObjects = getEntitiesNearby(c.tile, radius, occupiedTiles)
-
-      // Characters within vision radius get additional detail (urgent needs)
-      const visionCharacters = world.getNearby(charKey, radius).map((n) => ({
+      const nearbyCharacters = world.getNearby(charKey, radiusPx).map((n) => ({
         key: n.name,
         name: CHARACTER_NAMES[n.name] ?? n.name,
-        tile: n.tile,
-        distance_tiles: Math.round(tileDist(c.tile, n.tile) * 10) / 10,
+        pos: n.pos,
+        distance_px: Math.round(pixelDist(c.pos, n.pos)),
         urgent_needs: Object.entries(n.needs).filter(([, v]) => v < 0.3).map(([k]) => k),
       }))
 
       res.json({
         character: charKey,
-        tile: c.tile,
+        pos: c.pos,
         current_zone: currentZone,
         sim_time: world.simTimeString(),
         step: world.step,
-
-        // Zone awareness — what you know about your surroundings at a high level
         zone_awareness: {
           visible_zones: zoneAwareness.visibleZones,
           characters: zoneCharacters,
           entities: zoneAwareness.entities,
           free_appliances: zoneAwareness.entities
-            .filter((e) => e.entityType === "appliance" && e.status === "available" && e.actionNames.length > 0)
-            .map((e) => ({ name: e.name, zone: e.zone, actions: e.actionNames })),
+            .filter((e: { entityType: string; status: string; actionNames: string[] }) => e.entityType === "appliance" && e.status === "available" && e.actionNames.length > 0)
+            .map((e: { name: string; zone: string; actionNames: string[] }) => ({ name: e.name, zone: e.zone, actions: e.actionNames })),
         },
-
-        // Vision radius — full detail on what's immediately around you
-        vision: {
-          radius_tiles: radius,
-          objects: visionObjects,
-          characters: visionCharacters,
-        },
-
-        // Quick summary for decision-making
+        nearby_characters: nearbyCharacters,
         summary: {
           current_zone: currentZone,
           can_approach: zoneCharacters
             .filter((n) => !n.on_cooldown && !n.in_conversation)
             .map((n) => n.key),
           free_appliances_in_zone: zoneAwareness.entities
-            .filter((e) => e.entityType === "appliance" && e.status === "available" && e.actionNames.length > 0)
-            .map((e) => e.name),
-          detailed_objects_in_vision: visionObjects
-            .filter((e) => e.availableActions.length > 0)
-            .map((e) => e.name),
+            .filter((e: { entityType: string; status: string; actionNames: string[] }) => e.entityType === "appliance" && e.status === "available" && e.actionNames.length > 0)
+            .map((e: { name: string }) => e.name),
         },
       })
-    } catch (err: any) {
-      res.status(404).json({ error: err.message ?? "Character not found" })
+    } catch (err: unknown) {
+      res.status(404).json({ error: err instanceof Error ? err.message : "Character not found" })
     }
   })
 
@@ -225,18 +200,18 @@ export function buildRoutes(world: WorldState, client: NotionAgentsClient): Rout
       return res.status(400).json({ error: "Provide at least one need via ?needs=hunger,thirst" })
     }
 
-    let originTile: [number, number] | null = null
+    let originPos: [number, number] | null = null
     let currentNeeds: Record<string, number> = {}
 
     if (charKey) {
       try {
         const c = world.getCharacter(charKey)
-        originTile = c.tile
+        originPos = c.pos
         currentNeeds = c.needs   // actual live need values for urgency calculation
       } catch { /* unknown character — proceed without */ }
     }
 
-    const results = findActionsForNeeds(urgentNeeds, originTile, k, currentNeeds)
+    const results = findActionsForNeeds(urgentNeeds, originPos, k, currentNeeds)
     res.json({ urgent_needs: urgentNeeds, results })
   })
 
@@ -297,7 +272,7 @@ export function buildRoutes(world: WorldState, client: NotionAgentsClient): Rout
         if (!ok) {
           console.warn(`  [${character}] move_to: unknown locationId "${target}"`)
         } else {
-          console.log(`  → ${character} moving to ${target} (${c.plannedPath.length} tiles)`)
+          console.log(`  → ${character} moving to ${target} (${c.path.length} waypoints)`)
         }
       }
 
@@ -350,7 +325,7 @@ export function buildRoutes(world: WorldState, client: NotionAgentsClient): Rout
         type: "action",
         action,
         description,
-        locationId: target ?? c.tile.join(","),
+        locationId: target ?? c.pos.join(","),
         startMin: world.simMinutes,
         endMin: world.simMinutes + world.secPerStep / 60,
         followedPlan: follow_plan,
@@ -382,10 +357,10 @@ export function buildRoutes(world: WorldState, client: NotionAgentsClient): Rout
   })
 
   router.post("/position", (req, res) => {
-    const { character, tile } = req.body as { character: string; tile: [number, number] }
+    const { character, pos } = req.body as { character: string; pos: [number, number] }
     try {
       const c = world.getCharacter(character)
-      c.tile = tile
+      c.pos = pos
       res.json({ ok: true })
     } catch {
       res.status(404).json({ error: "Character not found" })

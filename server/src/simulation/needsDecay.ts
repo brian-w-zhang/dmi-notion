@@ -47,7 +47,11 @@ const PSYCH_BASE: Record<string, number> = {
 
 function oceanDecayRate(need: string, p: Personality): number | null {
   switch (need) {
-    case "social":       return 0.3 + p.e * 1.7   // extraversion → social need speed
+    // Social scaled up ~3× so urgency builds within 30–50 sim minutes at the office.
+    // At SEC_PER_STEP=10, TICKS_PER_DAY=3240; old range 0.3–2.0, new range 1.2–5.5.
+    // Dwight (e≈0.7): 1.2+1.75=2.95 → drops 0.3 units in ~305 steps ≈ 50 sim min.
+    // Kelly (e≈0.9): 1.2+2.25=3.45 → drops 0.3 units in ~260 steps ≈ 43 sim min.
+    case "social":       return 1.2 + p.e * 2.5
     case "productivity": return 0.1 + p.c * 1.5   // conscientiousness → productivity urgency
     case "stimulation":  return 0.3 + p.o * 1.2   // openness → boredom rate
     default:             return null

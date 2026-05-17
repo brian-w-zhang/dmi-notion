@@ -5,6 +5,7 @@ import { runConversation } from "./ConversationFlow.js"
 import { runGroupConversation } from "./GroupConversationFlow.js"
 import { CHARACTER_AGENT_IDS, CHARACTER_NAMES } from "./characters.js"
 import { getActionNeedDeltas, getApplianceByName } from "../simulation/WorldData.js"
+import { findPixelPath } from "../simulation/ServerPathfinder.js"
 
 interface AgentDecision {
   thinking?: string           // interior deliberation — stored in log for interpretability
@@ -97,8 +98,14 @@ export function applyDecisions(
   }
 
   // ── Normal per-character decisions ────────────────────────────────────────
-  for (const [key, decision] of decisions) {
+  for (const [key, _d] of decisions) {
+    let decision = _d
     const c = world.getCharacter(key)
+
+    // The repeat-block only fires once per appliance completion (immediate re-pick).
+    // After this tick, the block clears so the same action can be chosen again later.
+    const blockedAction = c.lastCompletedAppliance
+    c.lastCompletedAppliance = undefined
 
     if (decision.thinking) {
       world.getCharacter(key).lastThinking = decision.thinking
@@ -150,6 +157,18 @@ export function applyDecisions(
         continue
       }
 
+      // Proximity check — must be within 320px (~10 tiles) before starting conversation.
+      // If too far, pathfind toward the target and defer.
+      const dx = c.pos[0] - targetChar.pos[0]
+      const dy = c.pos[1] - targetChar.pos[1]
+      const dist = Math.sqrt(dx * dx + dy * dy)
+      if (dist > 320) {
+        c.path = findPixelPath(c.pos, targetChar.pos)
+        applyActionToCharacter(c, { ...decision, action: "move_to", description: `walking over to ${CHARACTER_NAMES[targetKey]}`, emoji: "🚶" })
+        console.log(`  [${key}] too far from ${targetKey} (${dist.toFixed(0)}px) — pathfinding closer`)
+        continue
+      }
+
       const convId = `conv-${key}-${targetKey}-${world.step}`
       world.startConversation(convId, {
         id: convId,
@@ -163,7 +182,8 @@ export function applyDecisions(
 
       runConversation(
         { id: convId, initiatorKey: key, targetKey, location: c.action, trigger: decision.want_to_talk.opening_topic, startStep: world.step },
-        world, client
+        world, client,
+        (turn) => world.pushConversationTurn(convId, turn)
       )
         .then(async (completed) => {
           const appraisalCtx = buildAppraisalContext({
@@ -200,7 +220,7 @@ export function applyDecisions(
     if (decision.action === "move_to" && decision.target) {
       const ok = world.setDestination(key, decision.target)
       if (!ok) console.warn(`  [${key}] move_to: unknown locationId "${decision.target}"`)
-      else console.log(`  → ${CHARACTER_NAMES[key]} moving to ${decision.target} (${c.plannedPath.length} tiles)`)
+      else console.log(`  → ${CHARACTER_NAMES[key]} moving to ${decision.target} (${c.path.length} waypoints)`)
     }
 
     // ── Use appliance ────────────────────────────────────────────────────────
@@ -209,19 +229,29 @@ export function applyDecisions(
     // The appliance lock + deferred need deltas are started here if already at the
     // destination; otherwise the agent will re-decide use_appliance on arrival.
     if (decision.action === "use_appliance" && decision.target && decision.appliance_action) {
+      // Hard-block: prevent the exact same appliance action at the very next perception tick
+      // after it just completed. Clears immediately so subsequent ticks allow it again.
+      if (blockedAction && blockedAction === decision.appliance_action) {
+        console.log(`  [${key}] ⛔ repeat of '${decision.appliance_action}' blocked — forcing idle`)
+        applyActionToCharacter(c, { ...decision, action: "idle", description: "taking a brief pause", emoji: "💭" })
+        continue
+      }
+
       const appliance = getApplianceByName(decision.target)
       const actionDef = appliance?.actions.find((a) => a.name === decision.appliance_action)
       const deltas = actionDef?.needDeltas ?? {}
       const durationSteps = actionDef?.durationSteps ?? 1
 
       const alreadyThere = world.setDestination(key, decision.target) === false
-        || c.plannedPath.length === 0
+        || c.path.length === 0
 
       if (alreadyThere) {
         world.startApplianceAction(key, decision.target, decision.appliance_action, durationSteps, deltas)
         console.log(`  → ${CHARACTER_NAMES[key]} using ${decision.target}:${decision.appliance_action} for ${durationSteps} steps`)
       } else {
-        console.log(`  → ${CHARACTER_NAMES[key]} heading to ${decision.target} (${c.plannedPath.length} tiles) to use ${decision.appliance_action}`)
+        // Character is en route — don't show the appliance emoji yet
+        decision = { ...decision, emoji: "🚶", description: `heading to ${decision.target}` }
+        console.log(`  → ${CHARACTER_NAMES[key]} heading to ${decision.target} (${c.path.length} waypoints) to use ${decision.appliance_action}`)
       }
     }
 
@@ -231,7 +261,7 @@ export function applyDecisions(
       type: "action",
       action: decision.action,
       description: decision.description,
-      locationId: decision.target ?? c.tile.join(","),
+      locationId: decision.target ?? c.pos.join(","),
       startMin: world.simMinutes,
       endMin: world.simMinutes + world.secPerStep / 60,
       followedPlan: decision.follow_plan,

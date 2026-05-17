@@ -141,8 +141,10 @@ export class MainMap extends Phaser.Scene {
   private readonly _npcApplianceOccupancy: Set<string> = new Set();
 
   // ── Replay mode ──────────────────────────────────────────────────────────
-  private _replayMode   = false;
-  private _replayCtrl:  MainMapReplayController | null = null;
+  private _replayMode         = false;
+  private _replayCtrl:        MainMapReplayController | null = null;
+  private _currentReplayIndex = 0;
+  private _replayCount        = 6;
 
   constructor() {
     super('MainMap');
@@ -263,11 +265,10 @@ export class MainMap extends Phaser.Scene {
       });
       this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
         if (pointer.button !== 0) return;
+        // In replay mode character clicks are handled by the controller's sprite handlers.
+        // Forward only non-person object clicks to the React overlay.
         if (!this.hoveredTarget) return;
-        if (this.hoveredTarget.kind === 'person') {
-          EventBus.emit('character-inspect', this.hoveredTarget.item.config.owner);
-          return;
-        }
+        if (this.hoveredTarget.kind === 'person') return;
         const key = this.hoveredTarget.kind === 'appliance'
           ? this.hoveredTarget.item.objectName
           : this.hoveredTarget.item.name;
@@ -277,6 +278,7 @@ export class MainMap extends Phaser.Scene {
       this._replayCtrl = new MainMapReplayController(this, this.hud);
       if (this._replayCtrl.isValid) {
         this._replayCtrl.start();
+        // this.hud.showReplayPicker(this._currentReplayIndex, this._replayCount, (idx) => this._switchReplay(idx));
       } else {
         console.error('[MainMap] replay.json missing or empty — switch to sandbox mode');
       }
@@ -720,5 +722,30 @@ export class MainMap extends Phaser.Scene {
     this._npcCoordinator.cancelAll();
     for (const runner of this._npcRunners.values()) runner.deactivate();
     this.hud.setSimulationActive(false);
+  }
+
+  private async _switchReplay(index: number): Promise<void> {
+    this._currentReplayIndex = index;
+    this._replayCtrl?.destroy();
+    this._replayCtrl = null;
+    this.hud.exitReplayMode();
+
+    const url = `/assets/simulation/replay ${index}.json`;
+    let data: object;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      data = await res.json();
+    } catch (e) {
+      console.error(`[MainMap] failed to load replay ${index}:`, e);
+      return;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this._replayCtrl = new MainMapReplayController(this, this.hud, data as any);
+    if (this._replayCtrl.isValid) {
+      this._replayCtrl.start();
+      this.hud.showReplayPicker(index, this._replayCount, (i) => this._switchReplay(i));
+    }
   }
 }

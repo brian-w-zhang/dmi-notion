@@ -211,3 +211,34 @@ function getGrid(): PathfindingGrid {
 export function findTilePath(from: [number, number], to: [number, number]): [number, number][] {
   return getGrid().findTilePath(from, to)
 }
+
+// Pixel-space pathfinding.
+// Converts pixel positions to tiles for A*, converts tile path to pixel centers,
+// then replaces the final waypoint with exactDestPx (the precise action/sit point).
+export function findPixelPath(
+  fromPx: [number, number],
+  toPx: [number, number],
+  exactDestPx?: [number, number]
+): [number, number][] {
+  const fromTile: [number, number] = [Math.floor(fromPx[0] / TILE_SIZE), Math.floor(fromPx[1] / TILE_SIZE)]
+  const toTile:   [number, number] = [Math.floor(toPx[0]   / TILE_SIZE), Math.floor(toPx[1]   / TILE_SIZE)]
+
+  const tilePath = getGrid().findTilePath(fromTile, toTile)
+
+  // Convert intermediate tiles to pixel centers
+  const pixelPath: [number, number][] = tilePath.map(
+    ([col, row]) => [col * TILE_SIZE + TILE_SIZE / 2, row * TILE_SIZE + TILE_SIZE / 2]
+  )
+
+  // Replace final waypoint with exact destination (sit point, action point, etc.)
+  const dest = exactDestPx ?? toPx
+  if (pixelPath.length > 0) {
+    pixelPath[pixelPath.length - 1] = dest
+  } else {
+    // Already at destination tile — just snap to exact point if not there
+    const dx = dest[0] - fromPx[0], dy = dest[1] - fromPx[1]
+    if (Math.sqrt(dx * dx + dy * dy) > 1) pixelPath.push(dest)
+  }
+
+  return pixelPath
+}
