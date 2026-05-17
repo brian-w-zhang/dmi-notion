@@ -61,7 +61,7 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
 
 const app = express()
 app.use(express.json())
-app.use("/", buildRoutes(world))
+app.use("/", buildRoutes(world, client))
 
 const PORT = process.env.PORT ?? 3001
 app.listen(PORT, () => {

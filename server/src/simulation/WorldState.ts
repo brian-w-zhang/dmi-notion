@@ -2,6 +2,7 @@ import type {
   LiveCharacter, ConversationRecord, WorldEvent,
   CharacterStepState, StepFile, LogEntry, PlanBlock,
 } from "./types.js"
+import { resolveLocationTile } from "./WorldData.js"
 
 export class WorldState {
   step = 0
@@ -226,6 +227,56 @@ export class WorldState {
     this.events.push(event)
   }
 
+  // ── Physics ──────────────────────────────────────────────────────────────────
+
+  // Advance all characters one step along their plannedPath.
+  // Called every tick regardless of whether agents ran this round.
+  advancePhysics(): void {
+    for (const c of this.characters.values()) {
+      if (c.plannedPath.length === 0) continue
+      c.tile = c.plannedPath[0]
+      c.plannedPath = c.plannedPath.slice(1)
+
+      // Update facing based on movement direction
+      if (c.plannedPath.length > 0) {
+        const [nx, ny] = c.plannedPath[0]
+        const dx = nx - c.tile[0]
+        const dy = ny - c.tile[1]
+        if (Math.abs(dx) >= Math.abs(dy)) {
+          c.facing = dx > 0 ? "right" : "left"
+        } else {
+          c.facing = dy > 0 ? "front" : "back"
+        }
+        c.animationKey = `walk_${c.facing}`
+      } else {
+        // Reached destination — switch back to idle animation
+        c.animationKey = `idle_${c.facing}`
+        this.addEvent({ type: "action_complete", character: c.name, detail: "reached destination" })
+      }
+    }
+  }
+
+  // Applies need deltas from an appliance action.
+  // Positive delta = satisfying (increases value toward 1.0).
+  // Negative delta = worsening (decreases value toward 0.0).
+  applyNeedDeltas(characterName: string, deltas: Record<string, number>): void {
+    const c = this.getCharacter(characterName)
+    for (const [need, delta] of Object.entries(deltas)) {
+      const current = c.needs[need] ?? 0.5
+      c.needs[need] = Math.max(0, Math.min(1, current + delta / 100))
+    }
+  }
+
+  // Sets a character's planned path toward a zone or locationId.
+  // Generates a straight-line tile path from current position.
+  setDestination(characterName: string, locationId: string): boolean {
+    const c = this.getCharacter(characterName)
+    const dest = resolveLocationTile(locationId)
+    if (!dest) return false
+    c.plannedPath = generatePath(c.tile, dest)
+    return true
+  }
+
   // ── Step advancement ────────────────────────────────────────────────────────
 
   advanceStep(): { completedConversations: ConversationRecord[]; events: WorldEvent[] } {
@@ -249,6 +300,8 @@ export class WorldState {
 
     return { completedConversations: completed, events }
   }
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
 
   toStepFile(completedConversations: ConversationRecord[], events: WorldEvent[]): StepFile {
     const characters: Record<string, CharacterStepState> = {}
@@ -274,4 +327,22 @@ export class WorldState {
       events,
     }
   }
+}
+
+// ── Path generation ───────────────────────────────────────────────────────────
+// Generates a straight diagonal tile path from `from` to `to`.
+// No pathfinding — just a direct line. Phaser handles visual smoothing.
+
+function generatePath(from: [number, number], to: [number, number]): [number, number][] {
+  const path: [number, number][] = []
+  let [x, y] = from
+  const [tx, ty] = to
+  while ((x !== tx || y !== ty) && path.length < 300) {
+    if (x < tx) x++
+    else if (x > tx) x--
+    if (y < ty) y++
+    else if (y > ty) y--
+    path.push([x, y])
+  }
+  return path
 }

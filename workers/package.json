@@ -4,12 +4,14 @@
   "type": "module",
   "scripts": {
     "deploy": "ntn workers deploy",
-    "dev": "ntn workers exec getWorldState --local -d '{\"character\":\"dwight\"}'"
+    "dev": "ntn workers exec getWorldState --local -d '{\"character\":\"dwight\"}'",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@notionhq/workers": "latest"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "typescript": "^5.0.0"
   }
 }

@@ -3,9 +3,13 @@ import { WorldState } from "./WorldState.js"
 import { StepWriter } from "./StepWriter.js"
 import { runTickRound, applyDecisions } from "../agents/orchestrator.js"
 
+// Agents are called every PERCEPTION_INTERVAL ticks.
+// Between calls, characters follow their last decision (path + action).
+const PERCEPTION_INTERVAL = 5
+
 interface RoundLoopOptions {
   totalRounds: number
-  delayBetweenRoundsMs?: number  // breathing room between rounds
+  delayBetweenRoundsMs?: number
 }
 
 export async function runSimulation(
@@ -14,31 +18,38 @@ export async function runSimulation(
   client: NotionAgentsClient,
   opts: RoundLoopOptions
 ) {
-  const { totalRounds, delayBetweenRoundsMs = 1000 } = opts
+  const { totalRounds, delayBetweenRoundsMs = 500 } = opts
 
   console.log(`\n${"═".repeat(60)}`)
   console.log(`Starting simulation: ${totalRounds} rounds`)
+  console.log(`Perception interval: every ${PERCEPTION_INTERVAL} ticks`)
   console.log(`Sim time start: ${world.simTime.toISOString()}`)
   console.log(`${"═".repeat(60)}\n`)
 
   for (let round = 0; round < totalRounds; round++) {
     const roundStart = Date.now()
 
-    // 1. Snapshot → tick all active characters in parallel
-    const decisions = await runTickRound(world, client)
+    // ── 1. Physics (every tick) ───────────────────────────────────────────────
+    world.advancePhysics()
 
-    // 2. Apply decisions (spawns conversation flows async for talk actions)
-    applyDecisions(decisions, world, client)
+    // ── 2. Cognition (every N ticks) ──────────────────────────────────────────
+    if (round % PERCEPTION_INTERVAL === 0) {
+      console.log(`\n[Perception round ${round}/${totalRounds}] Calling agents...`)
+      const decisions = await runTickRound(world, client)
+      applyDecisions(decisions, world, client)
+    }
 
-    // 3. Advance clock, flush completed conversations and events into step file
+    // ── 3. Advance clock + flush ──────────────────────────────────────────────
     const { completedConversations, events } = world.advanceStep()
 
-    // 4. Write step file — Phaser reads this for replay
+    // ── 4. Write step file ────────────────────────────────────────────────────
     const stepFile = world.toStepFile(completedConversations, events)
     writer.write(stepFile)
-    console.log(`  [Step ${stepFile.step}] written — sim time: ${stepFile.simTime}`)
 
-    // 5. Breathing room
+    const tag = round % PERCEPTION_INTERVAL === 0 ? " [perception]" : ""
+    console.log(`  [Step ${stepFile.step}] sim=${world.simTimeString()}${tag}`)
+
+    // ── 5. Breathing room ─────────────────────────────────────────────────────
     const elapsed = Date.now() - roundStart
     const wait = Math.max(0, delayBetweenRoundsMs - elapsed)
     if (wait > 0) await sleep(wait)

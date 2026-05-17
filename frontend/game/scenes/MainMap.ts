@@ -263,6 +263,21 @@ export class MainMap extends Phaser.Scene {
       this.hud.ignoreWorldObjects(this.dwight.sprite);
       this.driving = false;
 
+      this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
+        const wp = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+        this.updateHoverHighlight(wp.x, wp.y);
+      });
+      this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+        if (pointer.button !== 0) return;
+        if (!this.hoveredTarget) return;
+        const key = this.hoveredTarget.kind === 'appliance'
+          ? this.hoveredTarget.item.objectName
+          : this.hoveredTarget.kind === 'chair'
+          ? this.hoveredTarget.item.name
+          : null;
+        if (key) EventBus.emit('object-inspect', key);
+      });
+
       this._replayCtrl = new MainMapReplayController(this, this.car, this.dwight, this.hud);
       if (this._replayCtrl.isValid) {
         this._replayCtrl.start();

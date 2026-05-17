@@ -10,11 +10,19 @@
     },
     "belonging": {
       "params": { "amplitude": 1.4, "power": 0.35, "baseline": 0.12 },
-      "blurb": "The need to be loved, not just liked, is Michael's defining psychological wound. His extreme warmth and high neuroticism combine to make belonging urgency spike sharply and never fully satisfy. There is always a nagging sense that people don't quite get him."
+      "blurb": "The need to be loved, not just liked, is Michael's defining psychological wound. His extreme warmth and high neuroticism combine to make belonging urgency spike sharply and never fully satisfy. There is always a nagging sense that people don't quite get him.",
+      "decay": {
+        "kMultiplier": 1.7,
+        "blurb": "Michael's need to be loved — not liked, but loved — erodes faster than almost anyone. Brief reconnection refills him temporarily but the hunger returns quickly. His warmth is also his dependency."
+      }
     },
     "esteem": {
       "params": { "amplitude": 1.5, "power": 0.3, "baseline": 0.15 },
-      "blurb": "Michael's self-image is fragile and grandiose in equal measure. Esteem urgency ramps steeply from deprivation and the curve barely flattens. Validation is a treadmill he can never step off."
+      "blurb": "Michael's self-image is fragile and grandiose in equal measure. Esteem urgency ramps steeply from deprivation and the curve barely flattens. Validation is a treadmill he can never step off.",
+      "decay": {
+        "kMultiplier": 1.5,
+        "blurb": "Michael's self-image requires constant feeding. Without validation from the room, esteem erodes noticeably faster than baseline. His grandiosity is a defensive structure against a deficit that returns daily."
+      }
     },
     "stress": {
       "params": { "power": 1.3 },
@@ -53,7 +61,11 @@
     },
     "fulfillment": {
       "params": { "amplitude": 0.9, "power": 0.42, "baseline": 0.07 },
-      "blurb": "The receptionist-who-wanted-to-be-an-artist arc is pure fulfillment deficit. Pam knows what she wants creatively but consistently puts others first, leaving fulfillment chronically underfed."
+      "blurb": "The receptionist-who-wanted-to-be-an-artist arc is pure fulfillment deficit. Pam knows what she wants creatively but consistently puts others first, leaving fulfillment chronically underfed.",
+      "decay": {
+        "kMultiplier": 1.2,
+        "blurb": "Pam is quietly aware of the creative life she's not living. Fulfillment drains slightly faster than baseline — not urgently, but persistently, in the background of every day she spends at the reception desk."
+      }
     },
     "stress": {
       "params": { "power": 1.7 },
@@ -150,7 +162,11 @@
     },
     "esteem": {
       "params": { "amplitude": 1.2, "power": 0.38, "baseline": 0.12 },
-      "blurb": "Angela's sense of moral superiority is her primary esteem strategy: she gains it through judgement of others rather than approval-seeking. Urgency is high because her standards are impossible for anyone to meet, including herself."
+      "blurb": "Angela's sense of moral superiority is her primary esteem strategy: she gains it through judgement of others rather than approval-seeking. Urgency is high because her standards are impossible for anyone to meet, including herself.",
+      "decay": {
+        "kMultiplier": 0.6,
+        "blurb": "Angela's esteem is self-reinforcing and largely independent of external validation. She doesn't need others to confirm she is right — she already knows. The primary source is internal, so it drifts more slowly than average."
+      }
     },
     "stimulation": {
       "params": { "amplitude": 1.5, "midpoint": 0.30 },
@@ -173,7 +189,11 @@
     },
     "productivity": {
       "params": { "amplitude": 1.0, "power": 0.45, "baseline": 0.14 },
-      "blurb": "Oscar has a solid work ethic and genuine satisfaction from completing things correctly. Productivity urgency is meaningfully above baseline. Leaving work undone or done sloppily creates real discomfort."
+      "blurb": "Oscar has a solid work ethic and genuine satisfaction from completing things correctly. Productivity urgency is meaningfully above baseline. Leaving work undone or done sloppily creates real discomfort.",
+      "decay": {
+        "kMultiplier": 1.2,
+        "blurb": "Oscar notices when he's not being productive. The pull to do something correctly accumulates slightly faster than baseline — leaving real work undone or done sloppily is a specific kind of discomfort for him."
+      }
     },
     "belonging": {
       "params": { "amplitude": 0.75, "power": 0.52, "baseline": 0.04 },
@@ -252,7 +272,11 @@
     },
     "belonging": {
       "params": { "amplitude": 0.45, "power": 0.65, "baseline": 0.02 },
-      "blurb": "Creed orbits the office more than belonging to it. He has minimal need for genuine group belonging. He drifts in, says something unsettling, and drifts out, apparently satisfied."
+      "blurb": "Creed orbits the office more than belonging to it. He has minimal need for genuine group belonging. He drifts in, says something unsettling, and drifts out, apparently satisfied.",
+      "decay": {
+        "kMultiplier": 0.2,
+        "blurb": "Creed is not part of the office in any conventional sense and does not experience its absence. Belonging barely registers as a ticking clock — it moves so slowly it might as well be static."
+      }
     },
     "hunger": {
       "params": { "power": 3.5 },
@@ -262,6 +286,12 @@
       "decay": {
         "kMultiplier": 0.5,
         "blurb": "Creed appears to consume almost no energy during the workday because he does almost nothing. His energy baseline decay is half the norm — he is a paragon of minimal exertion."
+      }
+    },
+    "fulfillment": {
+      "decay": {
+        "kMultiplier": 0.4,
+        "blurb": "Creed is genuinely at peace with his circumstances, whatever they are. He has rich inner resources and an idiosyncratic sense of meaning that insulates him from the existential drift most characters experience."
       }
     }
   },
@@ -285,7 +315,11 @@
     },
     "belonging": {
       "params": { "amplitude": 0.55, "power": 0.60, "baseline": 0.03 },
-      "blurb": "Ryan wants admirers, not a tribe. His low agreeableness suppresses genuine belonging need. He is more comfortable being envied than loved, and rarely seeks real connection."
+      "blurb": "Ryan wants admirers, not a tribe. His low agreeableness suppresses genuine belonging need. He is more comfortable being envied than loved, and rarely seeks real connection.",
+      "decay": {
+        "kMultiplier": 0.6,
+        "blurb": "Ryan doesn't seek a tribe — he seeks admirers. His belonging need drifts more slowly than baseline because he has genuinely low attachment to group inclusion. Isolation doesn't register the way it does for high-agreeableness characters."
+      }
     },
     "stimulation": {
       "params": { "amplitude": 3.2, "midpoint": 0.52 },
@@ -293,7 +327,11 @@
     },
     "fulfillment": {
       "params": { "amplitude": 0.8, "power": 0.42, "baseline": 0.09 },
-      "blurb": "Despite ambition, Ryan is chronically unfulfilled because his goals are extrinsic and always shifting. The elevated amplitude and steeper curve reflect the persistent gap between his self-image and his actual trajectory."
+      "blurb": "Despite ambition, Ryan is chronically unfulfilled because his goals are extrinsic and always shifting. The elevated amplitude and steeper curve reflect the persistent gap between his self-image and his actual trajectory.",
+      "decay": {
+        "kMultiplier": 1.3,
+        "blurb": "Ryan's goals are always shifting to the next thing, so fulfillment drains faster than baseline. Even at the apparent peak — VP, startup founder — the gap between self-image and reality keeps urgency elevated."
+      }
     }
   },
 
@@ -312,11 +350,19 @@
     },
     "belonging": {
       "params": { "amplitude": 1.3, "power": 0.38, "baseline": 0.13 },
-      "blurb": "Kelly needs to be someone's favourite, not just part of the group, but central to it. The elevated amplitude and high baseline reflect a belonging need that is always somewhat active and requires constant reinforcement."
+      "blurb": "Kelly needs to be someone's favourite, not just part of the group, but central to it. The elevated amplitude and high baseline reflect a belonging need that is always somewhat active and requires constant reinforcement.",
+      "decay": {
+        "kMultiplier": 1.5,
+        "blurb": "Ambient group membership doesn't refill Kelly's belonging — she needs to feel specifically chosen and central. Without that, it drains faster than average regardless of how much social contact she gets."
+      }
     },
     "esteem": {
       "params": { "amplitude": 1.2, "power": 0.40, "baseline": 0.12 },
-      "blurb": "Kelly's self-worth swings with Ryan's attention and social validation. Her high neuroticism means esteem deficits feel enormous and repairs feel temporary. Urgency is elevated and the curve rarely fully flattens."
+      "blurb": "Kelly's self-worth swings with Ryan's attention and social validation. Her high neuroticism means esteem deficits feel enormous and repairs feel temporary. Urgency is elevated and the curve rarely fully flattens.",
+      "decay": {
+        "kMultiplier": 1.3,
+        "blurb": "Kelly's esteem is directly indexed to Ryan's attention and social status signals. Without reinforcement it erodes quickly — high neuroticism means the deficit is felt almost immediately."
+      }
     },
     "productivity": {
       "params": { "amplitude": 0.20, "power": 0.85, "baseline": 0.02 },
@@ -333,7 +379,11 @@
   "toby": {
     "fulfillment": {
       "params": { "amplitude": 1.0, "power": 0.38, "baseline": 0.10 },
-      "blurb": "Toby is the show's portrait of chronic unfulfillment: a man who wanted to be a priest, became an HR rep he can't quit, and writes a serial-killer novel in his spare time. His high neuroticism and moderate openness keep fulfillment urgency persistently elevated."
+      "blurb": "Toby is the show's portrait of chronic unfulfillment: a man who wanted to be a priest, became an HR rep he can't quit, and writes a serial-killer novel in his spare time. His high neuroticism and moderate openness keep fulfillment urgency persistently elevated.",
+      "decay": {
+        "kMultiplier": 1.6,
+        "blurb": "The priest who became an HR rep who can't leave. Fulfillment drains faster than almost anyone because Toby is acutely aware of the gap between the life he wanted and the one he inhabits."
+      }
     },
     "stress": {
       "params": { "power": 1.4 },
@@ -364,7 +414,11 @@
   "stanley": {
     "social": {
       "params": { "amplitude": 1.0, "midpoint": 0.22 },
-      "blurb": "Stanley has the lowest extraversion in the cast and wants almost zero social interaction at work. His social need is satisfied by the bare minimum: a nod, maybe a word about his crossword. Anything beyond that reads as encroachment."
+      "blurb": "Stanley has the lowest extraversion in the cast and wants almost zero social interaction at work. His social need is satisfied by the bare minimum: a nod, maybe a word about his crossword. Anything beyond that reads as encroachment.",
+      "decay": {
+        "kMultiplier": 0.4,
+        "blurb": "Stanley's social need drifts so slowly it barely moves across a full workday. A nod and a crossword is enough to keep it stable for days. He is not starved for interaction — he is relieved by its absence."
+      }
     },
     "stimulation": {
       "params": { "amplitude": 1.2, "midpoint": 0.28 },
@@ -384,7 +438,11 @@
     },
     "fulfillment": {
       "params": { "amplitude": 0.55, "power": 0.55, "baseline": 0.04 },
-      "blurb": "Stanley has made peace with his circumstances in a way that looks like resignation but functions as adaptation. Pretzel Day is genuinely fulfilling to him. Reduced amplitude because his benchmark for enough is calibrated low and he meets it."
+      "blurb": "Stanley has made peace with his circumstances in a way that looks like resignation but functions as adaptation. Pretzel Day is genuinely fulfilling to him. Reduced amplitude because his benchmark for enough is calibrated low and he meets it.",
+      "decay": {
+        "kMultiplier": 0.5,
+        "blurb": "Stanley has calibrated his sense of fulfillment to his actual life, and he largely meets it. The benchmark is Pretzel Day, not career achievement. Fulfillment drifts at half the normal rate."
+      }
     },
     "energy": {
       "decay": {
@@ -413,7 +471,11 @@
     },
     "fulfillment": {
       "params": { "amplitude": 0.65, "power": 0.50, "baseline": 0.06 },
-      "blurb": "Phyllis is one of the few characters who seems genuinely content with her life: Bob Vance, Vance Refrigeration, the Party Planning Committee, her friends. Fulfillment urgency sits close to baseline because she has largely built what she wanted."
+      "blurb": "Phyllis is one of the few characters who seems genuinely content with her life: Bob Vance, Vance Refrigeration, the Party Planning Committee, her friends. Fulfillment urgency sits close to baseline because she has largely built what she wanted.",
+      "decay": {
+        "kMultiplier": 0.5,
+        "blurb": "Phyllis has largely built what she wanted: Bob Vance, Vance Refrigeration, warm friendships, the party planning committee. Fulfillment drifts very slowly because her benchmark is calibrated to her actual life and she meets it."
+      }
     }
   }
 }
