@@ -226,13 +226,17 @@ export function buildRoutes(world: WorldState, client: NotionAgentsClient): Rout
     }
 
     let originTile: [number, number] | null = null
+    let currentNeeds: Record<string, number> = {}
+
     if (charKey) {
       try {
-        originTile = world.getCharacter(charKey).tile
-      } catch { /* ignore unknown character */ }
+        const c = world.getCharacter(charKey)
+        originTile = c.tile
+        currentNeeds = c.needs   // actual live need values for urgency calculation
+      } catch { /* unknown character — proceed without */ }
     }
 
-    const results = findActionsForNeeds(urgentNeeds, originTile, k)
+    const results = findActionsForNeeds(urgentNeeds, originTile, k, currentNeeds)
     res.json({ urgent_needs: urgentNeeds, results })
   })
 

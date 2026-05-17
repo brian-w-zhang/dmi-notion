@@ -401,11 +401,28 @@ export function summarizeAdvertisedActions(zoneName: string): object[] {
   }))
 }
 
-// ── Needs-based action lookup ─────────────────────────────────────────────────
-// Returns the K most relevant appliance actions for a set of urgent needs.
-// Scored by: sum of deltas for requested needs × zone proximity bonus.
-// Used by agents to efficiently navigate toward need satisfaction without
-// receiving all 29 appliances in every context.
+// ── Needs-based action scoring ────────────────────────────────────────────────
+// Utility score per action:
+//   score = Σ( needDelta × urgency × importanceWeight )
+// where urgency = 1 - currentNeedValue  (need at 0.1 → urgency 0.9, strong pull)
+// and importanceWeight reflects biological priority over social/productivity needs.
+//
+// If currentNeeds is not provided, urgency defaults to 1.0 for all needs
+// (treats every listed need as fully deprived — useful for testing).
+
+const NEED_IMPORTANCE: Record<string, number> = {
+  bladder:      3.0,   // biological — can't ignore
+  hunger:       2.5,
+  thirst:       2.0,
+  energy:       1.8,
+  stress:       1.5,
+  health:       1.5,
+  social:       1.0,
+  belonging:    0.9,
+  esteem:       0.8,
+  stimulation:  0.7,
+  productivity: 0.5,
+}
 
 export interface ActionForNeed {
   appliance: string
@@ -413,16 +430,17 @@ export interface ActionForNeed {
   emoji: string
   zone: string
   durationSec: number
-  needEffects: Record<string, number>        // only the needs that this action satisfies
-  relevanceScore: number                      // higher = more relevant
+  needEffects: Record<string, number>   // delta × urgency contribution per need
+  utilityScore: number                   // final ranked score
   actionPointTile: [number, number]
-  distanceTiles: number | null               // null if origin tile not provided
+  distanceTiles: number | null
 }
 
 export function findActionsForNeeds(
   urgentNeeds: string[],
   originTile: [number, number] | null,
-  k = 5
+  k = 5,
+  currentNeeds: Record<string, number> = {}  // 0–1 values from WorldState
 ): ActionForNeed[] {
   if (urgentNeeds.length === 0) return []
 
@@ -430,24 +448,32 @@ export function findActionsForNeeds(
 
   for (const entity of ALL_ENTITIES) {
     if (entity.entityType !== "appliance") continue
+
     for (const action of entity.actions) {
-      // Score = sum of deltas for each requested need
       let score = 0
       const relevantEffects: Record<string, number> = {}
+
       for (const need of urgentNeeds) {
         const delta = action.needDeltas[need] ?? 0
-        if (delta > 0) {
-          score += delta
-          relevantEffects[need] = delta
-        }
+        if (delta <= 0) continue
+
+        // urgency: how deprived is this need right now?
+        const currentVal = currentNeeds[need] ?? 0  // default 0 = fully deprived
+        const urgency = 1 - currentVal
+
+        const weight = NEED_IMPORTANCE[need] ?? 1.0
+        const contribution = delta * urgency * weight
+        score += contribution
+        relevantEffects[need] = Math.round(delta)
       }
-      if (score === 0) continue  // action doesn't help with any urgent need
+
+      if (score === 0) continue
 
       const ap = entity.actionPointTiles[0] ?? entity.tile
       const dist = originTile ? tileDist(originTile, ap) : null
 
-      // Proximity bonus: prefer closer zones (up to +20% score boost)
-      const proximityBonus = dist !== null ? Math.max(0, 1 - dist / 200) * 0.2 : 0
+      // Proximity tiebreaker: up to 15% boost for objects within 30 tiles
+      const proximityBonus = dist !== null ? Math.max(0, 1 - dist / 200) * 0.15 : 0
       const finalScore = score * (1 + proximityBonus)
 
       candidates.push({
@@ -457,7 +483,7 @@ export function findActionsForNeeds(
         zone: entity.zone,
         durationSec: Math.round(action.durationMs / 1000),
         needEffects: relevantEffects,
-        relevanceScore: Math.round(finalScore * 10) / 10,
+        utilityScore: Math.round(finalScore * 10) / 10,
         actionPointTile: ap,
         distanceTiles: dist !== null ? Math.round(dist * 10) / 10 : null,
       })
@@ -465,6 +491,6 @@ export function findActionsForNeeds(
   }
 
   return candidates
-    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+    .sort((a, b) => b.utilityScore - a.utilityScore)
     .slice(0, k)
 }
