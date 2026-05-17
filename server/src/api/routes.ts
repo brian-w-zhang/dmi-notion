@@ -1,19 +1,26 @@
 import { Router } from "express"
 import type { WorldState } from "../simulation/WorldState.js"
 
-// HTTP endpoints that Notion Workers call to query world state.
-// Workers need a publicly accessible URL (use ngrok in dev):
-//   ngrok http 3001  →  set GAME_SERVER_URL=https://xxx.ngrok.io in workers/.env
+// HTTP endpoints — Notion Workers call these to query world state.
+// In dev: expose with ngrok http 3001, set GAME_SERVER_URL in workers/.env
 
 export function buildRoutes(world: WorldState): Router {
   const router = Router()
 
-  // Full snapshot — workers call this for general context
+  // ── Health ──────────────────────────────────────────────────────────────────
+
+  router.get("/health", (_req, res) => {
+    res.json({ ok: true, step: world.step, simTime: world.simTimeString() })
+  })
+
+  // ── World state ─────────────────────────────────────────────────────────────
+
+  // Full snapshot of all characters
   router.get("/world-state", (_req, res) => {
     res.json(world.getSnapshot())
   })
 
-  // Single character state
+  // Single character live state
   router.get("/world-state/:character", (req, res) => {
     try {
       const c = world.getCharacter(req.params.character)
@@ -23,7 +30,7 @@ export function buildRoutes(world: WorldState): Router {
     }
   })
 
-  // Nearby characters — primary worker tool
+  // Nearby characters — primary worker perception tool
   router.get("/nearby/:character", (req, res) => {
     try {
       const radius = Number(req.query.radius ?? 5)
@@ -34,8 +41,79 @@ export function buildRoutes(world: WorldState): Router {
     }
   })
 
-  // Health check
-  router.get("/health", (_req, res) => res.json({ ok: true, step: world.step }))
+  // ── Planning ────────────────────────────────────────────────────────────────
+
+  // Full day plan + current block for a character
+  router.get("/plan/:character", (req, res) => {
+    try {
+      const c = world.getCharacter(req.params.character)
+      res.json({
+        dayPlan: c.dayPlan,
+        planIndex: c.planIndex,
+        planAdherence: c.planAdherence,
+        currentBlock: world.getCurrentPlanBlock(req.params.character) ?? null,
+        nextBlock: world.getNextPlanBlock(req.params.character) ?? null,
+      })
+    } catch {
+      res.status(404).json({ error: "Character not found" })
+    }
+  })
+
+  // ── Day log ─────────────────────────────────────────────────────────────────
+
+  // Full day log for a character (for dashboard + talking head context)
+  router.get("/day-log/:character", (req, res) => {
+    try {
+      const c = world.getCharacter(req.params.character)
+      res.json({
+        character: req.params.character,
+        simTime: world.simTimeString(),
+        currently: c.currently,
+        log: c.dayLog,
+        completedThisHour: c.completedThisHour,
+      })
+    } catch {
+      res.status(404).json({ error: "Character not found" })
+    }
+  })
+
+  // Recent log only (last N entries) — lighter call for workers
+  router.get("/day-log/:character/recent", (req, res) => {
+    try {
+      const count = Number(req.query.count ?? 5)
+      res.json(world.getRecentLog(req.params.character, count))
+    } catch {
+      res.status(404).json({ error: "Character not found" })
+    }
+  })
+
+  // ── Phaser action callbacks ─────────────────────────────────────────────────
+  // Phaser POSTs here when a character finishes an action animation.
+  // Server can use this to advance state or trigger next tick early.
+
+  router.post("/action-complete", (req, res) => {
+    const { character, action } = req.body as { character: string; action: string }
+    try {
+      const c = world.getCharacter(character)
+      world.addEvent({ type: "action_complete", character, detail: action })
+      console.log(`[Action complete] ${character}: ${action}`)
+      res.json({ ok: true, nextAction: c.action })
+    } catch {
+      res.status(404).json({ error: "Character not found" })
+    }
+  })
+
+  // Phaser POSTs here to update a character's tile position
+  router.post("/position", (req, res) => {
+    const { character, tile } = req.body as { character: string; tile: [number, number] }
+    try {
+      const c = world.getCharacter(character)
+      c.tile = tile
+      res.json({ ok: true })
+    } catch {
+      res.status(404).json({ error: "Character not found" })
+    }
+  })
 
   return router
 }
