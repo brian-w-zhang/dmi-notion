@@ -2,9 +2,9 @@ import Phaser from 'phaser';
 import { Car } from '../entities/Car';
 import { Character, CharacterKeys } from '../entities/Character';
 import {
-  activeDwightDeskBundle,
+  activeSeatedBundle,
   ApplianceInteractable,
-  DWIGHT_DESK_CHAIR_ID,
+  nearbyApplianceBundleInRange,
   nearestApplianceInRange,
 } from '../systems/ApplianceInteractionSystem';
 import {
@@ -115,23 +115,25 @@ export function updateOnFootState(args: OnFootUpdateArgs): OnFootUpdateResult {
     const feetX = x;
     const feetY = y - 32;
 
-    const atDwightDesk = occupiedChairId === DWIGHT_DESK_CHAIR_ID;
-    const deskBundle = atDwightDesk ? activeDwightDeskBundle(appliances) : [];
+    const seatedBundle = activeSeatedBundle(appliances, occupiedChairId);
 
-    let nearApplianceWhileSeated: ApplianceInteractable | null = null;
     let nextApplianceIdSeated: number | null = null;
 
-    if (deskBundle.length >= 2) {
-      hud.showMultiKeyActionHints(
-        deskBundle.map((a) => ({ key: a.hotkeySlot!, actionName: a.actionName }))
-      );
-      nextApplianceIdSeated = deskBundle[0]?.objectId ?? null;
+    if (seatedBundle.length >= 1) {
+      if (seatedBundle.length >= 2) {
+        hud.showMultiKeyActionHints(
+          seatedBundle.map((a) => ({ key: a.hotkeySlot!, actionName: a.actionName }))
+        );
+      } else {
+        hud.showActionHint(seatedBundle[0]!.actionName);
+      }
+      nextApplianceIdSeated = seatedBundle[0]?.objectId ?? null;
       if (nextApplianceIdSeated !== highlightedApplianceId) {
         applianceHighlight.clear();
-        for (const deskItem of deskBundle) {
-          if (deskItem.polygon) {
+        for (const item of seatedBundle) {
+          if (item.polygon) {
             applianceHighlight.lineStyle(2, 0xffd700, 1);
-            applianceHighlight.strokePoints(deskItem.polygon, true);
+            applianceHighlight.strokePoints(item.polygon, true);
           }
         }
       }
@@ -152,83 +154,22 @@ export function updateOnFootState(args: OnFootUpdateArgs): OnFootUpdateResult {
         };
       }
 
-      const runDesk = (slot: number): ApplianceInteractable | null =>
-        deskBundle.find((a) => a.hotkeySlot === slot) ?? null;
+      const runSeated = (slot: number): ApplianceInteractable | null =>
+        seatedBundle.find((a) => a.hotkeySlot === slot) ?? null;
 
-      if (onePressed) {
-        const target = runDesk(1);
-        if (target) {
-          hud.hideActionHint();
-          dwight.face(target.facing);
-          onApplianceAction(target);
-          return {
-            highlightedChairId,
-            highlightedApplianceId: target.objectId,
-            occupiedChairId,
-            shouldMount: false,
-          };
-        }
-      }
-      if (twoPressed) {
-        const target = runDesk(2);
-        if (target) {
-          hud.hideActionHint();
-          dwight.face(target.facing);
-          onApplianceAction(target);
-          return {
-            highlightedChairId,
-            highlightedApplianceId: target.objectId,
-            occupiedChairId,
-            shouldMount: false,
-          };
-        }
-      }
-
-      return {
-        highlightedChairId,
-        highlightedApplianceId: nextApplianceIdSeated,
-        occupiedChairId,
-        shouldMount: false,
-      };
-    }
-
-    if (atDwightDesk && deskBundle.length === 1) {
-      const only = deskBundle[0]!;
-      hud.showActionHint(only.actionName);
-      nextApplianceIdSeated = only.objectId;
-      if (nextApplianceIdSeated !== highlightedApplianceId) {
-        applianceHighlight.clear();
-        if (only.polygon) {
-          applianceHighlight.lineStyle(2, 0xffd700, 1);
-          applianceHighlight.strokePoints(only.polygon, true);
-        }
-      }
-      if (cPressed) {
-        dwight.stand();
-        onStand();
-        if (occupiedChairId !== null) setChairOccupancy(chairs, occupiedChairId, null);
-        hud.hideSitHint();
+      const seatedTarget = onePressed ? runSeated(1) : twoPressed ? runSeated(2) : null;
+      if (seatedTarget) {
         hud.hideActionHint();
-        chairHighlight.clear();
-        applianceHighlight.clear();
-        return {
-          highlightedChairId: null,
-          highlightedApplianceId: null,
-          occupiedChairId: null,
-          shouldMount: false,
-        };
-      }
-      if (onePressed) {
-        hud.hideActionHint();
-        dwight.face(only.facing);
-        onApplianceAction(only);
+        dwight.face(seatedTarget.facing);
+        onApplianceAction(seatedTarget);
         return {
           highlightedChairId,
-          highlightedApplianceId: only.objectId,
+          highlightedApplianceId: seatedTarget.objectId,
           occupiedChairId,
           shouldMount: false,
         };
       }
+
       return {
         highlightedChairId,
         highlightedApplianceId: nextApplianceIdSeated,
@@ -237,22 +178,22 @@ export function updateOnFootState(args: OnFootUpdateArgs): OnFootUpdateResult {
       };
     }
 
-    nearApplianceWhileSeated = nearestApplianceInRange(
+    const nearWhileSeated = nearestApplianceInRange(
       appliances,
       feetX,
       feetY,
       APPLIANCE_INTERACTION_RADIUS,
       { isSitting: true, occupiedChairId }
     );
-    if (nearApplianceWhileSeated) hud.showActionHint(nearApplianceWhileSeated.actionName);
+    if (nearWhileSeated) hud.showActionHint(nearWhileSeated.actionName);
     else hud.hideActionHint();
 
-    nextApplianceIdSeated = nearApplianceWhileSeated?.objectId ?? null;
-    if (nextApplianceIdSeated !== highlightedApplianceId) {
+    const nextApplianceIdSeated2 = nearWhileSeated?.objectId ?? null;
+    if (nextApplianceIdSeated2 !== highlightedApplianceId) {
       applianceHighlight.clear();
-      if (nearApplianceWhileSeated?.polygon) {
+      if (nearWhileSeated?.polygon) {
         applianceHighlight.lineStyle(2, 0xffd700, 1);
-        applianceHighlight.strokePoints(nearApplianceWhileSeated.polygon, true);
+        applianceHighlight.strokePoints(nearWhileSeated.polygon, true);
       }
     }
 
@@ -272,20 +213,20 @@ export function updateOnFootState(args: OnFootUpdateArgs): OnFootUpdateResult {
       };
     }
 
-    if (nearApplianceWhileSeated && onePressed) {
+    if (nearWhileSeated && onePressed) {
       hud.hideActionHint();
-      if (nearApplianceWhileSeated.skipWalkToActionPoint) {
-        dwight.face(nearApplianceWhileSeated.facing);
-        onApplianceAction(nearApplianceWhileSeated);
+      if (nearWhileSeated.skipWalkToActionPoint) {
+        dwight.face(nearWhileSeated.facing);
+        onApplianceAction(nearWhileSeated);
       } else {
-        dwight.walkTo(nearApplianceWhileSeated.position.x, nearApplianceWhileSeated.position.y, () => {
-          dwight.face(nearApplianceWhileSeated.facing);
-          onApplianceAction(nearApplianceWhileSeated);
+        dwight.walkTo(nearWhileSeated.position.x, nearWhileSeated.position.y, () => {
+          dwight.face(nearWhileSeated.facing);
+          onApplianceAction(nearWhileSeated);
         });
       }
       return {
         highlightedChairId,
-        highlightedApplianceId: nearApplianceWhileSeated.objectId,
+        highlightedApplianceId: nearWhileSeated.objectId,
         occupiedChairId,
         shouldMount: false,
       };
@@ -293,7 +234,7 @@ export function updateOnFootState(args: OnFootUpdateArgs): OnFootUpdateResult {
 
     return {
       highlightedChairId,
-      highlightedApplianceId: nextApplianceIdSeated,
+      highlightedApplianceId: nextApplianceIdSeated2,
       occupiedChairId,
       shouldMount: false,
     };
@@ -321,15 +262,22 @@ export function updateOnFootState(args: OnFootUpdateArgs): OnFootUpdateResult {
   if (nearChair) hud.showSitHint(false);
   else hud.hideSitHint();
 
-  const nearAppliance = nearestApplianceInRange(
+  const nearBundle = nearbyApplianceBundleInRange(
     appliances,
     feetX,
     feetY,
     APPLIANCE_INTERACTION_RADIUS,
     { isSitting: dwight.isSitting, occupiedChairId }
   );
-  if (nearAppliance) hud.showActionHint(nearAppliance.actionName);
-  else hud.hideActionHint();
+  const nearAppliance = nearBundle[0] ?? null;
+
+  if (nearBundle.length > 1) {
+    hud.showMultiKeyActionHints(nearBundle.map((a) => ({ key: a.hotkeySlot!, actionName: a.actionName })));
+  } else if (nearAppliance) {
+    hud.showActionHint(nearAppliance.actionName);
+  } else {
+    hud.hideActionHint();
+  }
 
   const nextHighlightedChairId = nearChair?.id ?? null;
   const nextHighlightedApplianceId = nearAppliance?.objectId ?? null;
@@ -362,17 +310,36 @@ export function updateOnFootState(args: OnFootUpdateArgs): OnFootUpdateResult {
     };
   }
 
-  if (nearAppliance && onePressed) {
+  function triggerAppliance(target: ApplianceInteractable) {
     hud.hideActionHint();
-    if (nearAppliance.skipWalkToActionPoint) {
-      dwight.face(nearAppliance.facing);
-      onApplianceAction(nearAppliance);
+    if (target.skipWalkToActionPoint) {
+      dwight.face(target.facing);
+      onApplianceAction(target);
     } else {
-      dwight.walkTo(nearAppliance.position.x, nearAppliance.position.y, () => {
-        dwight.face(nearAppliance.facing);
-        onApplianceAction(nearAppliance);
+      dwight.walkTo(target.position.x, target.position.y, () => {
+        dwight.face(target.facing);
+        onApplianceAction(target);
       });
     }
+  }
+
+  if (nearBundle.length > 1) {
+    const slotTarget = onePressed
+      ? nearBundle.find((a) => a.hotkeySlot === 1) ?? null
+      : twoPressed
+        ? nearBundle.find((a) => a.hotkeySlot === 2) ?? null
+        : null;
+    if (slotTarget) {
+      triggerAppliance(slotTarget);
+      return {
+        highlightedChairId: nextHighlightedChairId,
+        highlightedApplianceId: slotTarget.objectId,
+        occupiedChairId,
+        shouldMount: false,
+      };
+    }
+  } else if (nearAppliance && onePressed) {
+    triggerAppliance(nearAppliance);
     return {
       highlightedChairId: nextHighlightedChairId,
       highlightedApplianceId: nearAppliance.objectId,

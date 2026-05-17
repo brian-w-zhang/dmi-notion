@@ -1,7 +1,6 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import appliancesData from '../../../public/assets/world/appliances.json'
 import officeObjectsData from '../../../public/assets/world/office-objects.json'
 import needsConfig from '../../../public/data/needs_config.json'
 import characterActionsData from '../../../public/data/character_actions.json'
@@ -70,8 +69,10 @@ interface CharacterPair {
 }
 
 const actionsByObject: Record<string, ApplianceAction[]> = {}
-for (const appliance of appliancesData.appliances) {
-  actionsByObject[appliance.objectName] = appliance.actions as ApplianceAction[]
+for (const entity of Object.values(officeObjectsData.entitiesById as Record<string, Entity>)) {
+  if (entity.entityType === 'appliance' && entity.actions?.length) {
+    actionsByObject[entity.name] = entity.actions as ApplianceAction[]
+  }
 }
 
 const allEntities = Object.values(

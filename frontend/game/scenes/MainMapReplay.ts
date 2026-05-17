@@ -17,6 +17,15 @@ interface CharState {
   seated?: boolean;
 }
 
+interface SfxEvent {
+  key?:      string;
+  volume?:   number;
+  rate?:     number;
+  detune?:   number;
+  loop?:     boolean;
+  stopLoop?: string;
+}
+
 interface FullStep {
   step:        number;
   car_x:       number; car_y: number; car_facing: Facing; car_anim: CarAnim;
@@ -24,6 +33,7 @@ interface FullStep {
   follow:      'car' | string;
   emoji:       string; desc: string;
   transition?: 'enter_building';
+  sfx?:        SfxEvent[];
 }
 
 interface ReplayFile {
@@ -39,6 +49,7 @@ export class MainMapReplayController {
   private paused          = false;
   private stepTimer!:       Phaser.Time.TimerEvent;
   private currentFollow: 'car' | string = 'car';
+  private readonly loops  = new Map<string, Phaser.Sound.BaseSound>();
 
   constructor(
     private readonly scene:  Phaser.Scene,
@@ -51,6 +62,43 @@ export class MainMapReplayController {
 
   get isValid(): boolean {
     return !!(this.replay?.steps?.length);
+  }
+
+  get isPaused(): boolean { return this.paused; }
+
+  pause(): void  { this.paused = true;  }
+  resume(): void { this.paused = false; }
+  togglePause(): void { this.paused = !this.paused; }
+
+  skipSteps(n: number): void {
+    // stepIdx points to the NEXT step, so current displayed = stepIdx - 1
+    this.seekTo((this.stepIdx - 1) + n);
+  }
+
+  seekTo(idx: number): void {
+    const clamped = Phaser.Math.Clamp(idx, 0, this.replay.steps.length - 1);
+
+    // Kill any in-flight tweens so sprites don't drift after the jump
+    this.scene.tweens.killTweensOf(this.car.sprite);
+    this.scene.tweens.killTweensOf(this.dwight.sprite);
+
+    // Stop all managed sound loops — they'll restart if the replayed step needs them
+    this.loops.forEach(s => s.stop());
+    this.loops.clear();
+
+    // Instant-apply the target step
+    const step = this.replay.steps[clamped];
+    if (step.transition === 'enter_building') {
+      this._doTransition(step);
+    } else {
+      this._applyStep(step, true);
+    }
+
+    // Advance the cursor: next tick will process clamped+1
+    this.stepIdx = clamped + 1;
+
+    // Immediately sync the HUD scrubber
+    this.hud.setReplayStatus(step.emoji, step.desc, step.step, this.replay.steps.length - 1, this.paused);
   }
 
   start(): void {
@@ -75,8 +123,13 @@ export class MainMapReplayController {
     this.currentFollow = 'car';
 
     // HUD
-    this.hud.enterReplayMode(steps.length - 1);
-    this.hud.setReplayStatus(first.emoji, first.desc, 0, steps.length - 1);
+    this.hud.enterReplayMode(steps.length - 1, meta.ms_per_step, {
+      onPlayPause: () => this.togglePause(),
+      onSeek:      (idx)   => this.seekTo(idx),
+      onSkip:      (n)     => this.skipSteps(n),
+    });
+    this.hud.setReplayStatus(first.emoji, first.desc, 0, steps.length - 1, false);
+    this._playSfx(first.sfx);
 
     // Step timer starts after a short settle delay
     this.scene.time.delayedCall(600, () => {
@@ -91,6 +144,8 @@ export class MainMapReplayController {
 
   destroy(): void {
     this.stepTimer?.remove(false);
+    this.loops.forEach(s => s.stop());
+    this.loops.clear();
   }
 
   // ── Timer tick ──────────────────────────────────────────────────────────────
@@ -99,6 +154,8 @@ export class MainMapReplayController {
     if (this.paused) return;
     if (this.stepIdx >= this.replay.steps.length) {
       this.stepTimer.remove(false);
+      const lastStep = this.replay.steps[this.replay.steps.length - 1];
+      this.hud.setReplayStatus(lastStep.emoji, lastStep.desc, lastStep.step, this.replay.steps.length - 1, true);
       return;
     }
     const step = this.replay.steps[this.stepIdx++];
@@ -114,7 +171,8 @@ export class MainMapReplayController {
   private _applyStep(step: FullStep, instant: boolean): void {
     const ms = this.replay.meta.ms_per_step;
 
-    this.hud.setReplayStatus(step.emoji, step.desc, step.step, this.replay.steps.length - 1);
+    this.hud.setReplayStatus(step.emoji, step.desc, step.step, this.replay.steps.length - 1, this.paused);
+    this._playSfx(step.sfx);
 
     // Car — always tracked (stays at parked position after dismount)
     if (instant) {
@@ -175,13 +233,32 @@ export class MainMapReplayController {
     cam.setLerp(0.1, 0.1);
     this.currentFollow = this.replay.meta.sprite_key;
 
-    this.hud.setReplayStatus(step.emoji, step.desc, step.step, this.replay.steps.length - 1);
+    this.hud.setReplayStatus(step.emoji, step.desc, step.step, this.replay.steps.length - 1, this.paused);
+    this._playSfx(step.sfx);
 
     // Reveal Dwight on the next render frame — camera is already at the new
     // position so there is no visible jump.
     this.scene.time.delayedCall(16, () => {
       this.dwight.sprite.setVisible(true);
     });
+  }
+
+  // ── Sound ───────────────────────────────────────────────────────────────────
+
+  private _playSfx(events: SfxEvent[] | undefined): void {
+    if (!events?.length) return;
+    for (const e of events) {
+      if (e.stopLoop) {
+        this.loops.get(e.stopLoop)?.stop();
+        this.loops.delete(e.stopLoop);
+      }
+      if (e.key) {
+        const cfg = { volume: e.volume ?? 1, rate: e.rate, detune: e.detune, loop: e.loop ?? false };
+        const snd = this.scene.sound.add(e.key, cfg);
+        snd.play();
+        if (e.loop) this.loops.set(e.key, snd);
+      }
+    }
   }
 
   // ── Animation helpers ───────────────────────────────────────────────────────

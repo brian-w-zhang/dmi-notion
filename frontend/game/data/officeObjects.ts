@@ -19,13 +19,28 @@ export interface ActionPoint {
   facing: Direction;
 }
 
+export interface ApplianceAction {
+  id: string;
+  name: string;
+  emoji: string;
+  actionPointId: number | null;
+  loadingPhrases?: string[];
+  durationMs?: number;
+  sfxStartKey?: string;
+  sfxLoopKey?: string;
+  sfxEndKey?: string;
+  sfxStartVolumeScale?: number;
+  sfxLoopVolumeScale?: number;
+  sfxEndVolumeScale?: number;
+  needDeltas?: Record<string, number>;
+}
+
 interface BaseEntity {
   id: number;
   name: string;
   zone: string | null;
   center: Point;
-  /** Populated at runtime by merging with actions_config.json */
-  actions: string[];
+  actions: ApplianceAction[];
 }
 
 export interface ChairEntity extends BaseEntity {
@@ -44,6 +59,7 @@ export interface TableEntity extends BaseEntity {
 export interface ApplianceEntity extends BaseEntity {
   entityType: 'appliance';
   actionPoints: ActionPoint[];
+  hotkeySlot?: number;
 }
 
 export interface StorageEntity extends BaseEntity {

@@ -18,7 +18,6 @@ import {
   parseChairs,
   parseChairPolygons,
 } from '../systems/ChairSystem';
-import type { ApplianceActionsData } from '../data/appliances';
 import type { OfficeObjectsData } from '../data/officeObjects';
 import {
   ACTIVE_CAR,
@@ -214,7 +213,6 @@ export function loadMainMapWorldData(scene: Phaser.Scene): MainMapWorldData {
   console.log(`[MainMap] Walkable zones: ${walkableZones.length}, Colliders: ${colliders.length}`);
 
   const officeObjects = scene.cache.json.get('office-objects') as OfficeObjectsData;
-  const appliancesData = scene.cache.json.get('appliances') as ApplianceActionsData | undefined;
   const chairs = parseChairs(officeObjects);
   const chairPolygons = parseChairPolygons(tiledJSON);
   for (const chair of chairs) {
@@ -222,10 +220,21 @@ export function loadMainMapWorldData(scene: Phaser.Scene): MainMapWorldData {
   }
   console.log(`[MainMap] Chairs loaded: ${chairs.length} (${chairPolygons.size} with polygons)`);
 
+  // Owned chairs are fixed furniture — add their tile polygons as colliders so
+  // characters cannot walk through them. Unowned chairs (lobby couch seats etc.)
+  // are skipped since they may be moved or occupied dynamically.
+  let ownedChairColliderCount = 0;
+  for (const chair of chairs) {
+    if (chair.owner && chair.polygon) {
+      colliders.push({ vertices: chair.polygon });
+      ownedChairColliderCount++;
+    }
+  }
+  console.log(`[MainMap] Owned chair colliders added: ${ownedChairColliderCount}`);
+
   const appliancePolygons = parseAppliancePolygons(tiledJSON);
   const applianceInteractables = buildApplianceInteractables(
     officeObjects,
-    appliancesData,
     appliancePolygons
   );
   console.log(`[MainMap] Appliance interactables loaded: ${applianceInteractables.length}`);

@@ -21,6 +21,7 @@ const CONTEXT_HINT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
 };
 
 export class MainMapHud {
+  private readonly scene: Phaser.Scene;
   private readonly sceneW: number;
   private readonly sceneH: number;
   private readonly bottomHintY: number;
@@ -37,8 +38,24 @@ export class MainMapHud {
   private readonly mountHint: Phaser.GameObjects.Text;
   private readonly carControlsHint: Phaser.GameObjects.Text;
   // Replay-mode UI (hidden in sandbox, shown during replay playback)
-  private readonly replayStatusText: Phaser.GameObjects.Text;
-  private readonly replayStepLabel: Phaser.GameObjects.Text;
+  private readonly replayBar:           Phaser.GameObjects.Container;
+  private readonly replayStatusLine:    Phaser.GameObjects.Text;
+  private readonly replayPlayPauseBtn:  Phaser.GameObjects.Text;
+  private readonly replayTrackFill:     Phaser.GameObjects.Graphics;
+  private readonly replayPlayhead:      Phaser.GameObjects.Graphics;
+  private readonly replayTimeLabel:     Phaser.GameObjects.Text;
+  // Playback state
+  private _onPlayPause: (() => void) | null = null;
+  private _onSeek:      ((idx: number) => void) | null = null;
+  private _onSkip:      ((steps: number) => void) | null = null;
+  private _replaySkipSteps  = 188;
+  private _replayTotalSteps = 1;
+  private _replayMsPerStep  = 53;
+  private _trackX = 0;
+  private _trackW = 0;
+  private _trackCtrlY = 0;
+  private _draggingTrack = false;
+
   private readonly uiCamera: Phaser.Cameras.Scene2D.Camera;
   private hudChromeVisible = true;
 
@@ -52,6 +69,7 @@ export class MainMapHud {
     onToggleSimulation: () => void,
     onHome: () => void,
   ) {
+    this.scene = scene;
     this.onToggleCameraMode = onToggleCameraMode;
     this.onToggleSimulation = onToggleSimulation;
     this.onHome = onHome;
@@ -118,14 +136,103 @@ export class MainMapHud {
       }
     ).setOrigin(0.5, 1).setVisible(true).setLineSpacing(3);
 
-    this.replayStatusText = scene.add.text(sceneW / 2, sceneH - 14, '', {
-      fontFamily: 'monospace', fontSize: '11px', color: '#e2e8f0',
-      backgroundColor: '#00000099', padding: { x: 10, y: 5 },
-    }).setOrigin(0.5, 1).setVisible(false);
+    // ── Playback bar layout ──────────────────────────────────────────────────────
+    const BAR_W  = Math.min(600, sceneW - 32);
+    const BAR_H  = 70;
+    const BAR_X  = (sceneW - BAR_W) / 2;
+    const BAR_Y  = sceneH - BAR_H - 10;
+    const PAD_W  = 16;
+    const PAD_H  = 12;
+    const BTN_W  = 34;
+    const BTN_GAP = 8;
+    const TIME_W = 76;
 
-    this.replayStepLabel = scene.add.text(sceneW - 10, 14, '', {
-      fontFamily: 'monospace', fontSize: '9px', color: '#475569',
-    }).setOrigin(1, 0).setVisible(false);
+    const statusY  = BAR_Y + PAD_H;
+    const ctrlY    = BAR_Y + BAR_H - PAD_H - 4;
+
+    const btnBackX = BAR_X + PAD_W + BTN_W / 2;
+    const btnPlayX = btnBackX + BTN_W + BTN_GAP;
+    const btnFwdX  = btnPlayX + BTN_W + BTN_GAP;
+    const trackX   = btnFwdX + BTN_W / 2 + 12;
+    const trackEndX = BAR_X + BAR_W - PAD_W - TIME_W - 6;
+    const trackW   = trackEndX - trackX;
+    const TRACK_H  = 3;
+    const timeX    = BAR_X + BAR_W - PAD_W;
+
+    this._trackX    = trackX;
+    this._trackW    = trackW;
+    this._trackCtrlY = ctrlY;
+
+    // Static bar background (drawn once into a graphics object)
+    const barBg = scene.add.graphics();
+    barBg.fillStyle(0x060d18, 0.93);
+    barBg.fillRoundedRect(BAR_X, BAR_Y, BAR_W, BAR_H, 10);
+    barBg.lineStyle(1, 0x1e293b, 1);
+    barBg.strokeRoundedRect(BAR_X, BAR_Y, BAR_W, BAR_H, 10);
+
+    // Static track background
+    const trackBg = scene.add.graphics();
+    trackBg.fillStyle(0x1e293b, 1);
+    trackBg.fillRoundedRect(trackX, ctrlY - TRACK_H / 2, trackW, TRACK_H, 2);
+
+    // Dynamic track fill (updated by updatePlayback)
+    this.replayTrackFill = scene.add.graphics();
+
+    // Dynamic playhead circle (updated by updatePlayback)
+    this.replayPlayhead = scene.add.graphics();
+
+    // Status text (emoji + description)
+    this.replayStatusLine = scene.add.text(sceneW / 2, statusY, '', {
+      fontFamily: 'monospace',
+      fontSize: '11px',
+      color: '#94a3b8',
+    }).setOrigin(0.5, 0);
+
+    // Button style
+    const btnStyle: Phaser.Types.GameObjects.Text.TextStyle = {
+      fontFamily: 'monospace',
+      fontSize: '12px',
+      color: '#94a3b8',
+      backgroundColor: '#0f172a',
+      padding: { x: 7, y: 4 },
+    };
+
+    const skipBack = scene.add.text(btnBackX, ctrlY, '◀ 10s', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    this.replayPlayPauseBtn = scene.add.text(btnPlayX, ctrlY, '⏸', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    const skipFwd  = scene.add.text(btnFwdX,  ctrlY, '10s ▶', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
+
+    for (const btn of [skipBack, this.replayPlayPauseBtn, skipFwd]) {
+      btn.on('pointerover', () => btn.setColor('#e2e8f0'));
+      btn.on('pointerout',  () => btn.setColor('#94a3b8'));
+    }
+    skipBack.on('pointerdown', () => this._onSkip?.(-this._replaySkipSteps));
+    this.replayPlayPauseBtn.on('pointerdown', () => this._onPlayPause?.());
+    skipFwd.on('pointerdown',  () => this._onSkip?.(this._replaySkipSteps));
+
+    // Time label
+    this.replayTimeLabel = scene.add.text(timeX, ctrlY, '0:00 / 0:00', {
+      fontFamily: 'monospace',
+      fontSize: '10px',
+      color: '#475569',
+    }).setOrigin(1, 0.5);
+
+    // Interactive zone over the track for click-to-seek and drag-to-scrub
+    const trackZone = scene.add.zone(trackX, ctrlY - 12, trackW, 24).setOrigin(0, 0).setInteractive({ useHandCursor: true });
+    trackZone.on('pointerdown', (ptr: Phaser.Input.Pointer) => {
+      this._draggingTrack = true;
+      this._seekFromX(ptr.x);
+    });
+    scene.input.on(Phaser.Input.Events.POINTER_MOVE, (ptr: Phaser.Input.Pointer) => {
+      if (this._draggingTrack) this._seekFromX(ptr.x);
+    });
+    scene.input.on(Phaser.Input.Events.POINTER_UP, () => { this._draggingTrack = false; });
+
+    // Assemble replayBar container (hidden until enterReplayMode)
+    this.replayBar = scene.add.container(0, 0, [
+      barBg, trackBg, this.replayTrackFill, this.replayPlayhead,
+      this.replayStatusLine, skipBack, this.replayPlayPauseBtn, skipFwd,
+      this.replayTimeLabel, trackZone,
+    ]).setVisible(false);
 
     this.hudRoot = scene.add.container(0, 0, [
       homeBtn,
@@ -137,8 +244,7 @@ export class MainMapHud {
       this.entranceHint,
       this.mountHint,
       this.carControlsHint,
-      this.replayStatusText,
-      this.replayStepLabel,
+      this.replayBar,
     ]);
     this.hudRoot.setDepth(HUD_DEPTH);
     this.wireCameraModeTogglePointer();
@@ -270,30 +376,71 @@ export class MainMapHud {
   // ── Replay mode ─────────────────────────────────────────────────────────────
 
   /** Switch the HUD from sandbox controls to replay playback UI. */
-  enterReplayMode(totalSteps: number): void {
-    // Hide all sandbox-specific elements
+  enterReplayMode(
+    totalSteps: number,
+    msPerStep: number,
+    callbacks: { onPlayPause: () => void; onSeek: (idx: number) => void; onSkip: (steps: number) => void },
+  ): void {
+    this._onPlayPause        = callbacks.onPlayPause;
+    this._onSeek             = callbacks.onSeek;
+    this._onSkip             = callbacks.onSkip;
+    this._replayTotalSteps   = totalSteps;
+    this._replayMsPerStep    = msPerStep;
+    this._replaySkipSteps    = Math.round(10000 / msPerStep); // 10 real seconds of steps
+
     this.positionText.setVisible(false);
     this.cameraModeToggle.setVisible(false);
     this.simulationToggle.setVisible(false);
     this.hideContextHints();
     this.carControlsHint.setVisible(false);
-    // Show replay elements
-    this.replayStatusText.setVisible(true);
-    this.replayStepLabel.setText(`step 0 / ${totalSteps}`).setVisible(true);
+    this.replayBar.setVisible(true);
   }
 
-  setReplayStatus(emoji: string, desc: string, step: number, total: number): void {
-    this.replayStatusText.setText(`${emoji}  ${desc}`);
-    this.replayStepLabel.setText(`step ${step} / ${total}`);
+  setReplayStatus(emoji: string, desc: string, step: number, total: number, isPaused = false): void {
+    this.replayStatusLine.setText(`${emoji}  ${desc}`);
+    this._updateScrubber(step, total, isPaused);
   }
 
   exitReplayMode(): void {
-    this.replayStatusText.setVisible(false);
-    this.replayStepLabel.setVisible(false);
+    this.replayBar.setVisible(false);
+    this._onPlayPause = null;
+    this._onSeek = null;
+    this._onSkip = null;
     this.positionText.setVisible(true);
     this.cameraModeToggle.setVisible(true);
     this.simulationToggle.setVisible(true);
     this.showCarControls();
+  }
+
+  private _updateScrubber(step: number, total: number, isPaused: boolean): void {
+    const frac    = total > 0 ? Math.min(step / total, 1) : 0;
+    const fillW   = frac * this._trackW;
+    const headX   = this._trackX + frac * this._trackW;
+    const TRACK_H = 3;
+
+    this.replayTrackFill.clear();
+    if (fillW > 0.5) {
+      this.replayTrackFill.fillStyle(0x3b82f6, 1);
+      this.replayTrackFill.fillRoundedRect(this._trackX, this._trackCtrlY - TRACK_H / 2, fillW, TRACK_H, 1);
+    }
+
+    this.replayPlayhead.clear();
+    this.replayPlayhead.fillStyle(0xffffff, 1);
+    this.replayPlayhead.fillCircle(headX, this._trackCtrlY, 5);
+    this.replayPlayhead.lineStyle(1.5, 0x3b82f6, 1);
+    this.replayPlayhead.strokeCircle(headX, this._trackCtrlY, 5);
+
+    this.replayPlayPauseBtn.setText(isPaused ? '▶' : '⏸');
+
+    const elapsedSec = Math.floor((step * this._replayMsPerStep) / 1000);
+    const totalSec   = Math.floor((total * this._replayMsPerStep) / 1000);
+    const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+    this.replayTimeLabel.setText(`${fmt(elapsedSec)} / ${fmt(totalSec)}`);
+  }
+
+  private _seekFromX(screenX: number): void {
+    const frac = Phaser.Math.Clamp((screenX - this._trackX) / this._trackW, 0, 1);
+    this._onSeek?.(Math.round(frac * this._replayTotalSteps));
   }
 
   private layoutBottomContextHints(): void {

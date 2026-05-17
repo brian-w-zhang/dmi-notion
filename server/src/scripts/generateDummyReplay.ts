@@ -58,6 +58,15 @@ interface CharState {
   seated?: boolean
 }
 
+interface SfxEvent {
+  key?:      string    // sound key to play (omit when only stopping a loop)
+  volume?:   number
+  rate?:     number
+  detune?:   number
+  loop?:     boolean   // start a managed loop tracked by key
+  stopLoop?: string    // key of a managed loop to stop
+}
+
 interface FullStep {
   step:        number
   car_x:       number; car_y: number; car_facing: Facing; car_anim: CarAnim
@@ -65,6 +74,7 @@ interface FullStep {
   follow:      'car' | string   // 'car' or a char id
   emoji:       string; desc: string
   transition?: 'enter_building'
+  sfx?:        SfxEvent[]
 }
 
 interface ReplayFile {
@@ -75,8 +85,9 @@ interface ReplayFile {
 // ── Tiled JSON types (subset) ─────────────────────────────────────────────────
 
 interface TiledObj {
-  name?: string; x: number; y: number
-  polygon?: { x: number; y: number }[]
+  id?:       number
+  name?:     string; x: number; y: number
+  polygon?:  { x: number; y: number }[]
   properties?: { name: string; value: unknown }[]
 }
 
@@ -453,6 +464,24 @@ const officeWalkable   = parsePolygons(tiledJSON, 'Office Walkable Area')
 const colliders        = parsePolygons(tiledJSON, 'Colliders')
 console.log(`Zones — exterior: ${exteriorWalkable.length}, office: ${officeWalkable.length}, colliders: ${colliders.length}`)
 
+// Owned chair colliders — mirrors mainMapSetup.ts exactly so A* avoids the same chairs
+const officeObjectsPath = resolve(__dirname, '../../../frontend/public/assets/world/office-objects.json')
+const officeObjectsJson = JSON.parse(readFileSync(officeObjectsPath, 'utf-8'))
+const ownedChairIds = new Set<number>()
+for (const zone of Object.values(officeObjectsJson.zones) as { entities: { id: number; entityType: string; owner: string | null }[] }[]) {
+  for (const entity of zone.entities) {
+    if (entity.entityType === 'chair' && entity.owner) ownedChairIds.add(entity.id)
+  }
+}
+const chairGroup = findObjectGroup(tiledJSON.layers, 'Chairs')
+let ownedChairColliderCount = 0
+for (const obj of chairGroup?.objects ?? []) {
+  if (obj.id === undefined || !obj.polygon || !ownedChairIds.has(obj.id)) continue
+  colliders.push({ vertices: obj.polygon.map(v => ({ x: obj.x + v.x, y: obj.y + v.y })) })
+  ownedChairColliderCount++
+}
+console.log(`Owned chair colliders: ${ownedChairColliderCount}`)
+
 // One combined grid (same as MainMap: [...office, ...exterior])
 const pf = new PathfindingSystem([...officeWalkable, ...exteriorWalkable], colliders)
 
@@ -544,6 +573,74 @@ walkWaypoints(deskPath, '🚶', 'Walking to desk')
 char_x = DWIGHT_CHAIR.x; char_y = DWIGHT_CHAIR.y
 char_facing = 'left'; char_anim = 'sit'; char_seated = true
 idle(3, '💻', 'At desk — Assistant to the Regional Manager')
+
+// ── Bake sound events into steps ─────────────────────────────────────────────
+// Pre-roll all randomness so the JSON is deterministic on every replay.
+// All volumes are pre-scaled by REPLAY_VOLUME_SCALE so the sim is quieter than sandbox.
+
+const REPLAY_VOLUME_SCALE = 0.3
+const vol = (v: number) => parseFloat((v * REPLAY_VOLUME_SCALE).toFixed(3))
+
+const FOOTSTEP_KEYS  = ['Cloth_dig1.ogg', 'Cloth_dig2.ogg', 'Cloth_dig3.ogg', 'Cloth_dig4.ogg']
+const FOOTSTEP_EVERY = Math.round(400 / PLAYBACK_MS)  // ~7 steps ≈ 400 ms between footsteps
+
+const entrOutX = Math.round(GROUND_ENTRANCE_OUT.x)
+const entrOutY = Math.round(GROUND_ENTRANCE_OUT.y)
+
+let footCounter    = 0
+let carLoopStarted = false
+
+for (let i = 0; i < steps.length; i++) {
+  const s    = steps[i]
+  const prev = i > 0 ? steps[i - 1] : null
+  const sfx: SfxEvent[] = []
+
+  const dw     = s.chars.find(c => c.id === DWIGHT_ID)
+  const prevDw = prev?.chars.find(c => c.id === DWIGHT_ID)
+
+  // Car driving loop — start on first moving step, stop at dismount
+  if (!carLoopStarted && s.car_anim === 'drive') {
+    sfx.push({ key: 'car_driving', loop: true, volume: vol(3) })
+    carLoopStarted = true
+  }
+
+  // Dismount — char becomes visible for the first time
+  if (dw?.visible && !prevDw?.visible) {
+    sfx.push({ stopLoop: 'car_driving' })
+    sfx.push({ key: 'open_car_door', volume: vol(1) })
+  }
+
+  // Footsteps — every FOOTSTEP_EVERY walking steps, pre-rolled random values
+  if (dw?.visible && dw.anim === 'walk') {
+    footCounter++
+    if (footCounter % FOOTSTEP_EVERY === 1) {  // offset by 1 so first step gets sound
+      sfx.push({
+        key:    FOOTSTEP_KEYS[Math.floor(Math.random() * FOOTSTEP_KEYS.length)],
+        volume: vol(0.2 + Math.random() * 0.2),
+        rate:   parseFloat((0.85 + Math.random() * 0.3).toFixed(3)),
+        detune: Math.round(Math.random() * 400 - 200),
+      })
+    }
+  } else {
+    footCounter = 0
+  }
+
+  // Building entrance door — exact arrival at ground_entrance_out (check y, not x — path shares x)
+  if (dw?.x === entrOutX && dw?.y === entrOutY && prevDw?.y !== entrOutY) {
+    sfx.push({ key: 'entrance_door', volume: vol(0.4) })
+  }
+
+  // Sit down — char enters seated state
+  if (dw?.seated && !prevDw?.seated) {
+    sfx.push({
+      key:    'Cloth_dig1.ogg',
+      volume: vol(0.35),
+      detune: Math.round(Math.random() * 200 - 100),
+    })
+  }
+
+  if (sfx.length > 0) s.sfx = sfx
+}
 
 // ── Write output ──────────────────────────────────────────────────────────────
 

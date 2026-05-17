@@ -174,7 +174,6 @@ export class Preloader extends Phaser.Scene {
 
     // --- World data ---
     this.load.json('office-objects', '/assets/world/office-objects.json');
-    this.load.json('appliances', '/assets/world/appliances.json');
     this.load.json('replay', '/assets/simulation/replay.json');
     this.load.image('emoji16-question', '/assets/ui/emojis_16x16/question.png');
     this.load.image('emoji16-phone', '/assets/ui/emojis_16x16/phone.png');

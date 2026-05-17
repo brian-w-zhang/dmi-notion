@@ -1,5 +1,4 @@
-import type { ApplianceActionsData } from '../data/appliances';
-import type { ActionPoint, ApplianceEntity, OfficeObjectsData } from '../data/officeObjects';
+import type { ActionPoint, ApplianceEntity, ChairEntity, OfficeObjectsData } from '../data/officeObjects';
 import { findObjectGroupInJSON, type TiledLayer, type TiledMapJsonRoot } from './CollisionSystem';
 
 /** Dwight's desk chair object id in office-objects / Tiled (sales). */
@@ -149,13 +148,8 @@ function sfxVolumeScale(raw: unknown): number | undefined {
 
 export function buildApplianceInteractables(
   officeObjectsData: OfficeObjectsData,
-  applianceActionsData: ApplianceActionsData | null | undefined,
   polygonByObjectId: Map<number, { x: number; y: number }[]>
 ): ApplianceInteractable[] {
-  const actionsByObjectId = new Map(
-    (applianceActionsData?.appliances ?? []).map((entry) => [entry.objectId, entry])
-  );
-
   const appliances: ApplianceEntity[] = Object
     .values(officeObjectsData.entitiesById)
     .filter((entity): entity is ApplianceEntity => entity.entityType === 'appliance');
@@ -164,40 +158,44 @@ export function buildApplianceInteractables(
   for (const appliance of appliances) {
     if (!appliance.actionPoints.length) continue;
 
-    const configured = actionsByObjectId.get(appliance.id);
-    const action = configured?.actions?.[0];
-    const actionPoint = chooseActionPoint(appliance, action?.actionPointId ?? null);
-    if (!actionPoint) continue;
+    const actions = appliance.actions ?? [];
+    const isMulti = actions.length > 1;
 
-    interactables.push({
-      objectId: appliance.id,
-      objectName: appliance.name,
-      zone: appliance.zone,
-      actionPointId: actionPoint.id,
-      actionPointName: actionPoint.name,
-      actionName: action?.name?.trim() || fallbackActionName(appliance.name),
-      emoji: action?.emoji?.trim() || fallbackEmoji(appliance.name),
-      loadingPhrases: normalizeLoadingPhrases(
-        action?.loadingPhrases,
-        action?.name?.trim() || fallbackActionName(appliance.name)
-      ),
-      durationMs:
-        typeof action?.durationMs === 'number' && action.durationMs > 0
-          ? action.durationMs
-          : null,
-      position: actionPoint.position,
-      facing: actionPoint.facing,
-      polygon: polygonByObjectId.get(appliance.id) ?? null,
-      requiresOccupiedChairId: null,
-      skipWalkToActionPoint: false,
-      hotkeySlot: null,
-      sfxStartKey: sfxKey(action?.sfxStartKey),
-      sfxLoopKey: sfxKey(action?.sfxLoopKey),
-      sfxEndKey: sfxKey(action?.sfxEndKey),
-      sfxStartVolumeScale: sfxVolumeScale(action?.sfxStartVolumeScale),
-      sfxLoopVolumeScale: sfxVolumeScale(action?.sfxLoopVolumeScale),
-      sfxEndVolumeScale: sfxVolumeScale(action?.sfxEndVolumeScale),
-    });
+    for (let i = 0; i < Math.max(actions.length, 1); i++) {
+      const action = actions[i];
+      const actionPoint = chooseActionPoint(appliance, action?.actionPointId ?? null);
+      if (!actionPoint) continue;
+
+      interactables.push({
+        objectId: appliance.id,
+        objectName: appliance.name,
+        zone: appliance.zone,
+        actionPointId: actionPoint.id,
+        actionPointName: actionPoint.name,
+        actionName: action?.name?.trim() || fallbackActionName(appliance.name),
+        emoji: action?.emoji?.trim() || fallbackEmoji(appliance.name),
+        loadingPhrases: normalizeLoadingPhrases(
+          action?.loadingPhrases,
+          action?.name?.trim() || fallbackActionName(appliance.name)
+        ),
+        durationMs:
+          typeof action?.durationMs === 'number' && action.durationMs > 0
+            ? action.durationMs
+            : null,
+        position: actionPoint.position,
+        facing: actionPoint.facing,
+        polygon: polygonByObjectId.get(appliance.id) ?? null,
+        requiresOccupiedChairId: null,
+        skipWalkToActionPoint: false,
+        hotkeySlot: isMulti ? i + 1 : null,
+        sfxStartKey: sfxKey(action?.sfxStartKey),
+        sfxLoopKey: sfxKey(action?.sfxLoopKey),
+        sfxEndKey: sfxKey(action?.sfxEndKey),
+        sfxStartVolumeScale: sfxVolumeScale(action?.sfxStartVolumeScale),
+        sfxLoopVolumeScale: sfxVolumeScale(action?.sfxLoopVolumeScale),
+        sfxEndVolumeScale: sfxVolumeScale(action?.sfxEndVolumeScale),
+      });
+    }
   }
 
   // Desk-only demo appliances: no Tiled action points; interact while seated at Dwight's chair.
@@ -205,11 +203,10 @@ export function buildApplianceInteractables(
     if (appliance.actionPoints.length > 0) continue;
     if (!DESK_APPLIANCE_NAMES.has(appliance.name)) continue;
 
-    const configured = actionsByObjectId.get(appliance.id);
-    const action = configured?.actions?.[0];
+    const action = appliance.actions?.[0];
     const hotkeySlot =
-      typeof configured?.hotkeySlot === 'number' && configured.hotkeySlot >= 1
-        ? Math.floor(configured.hotkeySlot)
+      typeof appliance.hotkeySlot === 'number' && appliance.hotkeySlot >= 1
+        ? Math.floor(appliance.hotkeySlot)
         : DESK_DEFAULT_HOTKEY_SLOT[appliance.name] ?? 1;
     interactables.push({
       objectId: appliance.id,
@@ -242,19 +239,76 @@ export function buildApplianceInteractables(
     });
   }
 
+  // Chair entities with defined actions (e.g. nap on lobby couch).
+  // These only appear while the player is seated in that chair.
+  const chairs: ChairEntity[] = Object
+    .values(officeObjectsData.entitiesById)
+    .filter((entity): entity is ChairEntity => entity.entityType === 'chair' && entity.actions.length > 0);
+
+  for (const chair of chairs) {
+    const isMulti = chair.actions.length > 1;
+    const defaultFacing = chair.sitPoints[0]?.facing ?? 'front';
+    for (let i = 0; i < chair.actions.length; i++) {
+      const action = chair.actions[i];
+      interactables.push({
+        objectId: chair.id,
+        objectName: chair.name,
+        zone: chair.zone,
+        actionPointId: -(200000 + chair.id * 100 + i),
+        actionPointName: `${chair.name}_action_${i}`,
+        actionName: action.name?.trim() || 'rest',
+        emoji: action.emoji?.trim() || 'question',
+        loadingPhrases: normalizeLoadingPhrases(action.loadingPhrases, action.name?.trim() || 'rest'),
+        durationMs: typeof action.durationMs === 'number' && action.durationMs > 0 ? action.durationMs : null,
+        position: { ...chair.center },
+        facing: defaultFacing,
+        polygon: polygonByObjectId.get(chair.id) ?? null,
+        requiresOccupiedChairId: chair.id,
+        skipWalkToActionPoint: true,
+        hotkeySlot: isMulti ? i + 1 : 1,
+        sfxStartKey: sfxKey(action.sfxStartKey),
+        sfxLoopKey: sfxKey(action.sfxLoopKey),
+        sfxEndKey: sfxKey(action.sfxEndKey),
+        sfxStartVolumeScale: sfxVolumeScale(action.sfxStartVolumeScale),
+        sfxLoopVolumeScale: sfxVolumeScale(action.sfxLoopVolumeScale),
+        sfxEndVolumeScale: sfxVolumeScale(action.sfxEndVolumeScale),
+      });
+    }
+  }
+
   interactables.sort((a, b) => a.objectId - b.objectId);
   return interactables;
 }
 
 /** All desk-only interactables for Dwight's chair (sorted by hotkeySlot). */
 export function activeDwightDeskBundle(appliances: ApplianceInteractable[]): ApplianceInteractable[] {
+  return activeSeatedBundle(appliances, DWIGHT_DESK_CHAIR_ID);
+}
+
+/** All interactables for the currently occupied chair (sorted by hotkeySlot). Works for any chair. */
+export function activeSeatedBundle(appliances: ApplianceInteractable[], occupiedChairId: number | null): ApplianceInteractable[] {
+  if (occupiedChairId == null) return [];
   return appliances
-    .filter(
-      (a) =>
-        a.requiresOccupiedChairId === DWIGHT_DESK_CHAIR_ID &&
-        a.skipWalkToActionPoint &&
-        a.hotkeySlot != null
-    )
+    .filter((a) => a.requiresOccupiedChairId === occupiedChairId && a.skipWalkToActionPoint)
+    .sort((a, b) => (a.hotkeySlot ?? 0) - (b.hotkeySlot ?? 0));
+}
+
+/**
+ * Returns all interactables for the nearest appliance object in range (sorted by hotkeySlot).
+ * For single-action objects this is a 1-element array; for multi-action objects it returns all
+ * actions so the caller can show a multi-key hint.
+ */
+export function nearbyApplianceBundleInRange(
+  appliances: ApplianceInteractable[],
+  px: number,
+  py: number,
+  radius: number,
+  context?: NearestApplianceContext
+): ApplianceInteractable[] {
+  const nearest = nearestApplianceInRange(appliances, px, py, radius, context);
+  if (!nearest) return [];
+  return appliances
+    .filter((a) => a.objectId === nearest.objectId && a.requiresOccupiedChairId === nearest.requiresOccupiedChairId)
     .sort((a, b) => (a.hotkeySlot ?? 0) - (b.hotkeySlot ?? 0));
 }
 
