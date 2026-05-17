@@ -1,0 +1,100 @@
+[
+  {
+    "owner": "dwight",
+    "carTextureKey": "car-3-1",
+    "carImagePath": "/assets/cars/Car_3_32x32_1.png",
+    "carSheetLayout": "6x6",
+    "parkingSpot": "ps1"
+  },
+  {
+    "owner": "michael",
+    "carTextureKey": "car-4-1",
+    "carImagePath": "/assets/cars/Car_4_32x32_1.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps2"
+  },
+  {
+    "owner": "jim",
+    "carTextureKey": "car-4-2",
+    "carImagePath": "/assets/cars/Car_4_32x32_2.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps3"
+  },
+  {
+    "owner": "pam",
+    "carTextureKey": "car-3-3",
+    "carImagePath": "/assets/cars/Car_3_32x32_3.png",
+    "carSheetLayout": "6x6",
+    "parkingSpot": "ps4"
+  },
+  {
+    "owner": "ryan",
+    "carTextureKey": "car-5-1",
+    "carImagePath": "/assets/cars/Car_5_32x32_1.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps5"
+  },
+  {
+    "owner": "kelly",
+    "carTextureKey": "car-5-2",
+    "carImagePath": "/assets/cars/Car_5_32x32_2.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps6"
+  },
+  {
+    "owner": "oscar",
+    "carTextureKey": "car-4-3",
+    "carImagePath": "/assets/cars/Car_4_32x32_3.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps7"
+  },
+  {
+    "owner": "angela",
+    "carTextureKey": "car-3-2",
+    "carImagePath": "/assets/cars/Car_3_32x32_2.png",
+    "carSheetLayout": "6x6",
+    "parkingSpot": "ps8"
+  },
+  {
+    "owner": "kevin",
+    "carTextureKey": "car-4-4",
+    "carImagePath": "/assets/cars/Car_4_32x32_4.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps9"
+  },
+  {
+    "owner": "stanley",
+    "carTextureKey": "car-3-4",
+    "carImagePath": "/assets/cars/Car_3_32x32_4.png",
+    "carSheetLayout": "6x6",
+    "parkingSpot": "ps10"
+  },
+  {
+    "owner": "phyllis",
+    "carTextureKey": "car-3-5",
+    "carImagePath": "/assets/cars/Car_3_32x32_5.png",
+    "carSheetLayout": "6x6",
+    "parkingSpot": "ps11"
+  },
+  {
+    "owner": "meredith",
+    "carTextureKey": "car-4-5",
+    "carImagePath": "/assets/cars/Car_4_32x32_5.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps12"
+  },
+  {
+    "owner": "creed",
+    "carTextureKey": "car-5-3",
+    "carImagePath": "/assets/cars/Car_5_32x32_3.png",
+    "carSheetLayout": "5x5",
+    "parkingSpot": "ps13"
+  },
+  {
+    "owner": "toby",
+    "carTextureKey": "car-3-6",
+    "carImagePath": "/assets/cars/Car_3_32x32_6.png",
+    "carSheetLayout": "6x6",
+    "parkingSpot": "ps14"
+  }
+]

@@ -332,12 +332,17 @@ function parseParkingSpots(tiledJSON: TiledMapJson): ParkingSpot[] {
 
 interface CarFrame { x: number; y: number; facing: Facing; anim: CarAnim; desc: string }
 
-// Car horizontal half-width used by Car.canMoveX when facing left/right.
-const CAR_HALF_SHORT = 48
+// Car dimensions matching Car_3 (6x6 sheet layout, defaultHalfSizesForLayout).
+// Car.canMoveX uses halfLong when moving toward the front (facing left, dx < 0),
+// which is the case for enter-spot. halfShort is only used for lateral movement.
+// Car.canMoveX uses halfLong when moving toward the front (facing left, dx < 0),
+// which is the case for enter-spot.
+const CAR_HALF_LONG  = 96  // Car_3 (6x6): front edge offset when facing/moving left
 
 function simulateParking(
   spawn: { x: number; y: number },
   spot: ParkingSpot,
+  _colliders: Polygon[],
   walkableZones: Polygon[],
 ): CarFrame[] {
   const frames: CarFrame[] = []
@@ -360,15 +365,21 @@ function simulateParking(
   }
   y = targetY
 
-  // Phase 3: enter-spot — mirror CarAutoParkSystem: drive left until the boundary
-  // hits a wall (left edge leaves walkable zone), not until reaching spot centroid.
-  // This matches Car.canMoveX: checks (pivotX - halfShort, pivotY) in walkableZones.
+  // Phase 3: enter-spot — mirror Car.canMoveX exactly: move 7 px/frame (the real car
+  // speed) and stop when the leading edge leaves the walkable zone. Using the full
+  // CAR_PX_STEP (34 px) here would skip the narrow curb gap and overshoot.
   const goLeft = spot.x < laneX
-  while (true) {
-    const nx = x + (goLeft ? -CAR_PX_STEP : CAR_PX_STEP)
-    const edgeX = nx + (goLeft ? -CAR_HALF_SHORT : CAR_HALF_SHORT)
+  const PHASE3_STEP = 7
+  let lastX = x
+  let stoppedCount = 0
+  for (let guard = 0; guard < 1000; guard++) {
+    const nx = x + (goLeft ? -PHASE3_STEP : PHASE3_STEP)
+    // Use halfLong: Car.canMoveX checks halfLong when moving toward front (facing left, dx<0)
+    const edgeX = nx + (goLeft ? -CAR_HALF_LONG : CAR_HALF_LONG)
     if (!isPointInAnyPolygon(edgeX, y, walkableZones)) break
     x = Math.round(nx)
+    if (x === lastX) { if (++stoppedCount >= 3) break } else { stoppedCount = 0 }
+    lastX = x
     frames.push({ x, y, facing: goLeft ? 'left' : 'right', anim: 'drive', desc: 'Pulling into spot' })
   }
 
@@ -533,7 +544,7 @@ snapshot('🚗', 'Driving to work')
 
 // ── Car parking (CarAutoParkSystem state machine) ─────────────────────────────
 
-const parkFrames = simulateParking(CAR_SPAWN, ps1, exteriorWalkable)
+const parkFrames = simulateParking(CAR_SPAWN, ps1, colliders, exteriorWalkable)
 console.log(`Parking frames: ${parkFrames.length}`)
 for (const f of parkFrames) {
   car_x = f.x; car_y = f.y; car_facing = f.facing; car_anim = f.anim

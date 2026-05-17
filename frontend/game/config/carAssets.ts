@@ -1,5 +1,6 @@
 import type { CarSheetInfo } from '../data/carAnimations';
 import { CAR_SHEET_5x5, CAR_SHEET_6x6 } from '../systems/CarAnimationRegistry';
+import characterCarsJson from '../../public/data/character_cars.json';
 
 /** Matches `makeCarSheetInfo` block sizes in `carAnimations.ts` (car_3 vs car_4/car_5). */
 export type CarSheetLayout = '6x6' | '5x5';
@@ -47,8 +48,22 @@ export function resolvedSheetLayoutForActiveCar(config: ActiveCarConfig): CarShe
 // Active car — change `textureKey` + `imagePath` together (Phaser texture key
 // must match `registerCarAnimations` / `Car`).
 
-export const ACTIVE_CAR: ActiveCarConfig = 
+export const ACTIVE_CAR: ActiveCarConfig =
 { textureKey: 'car-3-1', imagePath: '/assets/cars/Car_3_32x32_1.png' }
+
+// ---------------------------------------------------------------------------
+// All character car assignments (from public/data/character_cars.json).
+// Each entry maps a character owner key to their car texture and parking spot.
+
+export interface CharacterCarConfig {
+  owner: string;
+  carTextureKey: string;
+  carImagePath: string;
+  carSheetLayout: CarSheetLayout;
+  parkingSpot: string;
+}
+
+export const CHARACTER_CARS: CharacterCarConfig[] = characterCarsJson as CharacterCarConfig[];
 
 /*
   Other paint jobs / families (copy one block into ACTIVE_CAR):

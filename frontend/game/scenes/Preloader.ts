@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import { dmiPixelUiFont, dmiTitleFont } from '@/lib/fonts';
 import { TILESET_ASSETS } from '../config/assets';
 import { CHARACTER_ASSETS } from '../config/characters';
-import { ACTIVE_CAR } from '../config/carAssets';
+import { ACTIVE_CAR, CHARACTER_CARS } from '../config/carAssets';
 import { SOUND_EFFECT_ASSETS } from '../config/soundEffects';
 
 const LOADING_TIPS = [
@@ -191,7 +191,14 @@ export class Preloader extends Phaser.Scene {
     }
 
     // --- Car sheets (loaded as plain images — frames are non-uniform size) ---
-    this.load.image(ACTIVE_CAR.textureKey, ACTIVE_CAR.imagePath);
+    // ACTIVE_CAR is the sandbox player car; CHARACTER_CARS covers all simulation cars.
+    const loadedCarKeys = new Set<string>();
+    for (const car of [ACTIVE_CAR, ...CHARACTER_CARS.map(c => ({ textureKey: c.carTextureKey, imagePath: c.carImagePath }))]) {
+      if (!loadedCarKeys.has(car.textureKey)) {
+        this.load.image(car.textureKey, car.imagePath);
+        loadedCarKeys.add(car.textureKey);
+      }
+    }
 
     // --- Sound effects (key = filename without extension) ---
     for (const { key, path } of SOUND_EFFECT_ASSETS) {
