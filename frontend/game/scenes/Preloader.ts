@@ -16,10 +16,17 @@ const LOADING_TIPS = [
   'Sharpening pencils in the annex…',
 ];
 
-// The Preloader scene runs before the map is displayed.
-// It loads all required assets and then starts the MainMap scene.
+// The Preloader scene loads all assets, then reveals mode-select buttons
+// directly on the loading screen rather than transitioning to a new scene.
 export class Preloader extends Phaser.Scene {
-  private destroyLoaderChrome?: () => void;
+  // Stored so create() can read/mutate them without a transition
+  private loaderTitle!: Phaser.GameObjects.Text;
+  private loaderStatus!: Phaser.GameObjects.Text;
+  private loaderTipText!: Phaser.GameObjects.Text;
+  private loaderPctText!: Phaser.GameObjects.Text;
+  private loaderTitleTween!: Phaser.Tweens.Tween;
+  private loaderTipTimer!: Phaser.Time.TimerEvent;
+  private loaderObjects: Phaser.GameObjects.GameObject[] = [];
 
   constructor() {
     super('Preloader');
@@ -59,7 +66,7 @@ export class Preloader extends Phaser.Scene {
       .setOrigin(0.5);
 
     const status = this.add
-      .text(cx, cy - 26, 'Loading simulation', {
+      .text(cx, cy - 40, 'Loading simulation', {
         fontFamily: dmiPixelUiFont.style.fontFamily,
         fontSize: '28px',
         color: '#cbd5e1',
@@ -67,7 +74,7 @@ export class Preloader extends Phaser.Scene {
       .setOrigin(0.5);
 
     const barW = 320;
-    const barH = 24;
+    const barH = 20;
     const barX = cx - barW / 2;
     const barY = cy - barH / 2;
     const radius = 10;
@@ -99,7 +106,7 @@ export class Preloader extends Phaser.Scene {
       .setOrigin(0.5, 0);
 
     let tipIndex = tipIndexStart;
-    const tipTimer = this.time.addEvent({
+    this.loaderTipTimer = this.time.addEvent({
       delay: 2600,
       loop: true,
       callback: () => {
@@ -108,7 +115,7 @@ export class Preloader extends Phaser.Scene {
       },
     });
 
-    const titleTween = this.tweens.add({
+    this.loaderTitleTween = this.tweens.add({
       targets: title,
       alpha: { from: 1, to: 0.88 },
       duration: 1800,
@@ -124,47 +131,26 @@ export class Preloader extends Phaser.Scene {
       const innerW = barW - innerPad * 2;
       const innerH = barH - innerPad * 2;
       const fillW = Math.max(0, innerW * value);
-      if (fillW <= 0) {
-        return;
-      }
+      if (fillW <= 0) return;
       progressFill.fillStyle(0x3b82f6, 1);
-      progressFill.fillRoundedRect(
-        barX + innerPad,
-        barY + innerPad,
-        fillW,
-        innerH,
-        radius - 3,
-      );
+      progressFill.fillRoundedRect(barX + innerPad, barY + innerPad, fillW, innerH, radius - 3);
       progressFill.fillStyle(0x93c5fd, 0.35);
       progressFill.fillRoundedRect(barX + innerPad, barY + innerPad, fillW, innerH * 0.45, 4);
     };
 
-    const onProgress = (value: number) => {
-      drawProgress(value);
-    };
-
+    const onProgress = (value: number) => drawProgress(value);
     this.load.on('progress', onProgress);
-
-    this.destroyLoaderChrome = () => {
-      this.load.off('progress', onProgress);
-      titleTween.stop();
-      tipTimer.destroy();
-      bg.destroy();
-      paperGrain.destroy();
-      barTrack.destroy();
-      progressFill.destroy();
-      title.destroy();
-      subtitle.destroy();
-      status.destroy();
-      tipText.destroy();
-      pctText.destroy();
-      this.destroyLoaderChrome = undefined;
-    };
-
     this.load.once('complete', () => {
       this.load.off('progress', onProgress);
       drawProgress(1);
     });
+
+    // Store refs for create()
+    this.loaderTitle = title;
+    this.loaderStatus = status;
+    this.loaderTipText = tipText;
+    this.loaderPctText = pctText;
+    this.loaderObjects = [bg, paperGrain, barTrack, progressFill, title, subtitle, status, tipText, pctText];
 
     // --- Load the embedded tilemap JSON ---
     // "infinite: true" maps use chunked data — Phaser handles this automatically
@@ -204,7 +190,68 @@ export class Preloader extends Phaser.Scene {
   }
 
   create() {
-    this.destroyLoaderChrome?.();
-    this.scene.start('MainMap');
+    // Stop loading animations
+    this.loaderTitleTween.stop();
+    this.loaderTipTimer.destroy();
+    this.loaderTitle.setAlpha(1);
+
+    // Swap status + tip for mode-select UI
+    this.loaderStatus.setText('Ready');
+    this.loaderStatus.setColor('#94a3b8');
+    this.loaderTipText.setVisible(false);
+    this.loaderPctText.setVisible(false);
+
+    const cx = this.scale.width / 2;
+    const cy = this.scale.height / 2;
+
+    // Buttons appear below the bar (bar sits at cy ± 12)
+    const btnY = cy + 60;
+    const btnW = 140;
+    const btnH = 40;
+    const gap = 20;
+
+    this.makeButton(cx - btnW / 2 - gap / 2, btnY, btnW, btnH, 'SANDBOX', 0x1a1a1a, 0x383838, () => {
+      this.loaderObjects.forEach(o => o.destroy());
+      this.scene.start('MainMap');
+    });
+
+    this.makeButton(cx + btnW / 2 + gap / 2, btnY, btnW, btnH, 'SIMULATION', 0x0d1a0d, 0x2a4a2a, () => {
+      this.loaderObjects.forEach(o => o.destroy());
+      this.scene.start('SimulationMap');
+    });
+
+    // Sub-labels
+    this.add.text(cx - btnW / 2 - gap / 2, btnY + 28, 'dev & testing', {
+      fontFamily: dmiPixelUiFont.style.fontFamily,
+      fontSize: '18px',
+      color: '#4A4A4A',
+    }).setOrigin(0.5, 0);
+
+    this.add.text(cx + btnW / 2 + gap / 2, btnY + 28, 'agent-driven run', {
+      fontFamily: dmiPixelUiFont.style.fontFamily,
+      fontSize: '18px',
+      color: '#2a5a2a',
+    }).setOrigin(0.5, 0);
+  }
+
+  private makeButton(
+    x: number, y: number, w: number, h: number,
+    label: string, bgColor: number, borderColor: number,
+    onClick: () => void,
+  ) {
+    const bg = this.add.rectangle(x, y, w, h, bgColor)
+      .setStrokeStyle(1, borderColor)
+      .setInteractive({ useHandCursor: true });
+
+    const text = this.add.text(x, y, label, {
+      fontFamily: dmiPixelUiFont.style.fontFamily,
+      fontSize: '20px',
+      color: '#E8E8E8',
+      letterSpacing: 2,
+    }).setOrigin(0.5);
+
+    bg.on('pointerover', () => { bg.setStrokeStyle(1, 0xE8E8E8); text.setColor('#ffffff'); });
+    bg.on('pointerout',  () => { bg.setStrokeStyle(1, borderColor); text.setColor('#E8E8E8'); });
+    bg.on('pointerdown', onClick);
   }
 }

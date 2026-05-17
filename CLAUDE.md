@@ -16,6 +16,34 @@ The simulation is **not a reenactment**. It runs forward from a canon seed state
 
 ---
 
+## Canon Scope
+
+**Season cutoff: S2E21** — the simulation seed state is set immediately before *Casino Night*. Characters, relationships, and dynamics must be consistent with what was established through that episode. Characters introduced after S2E21 (Andy Bernard, Karen Filippelli, etc.) **do not exist in this simulation**.
+
+**Canonical cast (15 characters):**
+
+| Character | Role |
+|---|---|
+| Michael Scott | Regional Manager |
+| Dwight Schrute | Assistant (to the) Regional Manager / Sales |
+| Jim Halpert | Sales |
+| Pam Beesly | Receptionist |
+| Ryan Howard | Temp |
+| Kelly Kapoor | Customer Service |
+| Oscar Martinez | Accounting |
+| Angela Martin | Accounting / Party Planning |
+| Kevin Malone | Accounting |
+| Stanley Hudson | Sales |
+| Phyllis Lapin | Sales |
+| Meredith Palmer | Supplier Relations |
+| Creed Bratton | Quality Assurance |
+| Toby Flenderson | HR |
+| Darryl Philbin | Warehouse |
+
+When creating character actions, personality traits, relationships, or any character-specific content: verify the character and the dynamic existed before S2E21. If unsure, leave it out.
+
+---
+
 ## Repository Layout
 
 ```
