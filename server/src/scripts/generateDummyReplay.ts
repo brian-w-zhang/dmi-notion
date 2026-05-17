@@ -339,15 +339,25 @@ const pt = (name: string, fb: { x: number; y: number }) => {
   return p ? { x: Math.round(p.x), y: Math.round(p.y) } : fb
 }
 
+// Parse a Sit Point, reading the 'facing' property from the tilemap object
+interface SitPoint { x: number; y: number; facing: Facing }
+const sitPt = (name: string, fb: SitPoint): SitPoint => {
+  const layer = findGroup(tiledJSON.layers, 'Sit Points')
+  const obj   = layer?.objects?.find(o => o.name === name)
+  if (!obj) { console.warn(`  ⚠ sit point "${name}" not found — using fallback`); return fb }
+  const facing = ((obj.properties ?? []).find(p => p.name === 'facing')?.value as Facing) ?? fb.facing
+  return { x: Math.round(obj.x), y: Math.round(obj.y), facing }
+}
+
 const GROUND_IN  = pt('ground_entrance_start',   { x: 818,  y: 1327 })
 const GROUND_OUT = pt('ground_entrance_end',     { x: 819,  y: 1205 })
 const ELEV_START = pt('elevator_entrance_start', { x: 608,  y: 447  })
 const ELEV_END   = pt('elevator_entrance_end',   { x: 608,  y: 328  })
 
-const DWIGHT_CHAIR  = pt('dwight_chair_seat',  { x: 1230, y: 749  })
-const JIM_CHAIR     = pt('jim_chair_seat',     { x: 1350, y: 749  })
-const MICHAEL_CHAIR = pt('michael_chair_seat', { x: 718,  y: 362  })
-const KITCHEN_COFFEE = pt('kitchen_coffee_seat', { x: 965, y: 621  })  // approximate
+const DWIGHT_CHAIR  = sitPt('dwight_chair_seat',  { x: 1230, y: 749, facing: 'left'  })
+const JIM_CHAIR     = sitPt('jim_chair_seat',     { x: 1136, y: 594, facing: 'front' })
+const MICHAEL_CHAIR = sitPt('michael_chair_seat', { x: 1040, y: 212, facing: 'front' })
+const KITCHEN_COFFEE = pt('kitchen_coffee_spot',  { x: 1936, y: 585  })
 
 const spots    = parseParkingSpots(tiledJSON)
 const getSpot  = (name: string, fb: ParkingSpot) => spots.find(s => s.name === name) ?? fb
@@ -366,13 +376,13 @@ interface CharConfig {
   carTexture: string
   carHalfLong: number
   spot: ParkingSpot
-  chairPos: { x: number; y: number }
+  chair: SitPoint
 }
 
 const CAST: CharConfig[] = [
-  { key: 'dwight',  spriteKey: 'dwight-schrute',  carTexture: 'car-3-1', carHalfLong: 96, spot: ps1, chairPos: DWIGHT_CHAIR  },
-  { key: 'jim',     spriteKey: 'jim-halpert',     carTexture: 'car-4-2', carHalfLong: 80, spot: ps3, chairPos: JIM_CHAIR     },
-  { key: 'michael', spriteKey: 'michael-scott',   carTexture: 'car-4-1', carHalfLong: 80, spot: ps2, chairPos: MICHAEL_CHAIR },
+  { key: 'dwight',  spriteKey: 'dwight-schrute',  carTexture: 'car-3-1', carHalfLong: 96, spot: ps1, chair: DWIGHT_CHAIR  },
+  { key: 'jim',     spriteKey: 'jim-halpert',     carTexture: 'car-4-2', carHalfLong: 80, spot: ps3, chair: JIM_CHAIR     },
+  { key: 'michael', spriteKey: 'michael-scott',   carTexture: 'car-4-1', carHalfLong: 80, spot: ps2, chair: MICHAEL_CHAIR },
 ]
 
 // ── Initialize all states as invisible ───────────────────────────────────────
@@ -385,7 +395,7 @@ for (const c of CAST) {
 // ── Commute sequence per character ────────────────────────────────────────────
 
 function runCommute(cfg: CharConfig): void {
-  const { key, spot, chairPos, carHalfLong } = cfg
+  const { key, spot, chair, carHalfLong } = cfg
   const parkedX = Math.round(spot.x)
   const parkedY = Math.round(spot.pathY + SPOT_Y_OFFSET)
   const dismountX = parkedX - CAR_SW
@@ -421,12 +431,12 @@ function runCommute(cfg: CharConfig): void {
   walkChar(key, ELEV_END.x, ELEV_END.y, '🛗', 'Riding elevator')
 
   // Walk from elevator to desk
-  const deskPath = pf.findPath(ELEV_END, chairPos)
+  const deskPath = pf.findPath(ELEV_END, chair)
   console.log(`  ${key}: desk path ${deskPath.length} waypoints`)
-  walkChar(key, chairPos.x, chairPos.y, '🚶', 'Walking to desk', pf)
+  walkChar(key, chair.x, chair.y, '🚶', 'Walking to desk', pf)
 
-  // Sit
-  chars[key] = { ...chars[key], x: chairPos.x, y: chairPos.y, facing: 'left', anim: 'sit', seated: true }
+  // Snap to exact sit point and use tilemap-defined facing
+  chars[key] = { ...chars[key], x: chair.x, y: chair.y, facing: chair.facing, anim: 'sit', seated: true }
   idle(4, key, '💻', 'Settling in at desk')
 }
 
@@ -443,7 +453,7 @@ walkChar('dwight', KITCHEN_COFFEE.x, KITCHEN_COFFEE.y, '☕', 'Getting coffee', 
 chars['dwight'] = { ...chars['dwight'], facing: 'front', anim: 'idle' }
 idle(5, 'dwight', '☕', 'Making coffee')
 walkChar('dwight', DWIGHT_CHAIR.x, DWIGHT_CHAIR.y, '🚶', 'Back to desk', pf)
-chars['dwight'] = { ...chars['dwight'], facing: 'left', anim: 'sit', seated: true }
+chars['dwight'] = { ...chars['dwight'], x: DWIGHT_CHAIR.x, y: DWIGHT_CHAIR.y, facing: DWIGHT_CHAIR.facing, anim: 'sit', seated: true }
 idle(3, 'dwight', '💻', 'Back at desk')
 
 console.log('\n── Jim commute ─────────────────────────────────────────────────')

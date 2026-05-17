@@ -174,8 +174,6 @@ export class MainMap extends Phaser.Scene {
     this.car               = entities.car;
     this.chairHighlight    = entities.chairHighlight;
     this.applianceHighlight = entities.applianceHighlight;
-    this.castMembers = spawnStaticCastMembers(this, this.chairs, worldObjects);
-
     this.carAutoPark = new CarAutoParkSystem(worldData.parkingSpots);
     this.parkingSpots = worldData.parkingSpots;
 

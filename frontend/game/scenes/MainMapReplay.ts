@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { CHARACTER_ASSETS } from '../config/characters';
+import { registerAnimations } from '../systems/AnimationRegistry';
 import { registerCarAnimations } from '../systems/CarAnimationRegistry';
 import { CAR_SHEET_6x6, CAR_SHEET_5x5 } from '../data/carAnimations';
 import type { MainMapHud } from './mainMapHud';
@@ -189,6 +190,8 @@ export class MainMapReplayController {
       const spriteKey = SPRITE_KEY[key];
       if (!spriteKey) continue;
 
+      registerAnimations(this.scene, spriteKey);
+
       const c = step.chars[key];
       const sprite = this.scene.add.sprite(c.x, c.y, spriteKey);
       sprite.setDepth(CHAR_DEPTH);
@@ -196,6 +199,7 @@ export class MainMapReplayController {
       sprite.setVisible(c.visible);
       sprite.setInteractive();
       sprite.on('pointerdown', () => this._selectChar(key));
+      this.hud.ignoreWorldObjects(sprite);   // prevent uiCamera double-draw
       this.sprites.set(key, sprite);
     }
   }
@@ -219,6 +223,7 @@ export class MainMapReplayController {
       sprite.setDepth(CAR_DEPTH);
       sprite.setOrigin(0.5, 0.5);
       sprite.setVisible(c.visible);
+      this.hud.ignoreWorldObjects(sprite);   // prevent uiCamera double-draw
       this.carSprites.set(key, sprite);
     }
   }
@@ -253,10 +258,12 @@ export class MainMapReplayController {
       const sprite = this.sprites.get(key);
       if (!sprite) continue;
 
+      const wasVisible = sprite.visible;
       sprite.setVisible(c.visible);
       if (!c.visible) continue;
 
-      if (instant) {
+      // Teleport if instant OR first time becoming visible (sprite was at init position)
+      if (instant || !wasVisible) {
         sprite.setPosition(c.x, c.y);
       } else {
         this.scene.tweens.add({
@@ -296,10 +303,12 @@ export class MainMapReplayController {
       const sprite = this.carSprites.get(key);
       if (!sprite) continue;
 
+      const wasVisible = sprite.visible;
       sprite.setVisible(c.visible);
       if (!c.visible) continue;
 
-      if (instant) {
+      // Teleport if instant OR first time becoming visible (sprite was at init position)
+      if (instant || !wasVisible) {
         sprite.setPosition(c.x, c.y);
       } else {
         this.scene.tweens.add({
@@ -397,6 +406,7 @@ export class MainMapReplayController {
     const y = INSPECT_MARGIN;
 
     this.inspectPanel = this.scene.add.container(x, y).setScrollFactor(0).setDepth(10000).setVisible(false);
+    this.scene.cameras.main.ignore(this.inspectPanel);  // render on uiCamera only
 
     const bg = this.scene.add.graphics();
     bg.fillStyle(0x111111, 0.88);

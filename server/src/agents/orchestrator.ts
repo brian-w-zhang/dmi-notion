@@ -4,7 +4,7 @@ import { buildTickContext, buildAppraisalContext, buildReflectionContext } from 
 import { runConversation } from "./ConversationFlow.js"
 import { runGroupConversation } from "./GroupConversationFlow.js"
 import { CHARACTER_AGENT_IDS, CHARACTER_NAMES } from "./characters.js"
-import { getActionNeedDeltas } from "../simulation/WorldData.js"
+import { getActionNeedDeltas, getApplianceByName } from "../simulation/WorldData.js"
 
 interface AgentDecision {
   thinking?: string           // interior deliberation — stored in log for interpretability
@@ -201,15 +201,25 @@ export function applyDecisions(
     }
 
     // ── Use appliance ────────────────────────────────────────────────────────
-    if (decision.action === "use_appliance" && decision.target) {
-      if (decision.appliance_action) {
-        const deltas = getActionNeedDeltas(decision.target, decision.appliance_action)
-        if (deltas) {
-          world.applyNeedDeltas(key, deltas)
-          console.log(`  → ${CHARACTER_NAMES[key]} used ${decision.target}:${decision.appliance_action} — deltas applied`)
-        }
+    // Navigate to the appliance. If the character is already there (path will be
+    // empty or very short), the next advancePhysics tick will trigger arrival.
+    // The appliance lock + deferred need deltas are started here if already at the
+    // destination; otherwise the agent will re-decide use_appliance on arrival.
+    if (decision.action === "use_appliance" && decision.target && decision.appliance_action) {
+      const appliance = getApplianceByName(decision.target)
+      const actionDef = appliance?.actions.find((a) => a.name === decision.appliance_action)
+      const deltas = actionDef?.needDeltas ?? {}
+      const durationSteps = actionDef?.durationSteps ?? 1
+
+      const alreadyThere = world.setDestination(key, decision.target) === false
+        || c.plannedPath.length === 0
+
+      if (alreadyThere) {
+        world.startApplianceAction(key, decision.target, decision.appliance_action, durationSteps, deltas)
+        console.log(`  → ${CHARACTER_NAMES[key]} using ${decision.target}:${decision.appliance_action} for ${durationSteps} steps`)
+      } else {
+        console.log(`  → ${CHARACTER_NAMES[key]} heading to ${decision.target} (${c.plannedPath.length} tiles) to use ${decision.appliance_action}`)
       }
-      world.setDestination(key, decision.target)
     }
 
     // ── Standard action ───────────────────────────────────────────────────────
@@ -376,7 +386,17 @@ function parseDecision(raw: string, characterKey: string): AgentDecision {
     return { follow_plan: true, action: "idle", description: "idle", emoji: "💭", reasoning: raw.slice(0, 80) }
   }
   try {
-    return JSON.parse(jsonMatch[0]) as AgentDecision
+    const parsed = JSON.parse(jsonMatch[0])
+
+    // Back-compat: old template used plan_status:"following|deviating|revising"
+    // New template uses follow_plan: boolean
+    if (parsed.follow_plan === undefined && parsed.plan_status !== undefined) {
+      parsed.follow_plan = parsed.plan_status === "following"
+    }
+    parsed.follow_plan = Boolean(parsed.follow_plan ?? true)
+    parsed.reasoning ??= parsed.deviation_reason ?? ""
+
+    return parsed as AgentDecision
   } catch {
     return { follow_plan: true, action: "idle", description: "idle", emoji: "💭", reasoning: "parse error" }
   }

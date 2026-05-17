@@ -3,7 +3,7 @@
 // Read by Phaser for replay. Must be stable — changing this breaks saved runs.
 
 export type Facing = "front" | "back" | "left" | "right"
-export type CharacterState = "active" | "in_conversation" | "idle" | "blocked"
+export type CharacterState = "active" | "in_conversation" | "using_appliance" | "idle" | "blocked" | "pre_arrival"
 
 // ── Planning types ────────────────────────────────────────────────────────────
 
@@ -74,6 +74,11 @@ export interface CharacterStepState {
   currentPlanBlock?: PlanBlock  // what they were supposed to be doing this tick
   currently: string             // living one-sentence status
   thinking?: string             // last interior deliberation from agent (persists until next perception round)
+  applianceAction?: {           // set while state === "using_appliance"
+    applianceName: string
+    actionName: string
+    lockedUntilStep: number
+  }
 }
 
 export interface ConversationTurn {
@@ -170,8 +175,17 @@ export interface LiveCharacter {
   state: CharacterState
   activeConversationId?: string
   plannedPath: [number, number][]
-  destinationId?: string          // locationId passed to setDestination — cleared when path empties
-  interruptedTaskDescription?: string  // what the character was doing before being interrupted
+  destinationId?: string            // locationId passed to setDestination — cleared when path empties
+  interruptedDestinationId?: string // raw locationId saved when a conversation interrupts transit
+                                    // persists until setDestination is called with a new destination
+
+  // Appliance action in progress — character is locked until lockedUntilStep
+  activeApplianceAction?: {
+    applianceName: string
+    actionName: string
+    lockedUntilStep: number
+    pendingNeedDeltas: Record<string, number>
+  }
 
   // PAD emotional state (updated by appraisal after conversations)
   pad: PADState

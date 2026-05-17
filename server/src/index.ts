@@ -32,14 +32,14 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
 
   world.characters.set(key, {
     name: key,
-    tile: [40, 20],          // placeholder — replace with actual desk/spawn positions
-    action: "arriving at work",
-    emoji: "🚶",
-    animationKey: "walk_front",
+    tile: [0, 0],            // off-screen until arrival; tickArrivals() places at parking spot
+    action: "commuting",
+    emoji: "🚗",
+    animationKey: "idle_front",
     facing: "front",
     needs: { ...INITIAL_NEEDS[key] },
     pad: { pleasure: 0.0, arousal: 0.0, dominance: 0.0 },
-    state: "idle",            // starts idle; becomes active when plan begins
+    state: "pre_arrival",    // excluded from ticking until first plan block's startMin
 
     // Planning
     dayPlan,

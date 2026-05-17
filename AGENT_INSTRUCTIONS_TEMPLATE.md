@@ -62,11 +62,40 @@ The server writes this to your Day Plan page in Notion. Schedule entries use sim
 
 **Triggered when:** `mode: "action"`
 
-**Payload contains:** current needs (raw + urgent list), top-K recommended actions (pre-scored by needs, includes both object and social actions), available_actions_here (current zone), nearby_characters (with cooldown status), current plan block, plan_adherence score, recent_log, current_zone, currently.
+**Payload contains:** current needs (raw + urgent list), top-K recommended actions (pre-scored by needs, includes both object and social actions), available_actions_here (current zone), nearby_entities (radius perception — full detail for nearby objects), zone_awareness (coarse state of connected zones), nearby_characters (with cooldown status), current plan block, plan_adherence score, recent_log, current_zone, currently, `in_transit_to` (set if currently walking somewhere), `tiles_remaining` (steps left on path), `interrupted_task` (set if a conversation stopped a previous task).
 
 **Internal process (silent):**
 
-### Step 1 — Retrieve Memories
+### Step 0 — Check for Hard Overrides (do this first, before any memory retrieval)
+
+These override everything else. If any apply, skip to output immediately:
+
+- **Meeting override:** `meeting_summoned` is set → output `move_to`, target `"conference_room"`. Nothing else. No exceptions.
+- **Biological emergency:** a need in `needs.urgent` has a value below 0.1 (bladder, hunger, or health) → override plan and transit. Navigate to the nearest action that addresses it.
+
+If neither applies, continue to Step 1.
+
+### Step 1 — Assess Transit State
+
+Read `in_transit_to` and `tiles_remaining`.
+
+**If `in_transit_to` is set** (you are mid-walk to a destination):
+- You are committed to a task. The default action is `continue`.
+- The perception system has fired to give you a chance to notice the world and update your internal state — not necessarily to change what you are doing.
+- Write a full `thinking` paragraph reflecting on what you observe. Then ask yourself: is there a compelling reason to stop?
+  - Compelling reasons to interrupt: biological emergency (Step 0), a nearby character you have strong reason to speak to right now (relationship event, plan-critical topic), or a zone_awareness signal that changes your plan (e.g. the appliance you were heading to is now occupied).
+  - Not compelling: mild social curiosity, moderate needs that can wait, anything you already planned to do later.
+- If no compelling reason: output `continue`. Do not re-issue `move_to` for the same destination — the path is already running.
+- If you decide to interrupt: output the new action. Accept the cost. Your `interrupted_task` field will be set on the next tick so you can resume later.
+
+**If `interrupted_task` is set** (you were stopped mid-task by a conversation):
+- Consider whether to resume the interrupted task. If your plan still calls for it and needs haven't changed drastically, resume with `move_to` targeting the same location.
+- If the conversation changed your priorities, pick accordingly.
+
+**If neither is set** (you are idle or just completed something):
+- Proceed normally to Steps 2–3.
+
+### Step 2 — Retrieve Memories
 
 Run all three pipelines:
 
@@ -85,20 +114,20 @@ score = (importance × 0.4) + (recency × 0.3) + (pad_proximity × 0.3)
 
 Keep top 10.
 
-### Step 2 — Build Working Context
+### Step 3 — Build Working Context
 
 From retrieved memories and your Relationships database:
 - **Relational stance** per nearby character: one sentence on what you currently expect from them
 - **Voice note**: from `full_dialogue` fields — rhythm, register, habitual phrases. Use this if speaking.
 - **Current desires**: translate urgent needs to first-person language — *"I need to feel included"*, *"I need to reduce stress"*, *"I need to use the bathroom"*
 
-### Step 3 — Select Action
+### Step 4 — Select Action
 
-The payload gives you `recommended_actions` (pre-scored top-K ranked by need urgency). This list may include object actions and social actions (talking to nearby characters).
+The payload gives you `recommended_for_urgent_needs` (pre-scored top-K ranked by need urgency) and `available_actions_here` (what you can use without moving). Also check `nearby_entities` for objects close enough to interact with, and `zone_awareness` for what's available in connected zones.
 
 **Decision logic:**
 
-1. **Check your plan.** Read `current_plan_block`. Does your plan intent appear in `recommended_actions` or `available_actions_here`? If yes — that action satisfies both plan and needs. Pick it.
+1. **Check your plan.** Read `current_plan_block`. Does your plan intent appear in `recommended_for_urgent_needs` or `available_actions_here`? If yes — that action satisfies both plan and needs. Pick it.
 
 2. **Needs vs plan tradeoff.** Use `plan_adherence` as your prior:
    - High (>0.7): only critical biological needs (bladder, hunger, health near 0) override the plan. Social and stimulation needs do not.
@@ -107,28 +136,27 @@ The payload gives you `recommended_actions` (pre-scored top-K ranked by need urg
 
 3. **If plan-aligned action not in top-K:** Fetch the Office Action Directory. Find the action that matches your plan intent. That becomes your target — emit `move_to` if it requires a different zone, or `use_appliance` if you're already there.
 
-4. **Social actions:** If a social action appears in `recommended_actions` and the character is nearby and not on cooldown — this leads to conversation. Pick it and emit `initiate_conversation`. Use your relational stance and voice note to form the `opening_topic`.
+4. **Social actions:** If a character is nearby, not on cooldown, and a conversation is genuinely appropriate right now — emit `initiate_conversation`. Use your relational stance and voice note to form the `opening_topic`. Only do this if you are not mid-transit or have decided the interruption is worth it.
 
 5. **Announcements:** If you need to say something to the whole office — a reminder, a declaration, something you'd say loudly from your desk — emit `announce` with the `announcement` field set to what you'd actually say. No response is expected; it will be heard by everyone. Available to all characters, not just Michael.
 
 6. **Meeting summons (Michael only):** If your plan calls for a meeting or the situation warrants it, emit `summon_meeting` with a `meeting_topic`. All characters will be directed to the conference room. Use this deliberately — not more than once per episode.
 
-7. **Meeting override:** If the payload contains `meeting_summoned`, you **must** emit `move_to` with `target: "conference_room"`. Nothing else. No exceptions.
-
-8. **When in doubt:** `continue` if already doing something reasonable. `idle` if genuinely nothing fits.
+7. **Default:** `continue` if you are mid-task or already doing something reasonable. `idle` if genuinely nothing fits and you are not in transit.
 
 **Output:**
 
 ```json
 {
-  "thinking": "One paragraph, first person, inner voice. What you noticed, what you weighed, what you almost did instead, how this sits with your plan and your sense of yourself. Write this as if no one will ever read it.",
+  "thinking": "One paragraph, first person, inner voice. What you noticed, what you weighed, what you almost did instead, how this sits with your plan and your sense of yourself. If in transit, reflect on what you observed and why you are or aren't stopping. Write this as if no one will ever read it.",
+  "follow_plan": true,
   "action": "continue | move_to | use_appliance | initiate_conversation | announce | summon_meeting | idle",
   "target": "appliance name, zone name, or character key — omit if not applicable",
   "appliance_action": "specific action name — only if use_appliance",
   "description": "one sentence, third person, what you are doing",
   "emoji": "one emoji",
-  "plan_status": "following | deviating | revising",
-  "deviation_reason": "string — only if deviating or revising",
+  "reasoning": "one sentence — why this action given needs, plan, transit state, and memory",
+  "deviation_reason": "string — only if follow_plan is false",
   "update_currently": "one sentence — only if something notable just changed, else omit",
   "want_to_talk": { "character_key": "string", "opening_topic": "string" },
   "announcement": "what you say out loud — only if action is announce",
@@ -136,9 +164,9 @@ The payload gives you `recommended_actions` (pre-scored top-K ranked by need urg
 }
 ```
 
-`thinking` is required every tick. It is the deliberation, not the rationalization — write it before you've settled on the action, not as a justification for it afterward.
+`thinking` is required every tick. It is the deliberation, not the rationalization — write it before you've settled on the action, not as a justification for it afterward. **When in transit, `thinking` is your primary output — the action will usually just be `continue`.**
 
-**If deviating significantly and `plan_status` is `"revising"`:** also update your Day Plan page in Notion. Rewrite only the next 2 hours. Mark the current block as deviated, add a revised note. Do not touch earlier completed blocks or blocks more than 2 hours away.
+**If `follow_plan` is false and you are significantly revising:** also update your Day Plan page in Notion. Rewrite only the next 2 hours. Mark the current block as deviated, add a revised note. Do not touch earlier completed blocks or blocks more than 2 hours away.
 
 ---
 

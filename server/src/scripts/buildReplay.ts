@@ -53,7 +53,7 @@ import path from "path"
 
 const TILE_SIZE = 32
 const OUTPUT_PATH = path.resolve("../frontend/public/assets/simulation/replay.json")
-const MS_PER_STEP = 1000   // 1 second per step in playback — adjust as needed
+const MS_PER_STEP = 5000   // 5 seconds per step → ~10 min for a full workday (120 steps)
 
 // --------------------------------------------------------------------------
 

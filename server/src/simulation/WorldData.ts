@@ -68,7 +68,7 @@ export const APPLIANCES: Appliance[] = Object.values(
       name: act.name,
       emoji: act.emoji ?? "⚙️",
       durationMs: act.durationMs ?? 2000,
-      durationSteps: act.durationSteps ?? Math.max(1, Math.round((act.durationMs ?? 2000) / 1000 / SEC_PER_STEP)),
+      durationSteps: Math.min(2, act.durationSteps ?? Math.max(1, Math.round((act.durationMs ?? 2000) / 1000 / SEC_PER_STEP))),
       needDeltas: act.needDeltas ?? act.need_deltas ?? act.needs ?? {},
       actionPointId: act.actionPointId,
       loadingPhrases: act.loadingPhrases ?? [],
@@ -187,6 +187,26 @@ const CHAR_DESK_TILES: Record<string, [number, number]> = {}
   }
 })()
 
+// ── Arrival tile positions ────────────────────────────────────────────────────
+// Characters spawn here when they transition from pre_arrival → active.
+// Staggered around the parking lot so they don't all occupy the same tile.
+// Column order roughly matches parking spot layout (left to right).
+
+const ARRIVAL_ORDER = [
+  "dwight", "angela", "michael", "stanley", "phyllis",
+  "jim", "pam", "oscar", "toby", "kevin",
+  "ryan", "kelly", "meredith", "creed",
+]
+
+export function getArrivalTile(characterKey: string): [number, number] {
+  // Try to resolve the parking_lot zone center, then stagger each character.
+  const base = getZoneCenterTile("parking_lot") ?? getZoneCenterTile("parking lot") ?? [5, 35]
+  const idx = ARRIVAL_ORDER.indexOf(characterKey)
+  const offset = idx >= 0 ? idx : ARRIVAL_ORDER.length
+  // Two rows of parking spots: odd characters one tile below
+  return [base[0] + Math.floor(offset / 2), base[1] + (offset % 2)]
+}
+
 // locationId → tile: handles "jim_desk", "break_room", "conference_room", etc.
 export function resolveLocationTile(locationId: string): [number, number] | undefined {
   // Check character desk pattern: "<key>_desk"
@@ -272,7 +292,7 @@ const ALL_ENTITIES: EntityRecord[] = Object.values(
       name: act.name,
       emoji: act.emoji ?? "⚙️",
       durationMs: act.durationMs ?? 2000,
-      durationSteps: act.durationSteps ?? Math.max(1, Math.round((act.durationMs ?? 2000) / 1000 / SEC_PER_STEP)),
+      durationSteps: Math.min(2, act.durationSteps ?? Math.max(1, Math.round((act.durationMs ?? 2000) / 1000 / SEC_PER_STEP))),
       needDeltas: act.needDeltas ?? act.need_deltas ?? act.needs ?? {},
       actionPointId: act.actionPointId,
       loadingPhrases: act.loadingPhrases ?? [],

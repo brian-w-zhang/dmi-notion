@@ -148,8 +148,12 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     in_transit_to: c.destinationId ?? null,
     tiles_remaining: c.plannedPath.length > 0 ? c.plannedPath.length : null,
 
-    // Set when a conversation interrupted a task — resume it if appropriate
-    interrupted_task: c.interruptedTaskDescription ?? null,
+    // Set after a conversation that interrupted a task.
+    // resume_target is a locationId you can pass directly to move_to.
+    // Cleared as soon as you call move_to for any destination.
+    interrupted_task: c.interruptedDestinationId
+      ? { resume_target: c.interruptedDestinationId }
+      : null,
 
     current_action: c.action,
     current_zone: currentZone,

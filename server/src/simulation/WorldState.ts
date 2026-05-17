@@ -2,7 +2,7 @@ import type {
   LiveCharacter, ConversationRecord, GroupConversationRecord, WorldEvent,
   CharacterStepState, StepFile, LogEntry, PlanBlock, PADState, MeetingState,
 } from "./types.js"
-import { resolveLocationTile } from "./WorldData.js"
+import { resolveLocationTile, getArrivalTile } from "./WorldData.js"
 import { decayNeeds } from "./needsDecay.js"
 import { findTilePath } from "./ServerPathfinder.js"
 
@@ -47,6 +47,7 @@ export class WorldState {
     return [...this.characters.values()].filter(
       (c) => c.state === "active" || c.state === "idle"
     )
+    // Note: "in_conversation", "using_appliance", and "pre_arrival" characters are excluded
   }
 
   getSnapshot(): Record<string, LiveCharacter> {
@@ -168,11 +169,15 @@ export class WorldState {
       if (c) {
         c.state = "in_conversation"
         c.activeConversationId = id
-        // Pause movement for the duration of the conversation
+        // Save where the character was headed (or where they currently are) so
+        // they can resume after the conversation. Persists through endConversation —
+        // cleared only when setDestination is called with a new destination.
+        c.interruptedDestinationId =
+          c.destinationId                             // mid-transit: resume the journey
+          ?? this.getCurrentPlanBlock(p)?.locationId  // idle at plan location: resume plan
+          ?? undefined
+        // Stop movement for the duration of the conversation
         if (c.plannedPath.length > 0) {
-          c.interruptedTaskDescription = c.destinationId
-            ? `heading to ${c.destinationId}`
-            : c.action
           c.plannedPath = []
           c.destinationId = undefined
           c.animationKey = `idle_${c.facing}`
@@ -202,7 +207,7 @@ export class WorldState {
         c.state = "active"
         c.activeConversationId = undefined
         c.threadId = undefined
-        c.interruptedTaskDescription = undefined
+        // interruptedDestinationId intentionally kept — agent reads it on next tick
       }
       // Apply 60-minute interaction cooldown between both participants
       const other = record.participants.find(x => x !== p)
@@ -318,18 +323,93 @@ export class WorldState {
     this.events.push(event)
   }
 
+  // ── Appliance lock ───────────────────────────────────────────────────────────
+
+  startApplianceAction(
+    characterName: string,
+    applianceName: string,
+    actionName: string,
+    durationSteps: number,
+    needDeltas: Record<string, number>
+  ): void {
+    const c = this.getCharacter(characterName)
+    c.state = "using_appliance"
+    c.interruptedDestinationId = undefined  // consumed — character is now acting
+    c.activeApplianceAction = {
+      applianceName,
+      actionName,
+      lockedUntilStep: this.step + durationSteps,
+      pendingNeedDeltas: needDeltas,
+    }
+    this.addEvent({ type: "action_complete", character: characterName, detail: `started ${actionName} on ${applianceName}` })
+  }
+
+  // Called each step — expires appliance locks and applies deferred need deltas.
+  private tickApplianceLocks(): void {
+    for (const c of this.characters.values()) {
+      if (c.state !== "using_appliance" || !c.activeApplianceAction) continue
+      if (this.step < c.activeApplianceAction.lockedUntilStep) continue
+
+      // Lock expired — apply need deltas and release
+      this.applyNeedDeltas(c.name, c.activeApplianceAction.pendingNeedDeltas)
+      this.pushLogEntry(c.name, {
+        type: "action",
+        action: "use_appliance",
+        description: `finished ${c.activeApplianceAction.actionName} at ${c.activeApplianceAction.applianceName}`,
+        locationId: c.activeApplianceAction.applianceName,
+        startMin: this.simMinutes - Math.floor(
+          (this.step - (c.activeApplianceAction.lockedUntilStep - Object.keys(c.activeApplianceAction.pendingNeedDeltas).length)) * this.secPerStep / 60
+        ),
+        endMin: this.simMinutes,
+        followedPlan: true,
+      })
+      this.addEvent({ type: "action_complete", character: c.name, detail: `finished ${c.activeApplianceAction.actionName}` })
+      c.activeApplianceAction = undefined
+      c.state = "active"
+    }
+  }
+
+  // ── Arrival management ───────────────────────────────────────────────────────
+
+  // Transitions pre_arrival characters to active when their first plan block begins.
+  // Spawns them at their parking spot and navigates to the first plan location.
+  private tickArrivals(): void {
+    const now = this.simMinutes
+    for (const [key, c] of this.characters) {
+      if (c.state !== "pre_arrival") continue
+      const firstBlock = c.dayPlan[0]
+      if (!firstBlock || now < firstBlock.startMin) continue
+
+      // Arrival: place character at their parking spot
+      c.tile = getArrivalTile(key)
+      c.state = "active"
+      c.facing = "front"
+      c.animationKey = "walk_front"
+      c.action = "arriving at the office"
+      c.emoji = "🚶"
+
+      // Navigate to the first plan block's location
+      this.setDestination(key, firstBlock.locationId)
+      this.addEvent({ type: "action_complete", character: key, detail: `arrived — heading to ${firstBlock.locationId}` })
+      console.log(`  [Arrival] ${key} → spawned at parking, heading to ${firstBlock.locationId}`)
+    }
+  }
+
   // ── Physics ──────────────────────────────────────────────────────────────────
 
   // Advance all characters one step along their plannedPath.
   // Called every tick regardless of whether agents ran this round.
-  // Characters in conversation do not move.
+  // Characters in conversation or using an appliance do not move.
   advancePhysics(): void {
     for (const c of this.characters.values()) {
+      // Characters not yet on-site don't decay needs or move
+      if (c.state === "pre_arrival") continue
+
       // Decay needs every tick
       decayNeeds(c.name, c.needs)
 
-      // Don't move while in conversation
-      if (c.state === "in_conversation") continue
+      // Don't move while in conversation or locked to an appliance
+      if (c.state === "in_conversation" || c.state === "using_appliance") continue
 
       if (c.plannedPath.length === 0) continue
       c.tile = c.plannedPath[0]
@@ -385,16 +465,23 @@ export class WorldState {
     if (!dest) return false
     c.plannedPath = findTilePath(c.tile, dest)
     c.destinationId = locationId
+    c.interruptedDestinationId = undefined  // consumed — character is now navigating
     return true
   }
 
   // ── Step advancement ────────────────────────────────────────────────────────
 
   advanceStep(): { completedConversations: ConversationRecord[]; completedGroupConversations: GroupConversationRecord[]; announcements: { from: string; message: string }[]; events: WorldEvent[] } {
+    // Transition pre_arrival characters that have reached their first plan block time
+    this.tickArrivals()
+
     // Advance plan indices for all characters
     for (const key of this.characters.keys()) {
       this.advancePlanIndex(key)
     }
+
+    // Expire finished appliance locks and apply deferred need deltas
+    this.tickApplianceLocks()
 
     // Tick cooldowns
     this.tickInteractionCooldowns()
@@ -437,6 +524,13 @@ export class WorldState {
         currentPlanBlock: this.getCurrentPlanBlock(name),
         currently: c.currently,
         thinking: c.lastThinking,
+        applianceAction: c.activeApplianceAction
+          ? {
+              applianceName: c.activeApplianceAction.applianceName,
+              actionName: c.activeApplianceAction.actionName,
+              lockedUntilStep: c.activeApplianceAction.lockedUntilStep,
+            }
+          : undefined,
       }
     }
     return {
