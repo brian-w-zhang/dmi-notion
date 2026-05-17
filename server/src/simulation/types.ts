@@ -179,6 +179,11 @@ export interface LiveCharacter {
   interruptedDestinationId?: string // raw locationId saved when a conversation interrupts transit
                                     // persists until setDestination is called with a new destination
 
+  // Event-driven perception flag — set when a task completes or character arrives.
+  // RoundLoop fires a perception tick for this character on the next step, then clears it.
+  needsPerception: boolean
+  lastPerceptionStep: number   // step of most recent perception — used for fallback interval
+
   // Appliance action in progress — character is locked until lockedUntilStep
   activeApplianceAction?: {
     applianceName: string

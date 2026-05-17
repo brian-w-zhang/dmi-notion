@@ -22,13 +22,16 @@ interface AgentDecision {
   meeting_topic?: string      // only when action === "summon_meeting"
 }
 
-// Fires all active character ticks in parallel against the current world snapshot.
+// Fires perception ticks in parallel for the given character keys (or all active if omitted).
 export async function runTickRound(
   world: WorldState,
-  client: NotionAgentsClient
+  client: NotionAgentsClient,
+  characterKeys?: string[]
 ): Promise<Map<string, AgentDecision>> {
-  const active = world.getActiveCharacters()
-  console.log(`\n[Round ${world.step}] Ticking ${active.length} active characters...`)
+  const active = characterKeys
+    ? characterKeys.map(k => world.getCharacter(k))
+    : world.getActiveCharacters()
+  console.log(`\n[Step ${world.step}] Ticking ${active.length} character(s): ${active.map(c => c.name).join(", ")}`)
 
   const results = await Promise.allSettled(
     active.map(async (c) => {

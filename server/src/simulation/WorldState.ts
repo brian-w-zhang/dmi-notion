@@ -207,6 +207,7 @@ export class WorldState {
         c.state = "active"
         c.activeConversationId = undefined
         c.threadId = undefined
+        c.needsPerception = true  // conversation done — agent decides what to do next
         // interruptedDestinationId intentionally kept — agent reads it on next tick
       }
       // Apply 60-minute interaction cooldown between both participants
@@ -350,7 +351,8 @@ export class WorldState {
       if (c.state !== "using_appliance" || !c.activeApplianceAction) continue
       if (this.step < c.activeApplianceAction.lockedUntilStep) continue
 
-      // Lock expired — apply need deltas and release
+      // Lock expired — apply need deltas, release, trigger perception
+      c.needsPerception = true
       this.applyNeedDeltas(c.name, c.activeApplianceAction.pendingNeedDeltas)
       this.pushLogEntry(c.name, {
         type: "action",
@@ -387,6 +389,7 @@ export class WorldState {
       c.animationKey = "walk_front"
       c.action = "arriving at the office"
       c.emoji = "🚶"
+      c.needsPerception = true   // first perception fires immediately on arrival
 
       // Navigate to the first plan block's location
       this.setDestination(key, firstBlock.locationId)
@@ -427,9 +430,10 @@ export class WorldState {
         }
         c.animationKey = `walk_${c.facing}`
       } else {
-        // Reached destination
+        // Reached destination — trigger perception so agent decides what to do next
         c.animationKey = `idle_${c.facing}`
         c.destinationId = undefined
+        c.needsPerception = true
         this.addEvent({ type: "action_complete", character: c.name, detail: "reached destination" })
       }
     }

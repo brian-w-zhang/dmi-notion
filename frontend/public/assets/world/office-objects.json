@@ -2613,12 +2613,12 @@
             "catching a quick rest before the next interruption",
             "napping through the ambient sound of ringing phones"
           ],
-          "durationMs": 15000,
+          "durationMs": 7500,
           "needDeltas": {
             "energy": 40,
             "stress": -10
           },
-          "durationSteps": 6
+          "durationSteps": 2
         }
       ]
     },
@@ -2696,7 +2696,7 @@
             "transferring the call to whoever they actually asked for",
             "handling three things at once behind the front desk"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 15,
@@ -2714,7 +2714,7 @@
             "fitting Michael's ideas into an already impossible calendar",
             "keeping the schedule sane against all reasonable odds"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 20
@@ -2731,7 +2731,7 @@
             "sketching something that was supposed to be a quick drawing",
             "filling a notebook page while the phone stays quiet"
           ],
-          "durationMs": 7000,
+          "durationMs": 3500,
           "needDeltas": {
             "fulfillment": 15,
             "stimulation": 10,
@@ -2840,12 +2840,12 @@
             "catching a quick rest before the next interruption",
             "napping through the ambient sound of ringing phones"
           ],
-          "durationMs": 15000,
+          "durationMs": 7500,
           "needDeltas": {
             "energy": 40,
             "stress": -10
           },
-          "durationSteps": 6
+          "durationSteps": 2
         }
       ]
     },
@@ -2899,13 +2899,13 @@
             "skimming quarterly numbers and turning them into anecdotes",
             "reviewing data before converting it into a monologue"
           ],
-          "durationMs": 7000,
+          "durationMs": 3500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 12,
             "esteem": 5
           },
-          "durationSteps": 4
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -2917,14 +2917,14 @@
             "calling Jan with the confidence of someone who practiced",
             "making the call that will definitely not spiral"
           ],
-          "durationMs": 9000,
+          "durationMs": 4500,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 15,
             "esteem": 10,
             "stress": 8
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -2936,14 +2936,14 @@
             "planning a party that HR will have opinions about",
             "writing the invite list and then adding everyone back on"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "esteem": 10,
             "stimulation": 15,
             "belonging": 8
           },
-          "durationSteps": 4
+          "durationSteps": 2
         }
       ]
     },
@@ -3017,14 +3017,14 @@
             "walking through the ledger line by careful line",
             "reconciling with meticulous detail and quiet satisfaction"
           ],
-          "durationMs": 7000,
+          "durationMs": 3500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 20,
             "esteem": 5,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3036,13 +3036,13 @@
             "turning raw numbers into something Michael might understand",
             "building a model that will be politely ignored at the next meeting"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
             "stimulation": 12
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3054,7 +3054,7 @@
             "annotating an article he will bring up at lunch unprompted",
             "finishing a piece from a publication that is definitely not local"
           ],
-          "durationMs": 7000,
+          "durationMs": 3500,
           "needDeltas": {
             "stimulation": 15,
             "esteem": 5
@@ -3085,14 +3085,14 @@
             "making the numbers match or staying until they do",
             "catching a discrepancy that has been hiding since Q3"
           ],
-          "durationMs": 7000,
+          "durationMs": 3500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 20,
             "esteem": 5,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3104,13 +3104,13 @@
             "reviewing the party budget for the third time this week",
             "flagging line items that have no business being in accounting"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
             "esteem": 8
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3122,7 +3122,7 @@
             "reviewing cat show results from last weekend with deep focus",
             "cataloguing new pictures of Mr. Ash with professional care"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "stress": -15,
             "stimulation": 8,
@@ -3154,14 +3154,14 @@
             "working through the ledger at a comfortable, deliberate pace",
             "doing the accounting and occasionally thinking about lunch"
           ],
-          "durationMs": 7000,
+          "durationMs": 3500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 20,
             "esteem": 5,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3173,13 +3173,13 @@
             "reviewing the budget with one eye and a quiet optimism",
             "checking numbers while keeping an eye on the clock"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
             "esteem": 8
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_3",
@@ -3191,7 +3191,7 @@
             "watching a video that has nothing to do with accounting",
             "going down a rabbit hole that started with chili recipes"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "stimulation": 15,
             "productivity": -8
@@ -3270,14 +3270,14 @@
             "running through the call script with quiet confidence",
             "closing a client before the hold music kicks in"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 20,
             "esteem": 8,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3289,7 +3289,7 @@
             "cross-referencing leads against last quarter's numbers",
             "researching accounts like the commission depends on it"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
@@ -3307,7 +3307,7 @@
             "mentally clocking out while technically still at his desk",
             "drifting somewhere far from Scranton for a few minutes"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "needDeltas": {
             "stress": -15,
             "stimulation": 8
@@ -3362,14 +3362,14 @@
             "running through the pitch at double speed",
             "closing a deal before the competition even dials"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 20,
             "esteem": 8,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3381,7 +3381,7 @@
             "cross-referencing intel with known beet yield data",
             "documenting every detail for maximum accountability"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
@@ -3399,7 +3399,7 @@
             "monitoring foot traffic patterns near the printer",
             "noting behavioral anomalies for the weekly security log"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "needDeltas": {
             "productivity": 8,
             "esteem": 5,
@@ -3455,14 +3455,14 @@
             "running through the call script with quiet confidence",
             "closing a client before the hold music kicks in"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 20,
             "esteem": 8,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3474,7 +3474,7 @@
             "cross-referencing leads against last quarter's numbers",
             "researching accounts like the commission depends on it"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
@@ -3492,7 +3492,7 @@
             "adding items to a cart with quiet, decisive confidence",
             "comparing shipping times between tabs while looking busy"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "stimulation": 10,
             "stress": -5,
@@ -3572,14 +3572,14 @@
             "running through the call script with quiet confidence",
             "closing a client before the hold music kicks in"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 20,
             "esteem": 8,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3591,7 +3591,7 @@
             "cross-referencing leads against last quarter's numbers",
             "researching accounts like the commission depends on it"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
@@ -3609,12 +3609,12 @@
             "solving the crossword before the morning meeting ends",
             "completing another puzzle with zero interest in being interrupted"
           ],
-          "durationMs": 10000,
+          "durationMs": 5000,
           "needDeltas": {
             "stimulation": 22,
             "stress": -12
           },
-          "durationSteps": 4
+          "durationSteps": 2
         }
       ]
     },
@@ -3640,7 +3640,7 @@
             "following up on a shipment that was due last Tuesday",
             "keeping supplier relations warm and non-litigious"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 15,
@@ -3658,7 +3658,7 @@
             "comparing distributor rates on a very old spreadsheet",
             "tracking down better pricing before the quarter closes"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 12,
@@ -3676,7 +3676,7 @@
             "reading a story that is somehow wilder than her own week",
             "flipping through pages with genuine editorial investment"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "stimulation": 12,
             "stress": -5
@@ -3731,14 +3731,14 @@
             "running through the call script with quiet confidence",
             "closing a client before the hold music kicks in"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 20,
             "esteem": 8,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3750,7 +3750,7 @@
             "cross-referencing leads against last quarter's numbers",
             "researching accounts like the commission depends on it"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
@@ -3768,14 +3768,14 @@
             "writing a mission statement that is deliberately vague",
             "mapping out a go-to-market strategy instead of making calls"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "esteem": 10,
             "stimulation": 15,
             "fulfillment": 8
           },
-          "durationSteps": 3
+          "durationSteps": 2
         }
       ]
     },
@@ -3825,13 +3825,13 @@
             "auditing a batch report with selective attention",
             "signing off on a form that seems roughly correct"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
             "esteem": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3843,7 +3843,7 @@
             "checking stock against a suspiciously outdated list",
             "tracking items that may or may not still be in the building"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "productivity": 10
           },
@@ -3859,7 +3859,7 @@
             "corresponding with someone from a previous life",
             "handling business that predates his employment here by some years"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "needDeltas": {
             "stimulation": 15,
             "esteem": 8
@@ -3914,7 +3914,7 @@
             "answering five emails before Ryan's meeting even ends",
             "responding with enthusiasm to a very frustrated customer"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
@@ -3932,7 +3932,7 @@
             "recording the complaint before it escalates to a crisis",
             "tracking customer feedback with color-coded sticky notes"
           ],
-          "durationMs": 4000,
+          "durationMs": 2000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 12
@@ -3949,7 +3949,7 @@
             "reading a breakup story that is more dramatic than her own",
             "staying completely current on everything Ryan does not care about"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "stimulation": 12,
             "social": 5
@@ -3980,13 +3980,13 @@
             "carefully writing up a report that corporate will eventually find",
             "filling out forms in the quiet corner nobody visits"
           ],
-          "durationMs": 6000,
+          "durationMs": 3000,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         },
         {
           "id": "action_2",
@@ -3998,7 +3998,7 @@
             "processing the fourth grievance this week from the same person",
             "reviewing a formal complaint with professional neutrality"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 10,
@@ -4016,7 +4016,7 @@
             "drafting chapter four of a novel set in Costa Rica",
             "processing the day through the only outlet that listens back"
           ],
-          "durationMs": 7000,
+          "durationMs": 3500,
           "needDeltas": {
             "fulfillment": 10,
             "stress": -10,
@@ -4300,7 +4300,7 @@
             "feeding crumpled dollars to the snack machine",
             "staring down the spiral to free a stuck snack"
           ],
-          "durationMs": 3000,
+          "durationMs": 1500,
           "needDeltas": {
             "hunger": 20,
             "stimulation": 5
@@ -4318,7 +4318,7 @@
             "slapping the machine for the five cents it owes you",
             "picking a cold drink before the next surprise meeting"
           ],
-          "durationMs": 3000,
+          "durationMs": 1500,
           "needDeltas": {
             "thirst": 18,
             "stimulation": 3
@@ -4364,7 +4364,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4417,7 +4417,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4470,7 +4470,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4523,7 +4523,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4576,7 +4576,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4629,7 +4629,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4682,7 +4682,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4735,7 +4735,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4788,7 +4788,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4841,7 +4841,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4894,7 +4894,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -4947,7 +4947,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5000,7 +5000,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5053,7 +5053,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5106,7 +5106,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5159,7 +5159,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5212,7 +5212,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5265,7 +5265,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5318,7 +5318,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5371,7 +5371,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5424,7 +5424,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5477,7 +5477,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5530,7 +5530,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5583,7 +5583,7 @@
           "id": "action_attend_meeting",
           "name": "attend meeting",
           "emoji": "pencil",
-          "durationMs": 0,
+          "durationMs": 500,
           "loadingPhrases": [
             "settling in before Michael notices you're late",
             "finding a chair and bracing for impact",
@@ -5739,7 +5739,7 @@
             "checking every shelf for a non-dairy surprise",
             "running a Kevin-style snack audit"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxStartKey": "wooded_box_open",
           "sfxEndKey": "door_close_01",
           "needDeltas": {
@@ -5780,7 +5780,7 @@
             "rinsing coffee stains before they become evidence",
             "washing hands while humming the Dunder Mifflin jingle"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "sfxLoopKey": "wash_hands",
           "needDeltas": {
             "health": 5
@@ -5820,7 +5820,7 @@
             "rotating lunch exactly one quarter turn",
             "microwaving mystery pasta to acceptable levels"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxStartKey": "microwave_on",
           "sfxEndKey": "microwave_ding",
           "needDeltas": {
@@ -5910,7 +5910,7 @@
             "scrubbing fast before someone needs the sink",
             "resetting with a cold splash and deep sigh"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "sfxLoopKey": "wash_hands",
           "needDeltas": {
             "health": 5,
@@ -5951,7 +5951,7 @@
             "rinsing out the smell of burnt coffee",
             "washing hands while planning the next email"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "sfxLoopKey": "wash_hands",
           "needDeltas": {
             "health": 5,
@@ -5992,7 +5992,7 @@
             "rinsing hands and resetting focus",
             "quick sink break before the next interruption"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "sfxLoopKey": "wash_hands",
           "needDeltas": {
             "health": 5,
@@ -6033,7 +6033,7 @@
             "cooling down after another hallway detour",
             "cleaning up before jumping back into work"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "sfxLoopKey": "wash_hands",
           "needDeltas": {
             "health": 5,
@@ -6074,7 +6074,7 @@
             "unsticking pages from a suspicious paper jam",
             "sending forms to the accounting print queue"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "needDeltas": {
             "productivity": 10
           },
@@ -6090,7 +6090,7 @@
             "re-scanning because someone left it face-down again",
             "archiving the document before anyone asks for the original"
           ],
-          "durationMs": 3000,
+          "durationMs": 1500,
           "needDeltas": {
             "productivity": 10
           },
@@ -6129,7 +6129,7 @@
             "checking emergency gear like a compliance hero",
             "making sure the red hydrant is still on duty"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "needDeltas": {
             "productivity": 5
           },
@@ -6151,7 +6151,7 @@
             "aiming the stream directly at the source",
             "fighting the blaze with full pressure and a steady hand"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "health": 20,
             "stress": 25,
@@ -6280,7 +6280,7 @@
             "coaxing the printer to stop eating paper",
             "running off one more quote for a client"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "needDeltas": {
             "productivity": 10
           },
@@ -6296,7 +6296,7 @@
             "re-scanning because someone left it face-down again",
             "archiving the document before anyone asks for the original"
           ],
-          "durationMs": 3000,
+          "durationMs": 1500,
           "needDeltas": {
             "productivity": 10
           },
@@ -6335,7 +6335,7 @@
             "cueing up the quarterly slideshow",
             "pretending this is a very high-budget presentation"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "needDeltas": {
             "stimulation": 10,
             "productivity": 5
@@ -6358,14 +6358,14 @@
             "presenting quarterly numbers with rehearsed confidence",
             "walking everyone through a deck no one read beforehand"
           ],
-          "durationMs": 12000,
+          "durationMs": 6000,
           "needDeltas": {
             "esteem": 15,
             "productivity": 20,
             "social": 10,
             "stress": 5
           },
-          "durationSteps": 6
+          "durationSteps": 2
         }
       ]
     },
@@ -6400,7 +6400,7 @@
             "drawing arrows until the plan looks smart",
             "mapping ideas with peak conference-room energy"
           ],
-          "durationMs": 3000,
+          "durationMs": 1500,
           "needDeltas": {
             "esteem": 12,
             "productivity": 15,
@@ -6418,13 +6418,13 @@
             "filling the board with arrows and open questions",
             "going broad before narrowing to something defensible"
           ],
-          "durationMs": 8000,
+          "durationMs": 4000,
           "needDeltas": {
             "stimulation": 15,
             "productivity": 10,
             "esteem": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         }
       ]
     },
@@ -6500,7 +6500,7 @@
             "topping off water before a long sales call",
             "taking a classic water-cooler pause"
           ],
-          "durationMs": 1500,
+          "durationMs": 750,
           "needDeltas": {
             "thirst": 20
           },
@@ -6522,7 +6522,7 @@
             "stretching a water break into a full office debrief",
             "catching up on news with a paper cup in hand"
           ],
-          "durationMs": 8000,
+          "durationMs": 4000,
           "needDeltas": {
             "social": 12,
             "belonging": 5,
@@ -6563,7 +6563,7 @@
             "checking that emergency gear is ready",
             "making sure the sales wing is still up to code"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "needDeltas": {
             "productivity": 5
           },
@@ -6585,7 +6585,7 @@
             "aiming the stream directly at the source",
             "fighting the blaze with full pressure and a steady hand"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "health": 20,
             "stress": 25,
@@ -6627,7 +6627,7 @@
             "waiting for coffee strong enough for Michael ideas",
             "pouring a cup before the next surprise meeting"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "needDeltas": {
             "thirst": 10,
             "energy": 25,
@@ -6668,7 +6668,7 @@
             "watching the toaster like it owes you money",
             "making quick toast before someone steals it"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "needDeltas": {
             "hunger": 18
           },
@@ -6707,7 +6707,7 @@
             "confirming the hydrant is ready for emergencies",
             "giving the hydrant one cautious nod"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "needDeltas": {
             "productivity": 5
           },
@@ -6729,7 +6729,7 @@
             "aiming the stream directly at the source",
             "fighting the blaze with full pressure and a steady hand"
           ],
-          "durationMs": 5000,
+          "durationMs": 2500,
           "needDeltas": {
             "health": 20,
             "stress": 25,
@@ -6770,7 +6770,7 @@
             "disposing of paper trails and snack wrappers",
             "doing a tiny cleanup sprint in the kitchen"
           ],
-          "durationMs": 1500,
+          "durationMs": 750,
           "needDeltas": {
             "productivity": 5,
             "health": 3
@@ -6810,7 +6810,7 @@
             "waiting out the microwave countdown drama",
             "rescuing lunch from fridge-cold status"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxStartKey": "microwave_on",
           "sfxEndKey": "microwave_ding",
           "needDeltas": {
@@ -6852,7 +6852,7 @@
             "speed-running a restroom pit stop",
             "keeping it quick before someone needs the mirror"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "sfxEndKey": "toilet_02",
           "needDeltas": {
             "bladder": 65,
@@ -6893,7 +6893,7 @@
             "handling a fast restroom stop with zero fanfare",
             "making this break as efficient as possible"
           ],
-          "durationMs": 2000,
+          "durationMs": 1000,
           "sfxEndKey": "toilet_02",
           "needDeltas": {
             "bladder": 65,
@@ -6934,7 +6934,7 @@
             "handling restroom business before the next task",
             "locking in a quick pause away from the noise"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxEndKey": "toilet_02",
           "needDeltas": {
             "bladder": 65,
@@ -6975,7 +6975,7 @@
             "stepping away for a quick private break",
             "catching a breath in peace for a moment"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxEndKey": "toilet_02",
           "needDeltas": {
             "bladder": 65,
@@ -7016,7 +7016,7 @@
             "taking a short break from office turbulence",
             "using a quick pause to regroup"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxEndKey": "toilet_02",
           "needDeltas": {
             "bladder": 65,
@@ -7057,7 +7057,7 @@
             "taking a fast private break and reset",
             "stepping out of the chaos for a beat"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxEndKey": "toilet_02",
           "needDeltas": {
             "bladder": 65,
@@ -7115,13 +7115,13 @@
             "sharing intel in the one place no one records anything",
             "whispering the real story behind the all-hands memo"
           ],
-          "durationMs": 10000,
+          "durationMs": 5000,
           "needDeltas": {
             "social": 10,
             "belonging": 8,
             "stress": -8
           },
-          "durationSteps": 3
+          "durationSteps": 2
         }
       ]
     },
@@ -7164,13 +7164,13 @@
             "sharing intel in the one place no one records anything",
             "whispering the real story behind the all-hands memo"
           ],
-          "durationMs": 10000,
+          "durationMs": 5000,
           "needDeltas": {
             "social": 10,
             "belonging": 8,
             "stress": -8
           },
-          "durationSteps": 3
+          "durationSteps": 2
         }
       ]
     },
@@ -7205,7 +7205,7 @@
             "tidying the front desk like Pam might walk in",
             "binning old flyers and coffee lids"
           ],
-          "durationMs": 1500,
+          "durationMs": 750,
           "needDeltas": {
             "productivity": 5,
             "health": 3
@@ -7257,7 +7257,7 @@
             "updating the beet shipment spreadsheet before Jim notices",
             "pulling up Dunder Mifflin pricing like it is classified intel"
           ],
-          "durationMs": 2500,
+          "durationMs": 1250,
           "sfxLoopKey": "keyboard_typing",
           "needDeltas": {
             "productivity": 15,
@@ -7289,14 +7289,14 @@
             "running down the client list like a beet harvest checklist",
             "closing a sale while the hold music tests your patience"
           ],
-          "durationMs": 3800,
+          "durationMs": 1900,
           "sfxLoopKey": "phone_dial",
           "needDeltas": {
             "productivity": 20,
             "esteem": 10,
             "stress": 5
           },
-          "durationSteps": 3
+          "durationSteps": 2
         }
       ],
       "hotkeySlot": 1

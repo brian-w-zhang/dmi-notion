@@ -3,9 +3,9 @@ import { WorldState } from "./WorldState.js"
 import { StepWriter } from "./StepWriter.js"
 import { runTickRound, applyDecisions, runReflectionRound } from "../agents/orchestrator.js"
 
-// Agents are called every PERCEPTION_INTERVAL ticks.
-// Between calls, characters follow their last decision (path + action).
-const PERCEPTION_INTERVAL = 10
+// Fallback: even if no event fires, perceive at least every N steps.
+// Prevents characters from going completely dark during long uninterrupted activity.
+const PERCEPTION_FALLBACK_INTERVAL = 120   // ~20 sim minutes at sec_per_step=10
 
 interface RoundLoopOptions {
   totalRounds: number
@@ -22,7 +22,7 @@ export async function runSimulation(
 
   console.log(`\n${"═".repeat(60)}`)
   console.log(`Starting simulation: ${totalRounds} rounds`)
-  console.log(`Perception interval: every ${PERCEPTION_INTERVAL} ticks`)
+  console.log(`Perception: event-driven + fallback every ${PERCEPTION_FALLBACK_INTERVAL} steps`)
   console.log(`Sim time start: ${world.simTime.toISOString()}`)
   console.log(`${"═".repeat(60)}\n`)
 
@@ -34,17 +34,34 @@ export async function runSimulation(
     // ── 1. Physics (every tick) ───────────────────────────────────────────────
     world.advancePhysics()
 
-    // ── 2. Cognition (every N ticks) ──────────────────────────────────────────
-    if (round % PERCEPTION_INTERVAL === 0) {
-      console.log(`\n[Perception round ${round}/${totalRounds}] Calling agents...`)
-      const decisions = await runTickRound(world, client)
+    // ── 2. Arrivals + appliance expiry (sets needsPerception flags) ───────────
+    // (handled inside advanceStep → tickArrivals + tickApplianceLocks)
+
+    // ── 3. Event-driven cognition ─────────────────────────────────────────────
+    // Collect characters that need perception this step (event-triggered or fallback)
+    const toTick = world.getActiveCharacters().filter((c) => {
+      if (c.needsPerception) return true
+      if (world.step - c.lastPerceptionStep >= PERCEPTION_FALLBACK_INTERVAL) return true
+      return false
+    })
+
+    if (toTick.length > 0) {
+      const keys = toTick.map(c => c.name)
+      console.log(`\n[Step ${world.step}] Perception for: ${keys.join(", ")}`)
+      const decisions = await runTickRound(world, client, keys)
       applyDecisions(decisions, world, client)
+
+      // Clear flags and record perception step
+      for (const c of toTick) {
+        c.needsPerception = false
+        c.lastPerceptionStep = world.step
+      }
     }
 
-    // ── 3. Advance clock + flush ──────────────────────────────────────────────
+    // ── 4. Advance clock + flush ──────────────────────────────────────────────
     const { completedConversations, completedGroupConversations, announcements, events } = world.advanceStep()
 
-    // ── 4. End-of-hour talking heads (fire-and-forget, staggered) ────────────
+    // ── 5. End-of-hour reflections (fire-and-forget) ─────────────────────────
     const currentHour = Math.floor(world.simMinutes / 60)
     if (currentHour !== lastReflectionHour) {
       lastReflectionHour = currentHour
@@ -53,14 +70,14 @@ export async function runSimulation(
       )
     }
 
-    // ── 5. Write step file ────────────────────────────────────────────────────
+    // ── 6. Write step file ────────────────────────────────────────────────────
     const stepFile = world.toStepFile(completedConversations, completedGroupConversations, announcements, events)
     writer.write(stepFile)
 
-    const tag = round % PERCEPTION_INTERVAL === 0 ? " [perception]" : ""
+    const tag = toTick.length > 0 ? ` [perception: ${toTick.map(c => c.name).join(",")}]` : ""
     console.log(`  [Step ${stepFile.step}] sim=${world.simTimeString()}${tag}`)
 
-    // ── 6. Breathing room ─────────────────────────────────────────────────────
+    // ── 7. Breathing room ─────────────────────────────────────────────────────
     const elapsed = Date.now() - roundStart
     const wait = Math.max(0, delayBetweenRoundsMs - elapsed)
     if (wait > 0) await sleep(wait)

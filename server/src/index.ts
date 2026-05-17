@@ -22,7 +22,7 @@ const client = new NotionAgentsClient({ auth: process.env.NOTION_API_TOKEN })
 // ── World setup ───────────────────────────────────────────────────────────────
 
 const SIM_START = new Date("2023-02-13T07:00:00")  // 7 AM — covers Dwight's early arrival
-const SEC_PER_STEP = 300  // 5 sim minutes per round
+const SEC_PER_STEP = 10   // 10 sim seconds per step; 1 tile = 10 sim sec; 3600 steps per workday
 
 logDecayRates()
 const world = new WorldState(SIM_START, SEC_PER_STEP)
@@ -53,6 +53,8 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
     recentInteractions: {},
 
     plannedPath: [],
+    needsPerception: false,
+    lastPerceptionStep: 0,
   })
 }
 
@@ -71,7 +73,7 @@ router.post("/simulation/start", async (req, res) => {
     res.status(409).json({ error: "Simulation already running" })
     return
   }
-  const totalRounds = Number(req.body?.totalRounds ?? 50)
+  const totalRounds = Number(req.body?.totalRounds ?? 3600)
   const delayBetweenRoundsMs = Number(req.body?.delayBetweenRoundsMs ?? 0)
   res.json({ ok: true, totalRounds, delayBetweenRoundsMs, message: "Simulation started" })
 

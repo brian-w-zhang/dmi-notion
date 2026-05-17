@@ -79,10 +79,13 @@ const SPRITE_KEY: Record<string, string> = Object.fromEntries(
 
 // ── Controller ────────────────────────────────────────────────────────────────
 
-const CHAR_DEPTH     = 17;
-const CAR_DEPTH      = 15;
-const INSPECT_WIDTH  = 240;
-const INSPECT_MARGIN = 12;
+const CHAR_DEPTH      = 17;
+const CAR_DEPTH       = 15;
+const INSPECT_WIDTH   = 200;
+const INSPECT_MARGIN  = 12;
+const POV_H           = 30;   // collapsed POV picker height
+const POV_ITEM_H      = 22;   // each dropdown row height
+const POV_GAP         = 4;    // gap between POV picker and inspect panel
 
 export class MainMapReplayController {
   private readonly replay: ReplayFile;
@@ -97,9 +100,10 @@ export class MainMapReplayController {
   private activeLoop:    Phaser.Sound.BaseSound | null = null;
   private activeLoopKey: string | null = null;
 
-  // Camera follow target
-  private followTarget: Phaser.GameObjects.Sprite | null = null;
-  private followId:     string | null = null;
+  // POV picker
+  private _povKey:       string | null = null;
+  private _povOpen       = false;
+  private _povContainer!: Phaser.GameObjects.Container;
 
   // Inspect panel
   private inspectKey:   string | null = null;
@@ -144,6 +148,7 @@ export class MainMapReplayController {
 
     this._spawnCars(steps[0]);
     this._spawnSprites(steps[0]);
+    this._buildPovPicker();
     this._buildInspectPanel();
     this._applyStep(steps[0], true);
     this.stepIdx = 1;
@@ -165,7 +170,7 @@ export class MainMapReplayController {
       });
     });
 
-    // Camera — start at parking lot entrance; follow logic takes over per-step
+    // Camera — start at parking lot entrance; user picks POV via the picker
     const cam = this.scene.cameras.main;
     cam.setLerp(0.08, 0.08);
     cam.centerOn(2714, 1442);
@@ -179,6 +184,7 @@ export class MainMapReplayController {
     this.carSprites.clear();
     this.activeLoop?.stop();
     this.activeLoop = null;
+    this._povContainer?.destroy();
     this.inspectPanel?.destroy();
   }
 
@@ -277,11 +283,6 @@ export class MainMapReplayController {
       this._playCharAnim(sprite, SPRITE_KEY[key] ?? key, c.anim, c.facing);
     }
 
-    // Camera follow
-    if (step.follow !== undefined) {
-      this._updateFollow(step.follow);
-    }
-
     // SFX
     if (!instant) {
       this._applySfx(step);
@@ -327,23 +328,111 @@ export class MainMapReplayController {
     }
   }
 
-  // ── Camera follow ─────────────────────────────────────────────────────────────
+  // ── POV picker ────────────────────────────────────────────────────────────────
 
-  private _updateFollow(followId: string): void {
-    if (followId === this.followId) return;
-    this.followId = followId;
-
-    let target: Phaser.GameObjects.Sprite | null = null;
-    if (followId.endsWith('_car')) {
-      target = this.carSprites.get(followId.slice(0, -4)) ?? null;
+  private _setPov(key: string | null): void {
+    this._povKey  = key;
+    this._povOpen = false;
+    const cam = this.scene.cameras.main;
+    if (key) {
+      const sprite = this.sprites.get(key);
+      if (sprite) cam.startFollow(sprite, false, 0.08, 0.08);
     } else {
-      target = this.sprites.get(followId) ?? null;
+      cam.stopFollow();
     }
+    this._renderPovPicker();
+  }
 
-    if (target) {
-      this.followTarget = target;
-      this.scene.cameras.main.startFollow(target, false, 0.08, 0.08);
-    }
+  private _buildPovPicker(): void {
+    const { width } = this.scene.scale;
+    const x = width - INSPECT_WIDTH - INSPECT_MARGIN;
+    this._povContainer = this.scene.add.container(x, INSPECT_MARGIN)
+      .setScrollFactor(0).setDepth(10002);
+    this.scene.cameras.main.ignore(this._povContainer);
+    this._renderPovPicker();
+  }
+
+  private _renderPovPicker(): void {
+    this._povContainer.removeAll(true);
+    const W = INSPECT_WIDTH;
+
+    const characters = this.replay.meta.characters ?? [];
+    const totalH     = this._povOpen
+      ? POV_H + (characters.length + 1) * POV_ITEM_H  // +1 for "Free camera"
+      : POV_H;
+
+    // Background
+    const bg = this.scene.add.graphics();
+    bg.fillStyle(0x111111, 0.92);
+    bg.lineStyle(1, this._povOpen ? 0x4a90d9 : 0x333333, 1);
+    bg.fillRoundedRect(0, 0, W, totalH, 4);
+    bg.strokeRoundedRect(0, 0, W, totalH, 4);
+    this._povContainer.add(bg);
+
+    // Header row — label + current selection + arrow
+    const selName = this._povKey
+      ? (CHARACTER_ASSETS.find(a => a.owner === this._povKey)?.displayName ?? this._povKey)
+      : 'Free camera';
+    const headerTxt = this.scene.add.text(10, 8, `CAM  ${selName}`, {
+      fontFamily: 'monospace', fontSize: '9px', color: '#cccccc',
+    });
+    const arrow = this.scene.add.text(W - 16, 10, this._povOpen ? '▲' : '▼', {
+      fontFamily: 'monospace', fontSize: '8px', color: '#4a90d9',
+    });
+    this._povContainer.add([headerTxt, arrow]);
+
+    // Invisible hit-zone on header to toggle open/close
+    const headerHit = this.scene.add.rectangle(0, 0, W, POV_H, 0, 0).setOrigin(0, 0)
+      .setInteractive({ useHandCursor: true });
+    headerHit.on('pointerover', () => { headerTxt.setColor('#ffffff'); });
+    headerHit.on('pointerout',  () => { headerTxt.setColor('#cccccc'); });
+    headerHit.on('pointerdown', () => { this._povOpen = !this._povOpen; this._renderPovPicker(); });
+    this._povContainer.add(headerHit);
+
+    if (!this._povOpen) return;
+
+    // Divider
+    const div = this.scene.add.graphics();
+    div.lineStyle(1, 0x333333, 1);
+    div.lineBetween(0, POV_H, W, POV_H);
+    this._povContainer.add(div);
+
+    // Dropdown items: "Free camera" + each character
+    const items: Array<{ key: string | null; label: string }> = [
+      { key: null, label: 'Free camera' },
+      ...characters.map(k => ({
+        key: k,
+        label: CHARACTER_ASSETS.find(a => a.owner === k)?.displayName ?? k,
+      })),
+    ];
+
+    items.forEach((item, i) => {
+      const iy      = POV_H + i * POV_ITEM_H;
+      const isSelected = item.key === this._povKey;
+      const color   = isSelected ? '#ffffff' : '#888888';
+
+      if (isSelected) {
+        const selBg = this.scene.add.graphics();
+        selBg.fillStyle(0x1a3a5c, 1);
+        selBg.fillRect(0, iy, W, POV_ITEM_H);
+        this._povContainer.add(selBg);
+      }
+
+      const bullet = this.scene.add.text(8, iy + 5, isSelected ? '●' : ' ', {
+        fontFamily: 'monospace', fontSize: '8px', color: '#4a90d9',
+      });
+      const label = this.scene.add.text(20, iy + 5, item.label, {
+        fontFamily: 'monospace', fontSize: '9px', color,
+      });
+      this._povContainer.add([bullet, label]);
+
+      const rowHit = this.scene.add.rectangle(0, iy, W, POV_ITEM_H, 0, 0).setOrigin(0, 0)
+        .setInteractive({ useHandCursor: true });
+      rowHit.on('pointerover', () => { label.setColor('#ffffff'); });
+      rowHit.on('pointerout',  () => { label.setColor(isSelected ? '#ffffff' : '#888888'); });
+      rowHit.on('pointerdown', () => { this._setPov(item.key); });
+      this._povContainer.add(rowHit);
+    });
   }
 
   // ── SFX ──────────────────────────────────────────────────────────────────────
@@ -402,8 +491,9 @@ export class MainMapReplayController {
 
   private _buildInspectPanel(): void {
     const { width, height } = this.scene.scale;
-    const x = width - INSPECT_WIDTH - INSPECT_MARGIN;
-    const y = INSPECT_MARGIN;
+    const x      = width - INSPECT_WIDTH - INSPECT_MARGIN;
+    const y      = INSPECT_MARGIN + POV_H + POV_GAP;
+    const panelH = height - y - INSPECT_MARGIN;
 
     this.inspectPanel = this.scene.add.container(x, y).setScrollFactor(0).setDepth(10000).setVisible(false);
     this.scene.cameras.main.ignore(this.inspectPanel);  // render on uiCamera only
@@ -411,8 +501,8 @@ export class MainMapReplayController {
     const bg = this.scene.add.graphics();
     bg.fillStyle(0x111111, 0.88);
     bg.lineStyle(1, 0x333333, 1);
-    bg.fillRoundedRect(0, 0, INSPECT_WIDTH, height - INSPECT_MARGIN * 2, 6);
-    bg.strokeRoundedRect(0, 0, INSPECT_WIDTH, height - INSPECT_MARGIN * 2, 6);
+    bg.fillRoundedRect(0, 0, INSPECT_WIDTH, panelH, 6);
+    bg.strokeRoundedRect(0, 0, INSPECT_WIDTH, panelH, 6);
     this.inspectPanel.add(bg);
 
     const closeBtn = this.scene.add.text(INSPECT_WIDTH - 16, 10, '✕', {
