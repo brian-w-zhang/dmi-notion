@@ -17,13 +17,17 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 // ── Timing ────────────────────────────────────────────────────────────────────
 
-const MS_PER_STEP  = 80
-const CAR_SPEED    = 7   // px / frame
-const CHAR_SPEED   = 3   // px / frame
-const FPS          = 60
+const MS_PER_STEP    = 80    // path sampling rate (affects step count + smoothness)
+const PLAYBACK_SPEED = 1.5   // replay speed multiplier (1.0 = real-time)
+const CAR_SPEED      = 7     // px / frame
+const CHAR_SPEED     = 3     // px / frame
+const FPS            = 60
 
 const CAR_PX_STEP  = Math.round(CAR_SPEED  * FPS * MS_PER_STEP / 1000)  // 34
 const CHAR_PX_STEP = Math.round(CHAR_SPEED * FPS * MS_PER_STEP / 1000)  // 14
+
+// Playback ms — smaller = faster. Independent of path sampling so step density is unchanged.
+const PLAYBACK_MS = Math.round(MS_PER_STEP / PLAYBACK_SPEED)  // 53 at 1.5×
 
 // ── CarAutoParkSystem constants ───────────────────────────────────────────────
 
@@ -46,15 +50,21 @@ type Facing   = 'front' | 'back' | 'left' | 'right'
 type CarAnim  = 'drive' | 'idle'
 type CharAnim = 'walk' | 'idle' | 'sit'
 
+interface CharState {
+  id:      string
+  x:       number; y: number
+  facing:  Facing; anim: CharAnim
+  visible: boolean
+  seated?: boolean
+}
+
 interface FullStep {
-  step:         number
-  car_x:        number; car_y: number; car_facing: Facing; car_anim: CarAnim
-  char_x:       number; char_y: number; char_facing: Facing; char_anim: CharAnim
-  char_visible: boolean
-  follow:       'car' | 'char'
-  emoji:        string; desc: string
-  transition?:  'enter_building'
-  seated?:      boolean
+  step:        number
+  car_x:       number; car_y: number; car_facing: Facing; car_anim: CarAnim
+  chars:       CharState[]
+  follow:      'car' | string   // 'car' or a char id
+  emoji:       string; desc: string
+  transition?: 'enter_building'
 }
 
 interface ReplayFile {
@@ -363,14 +373,23 @@ let char_x = 0, char_y = 0
 let char_facing: Facing  = 'front'
 let char_anim:   CharAnim = 'idle'
 let char_visible = false
-let follow: 'car' | 'char' = 'car'
+let char_seated  = false
+let follow: 'car' | string = 'car'
 
-function snapshot(emoji: string, desc: string, opts: { transition?: 'enter_building'; seated?: boolean } = {}): void {
+const DWIGHT_ID = 'dwight-schrute'
+
+function snapshot(emoji: string, desc: string, opts: { transition?: 'enter_building' } = {}): void {
+  const charEntry: CharState = {
+    id: DWIGHT_ID, x: char_x, y: char_y,
+    facing: char_facing, anim: char_anim, visible: char_visible,
+  }
+  if (char_seated) charEntry.seated = true
   steps.push({
     step: stepNum++,
     car_x, car_y, car_facing, car_anim,
-    char_x, char_y, char_facing, char_anim, char_visible,
-    follow, emoji, desc, ...opts,
+    chars: [charEntry],
+    follow, emoji, desc,
+    ...(opts.transition ? { transition: opts.transition } : {}),
   })
 }
 
@@ -487,7 +506,7 @@ idle(2, '🅿️', 'Parked')
 
 char_x = DISMOUNT_X; char_y = DISMOUNT_Y
 char_facing = 'front'; char_anim = 'idle'
-char_visible = true; follow = 'char'
+char_visible = true; follow = DWIGHT_ID
 idle(2, '😤', 'Getting out of car')
 
 // ── Outdoor walk: pathfind to groundEntranceStart ────────────────────────────
@@ -523,15 +542,14 @@ walkWaypoints(deskPath, '🚶', 'Walking to desk')
 // ── Sit at desk ───────────────────────────────────────────────────────────────
 
 char_x = DWIGHT_CHAIR.x; char_y = DWIGHT_CHAIR.y
-char_facing = 'left'; char_anim = 'sit'
+char_facing = 'left'; char_anim = 'sit'; char_seated = true
 idle(3, '💻', 'At desk — Assistant to the Regional Manager')
-steps[steps.length - 1].seated = true
 
 // ── Write output ──────────────────────────────────────────────────────────────
 
 const replay: ReplayFile = {
   meta: {
-    ms_per_step:  MS_PER_STEP,
+    ms_per_step:  PLAYBACK_MS,
     car_px_step:  CAR_PX_STEP,
     char_px_step: CHAR_PX_STEP,
     sprite_key:   'dwight-schrute',
@@ -540,21 +558,41 @@ const replay: ReplayFile = {
   steps,
 }
 
+// One step per line — readable in an editor, parseable by JSON.parse()
+function serializeReplay(r: ReplayFile): string {
+  const metaLine  = `"meta":${JSON.stringify(r.meta)}`
+  const stepLines = r.steps.map((s, i) =>
+    JSON.stringify(s) + (i < r.steps.length - 1 ? ',' : '')
+  )
+  return `{\n${metaLine},\n"steps":[\n${stepLines.join('\n')}\n]\n}`
+}
+
 const outDir  = resolve(__dirname, '../../../frontend/public/assets/simulation')
 mkdirSync(outDir, { recursive: true })
 const outPath = resolve(outDir, 'replay.json')
-writeFileSync(outPath, JSON.stringify(replay))
+const output  = serializeReplay(replay)
+writeFileSync(outPath, output)
 
 console.log(`\n✓  replay.json → ${outPath}`)
 console.log(`   Steps    : ${steps.length}`)
-console.log(`   Duration : ~${(steps.length * MS_PER_STEP / 1000).toFixed(1)}s real time`)
-console.log(`   File     : ${(JSON.stringify(replay).length / 1024).toFixed(1)} KB`)
+console.log(`   Duration : ~${(steps.length * PLAYBACK_MS / 1000).toFixed(1)}s at ${PLAYBACK_SPEED}× speed`)
+console.log(`   File     : ${(output.length / 1024).toFixed(1)} KB`)
 
-const dismountStep = steps.find(s => s.char_visible && !steps[Math.max(0, s.step - 1)]?.char_visible)
-const sitStep      = steps.find(s => s.seated)
+const dwight     = (s: FullStep) => s.chars.find(c => c.id === DWIGHT_ID)
+const dismountStep = steps.find(s => dwight(s)?.visible && !dwight(steps[Math.max(0, s.step - 1)])?.visible)
+const sitStep      = steps.find(s => dwight(s)?.seated)
 console.log('')
-if (dismountStep) console.log(`   Dismount   step #${dismountStep.step}: char(${dismountStep.char_x},${dismountStep.char_y})`)
-console.log(`   Entrance   step #${steps.findIndex(s => s.char_x === GROUND_ENTRANCE_OUT.x && s.char_y === GROUND_ENTRANCE_OUT.y)}: char→(${GROUND_ENTRANCE_OUT.x},${GROUND_ENTRANCE_OUT.y})`)
-console.log(`   Teleport   step #${steps.findIndex(s => s.char_x === ELEVATOR_START.x && s.char_y === ELEVATOR_START.y)}: char→(${ELEVATOR_START.x},${ELEVATOR_START.y})`)
-console.log(`   ElevEnd    step #${steps.findIndex(s => s.char_x === ELEVATOR_END.x && s.char_y === ELEVATOR_END.y)}: char→(${ELEVATOR_END.x},${ELEVATOR_END.y})`)
-if (sitStep) console.log(`   Sit        step #${sitStep.step}: char(${sitStep.char_x},${sitStep.char_y})`)
+if (dismountStep) {
+  const d = dwight(dismountStep)!
+  console.log(`   Dismount   step #${dismountStep.step}: char(${d.x},${d.y})`)
+}
+const entranceIdx = steps.findIndex(s => { const d = dwight(s); return d?.x === GROUND_ENTRANCE_OUT.x && d?.y === GROUND_ENTRANCE_OUT.y })
+const teleportIdx = steps.findIndex(s => { const d = dwight(s); return d?.x === ELEVATOR_START.x && d?.y === ELEVATOR_START.y })
+const elevEndIdx  = steps.findIndex(s => { const d = dwight(s); return d?.x === ELEVATOR_END.x && d?.y === ELEVATOR_END.y })
+console.log(`   Entrance   step #${entranceIdx}: char→(${GROUND_ENTRANCE_OUT.x},${GROUND_ENTRANCE_OUT.y})`)
+console.log(`   Teleport   step #${teleportIdx}: char→(${ELEVATOR_START.x},${ELEVATOR_START.y})`)
+console.log(`   ElevEnd    step #${elevEndIdx}: char→(${ELEVATOR_END.x},${ELEVATOR_END.y})`)
+if (sitStep) {
+  const d = dwight(sitStep)!
+  console.log(`   Sit        step #${sitStep.step}: char(${d.x},${d.y})`)
+}

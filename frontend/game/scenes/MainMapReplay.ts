@@ -9,15 +9,21 @@ type Facing   = 'front' | 'back' | 'left' | 'right';
 type CarAnim  = 'drive' | 'idle';
 type CharAnim = 'walk' | 'idle' | 'sit';
 
+interface CharState {
+  id:      string;
+  x:       number; y: number;
+  facing:  Facing; anim: CharAnim;
+  visible: boolean;
+  seated?: boolean;
+}
+
 interface FullStep {
-  step:         number;
-  car_x:        number; car_y: number; car_facing: Facing; car_anim: CarAnim;
-  char_x:       number; char_y: number; char_facing: Facing; char_anim: CharAnim;
-  char_visible: boolean;
-  follow:       'car' | 'char';
-  emoji:        string; desc: string;
-  transition?:  'enter_building';
-  seated?:      boolean;
+  step:        number;
+  car_x:       number; car_y: number; car_facing: Facing; car_anim: CarAnim;
+  chars:       CharState[];
+  follow:      'car' | string;
+  emoji:       string; desc: string;
+  transition?: 'enter_building';
 }
 
 interface ReplayFile {
@@ -32,7 +38,7 @@ export class MainMapReplayController {
   private stepIdx         = 1;
   private paused          = false;
   private stepTimer!:       Phaser.Time.TimerEvent;
-  private currentFollow: 'car' | 'char' = 'car';
+  private currentFollow: 'car' | string = 'car';
 
   constructor(
     private readonly scene:  Phaser.Scene,
@@ -55,9 +61,12 @@ export class MainMapReplayController {
     this.car.snapToPivot(first.car_x, first.car_y);
     this._playCarAnim(first.car_anim, first.car_facing);
 
-    this.dwight.sprite.setVisible(first.char_visible);
-    this.dwight.teleportTo(first.char_x, first.char_y);
-    if (first.char_visible) this._playCharAnim(first.char_anim, first.char_facing);
+    const firstDwight = first.chars.find(c => c.id === this.replay.meta.sprite_key);
+    this.dwight.sprite.setVisible(firstDwight?.visible ?? false);
+    if (firstDwight) {
+      this.dwight.teleportTo(firstDwight.x, firstDwight.y);
+      if (firstDwight.visible) this._playCharAnim(firstDwight.anim, firstDwight.facing);
+    }
 
     // Camera
     const cam = this.scene.cameras.main;
@@ -118,18 +127,21 @@ export class MainMapReplayController {
     }
     this._playCarAnim(step.car_anim, step.car_facing);
 
-    // Dwight
-    this.dwight.sprite.setVisible(step.char_visible);
-    if (step.char_visible) {
-      if (instant) {
-        this.dwight.teleportTo(step.char_x, step.char_y);
-      } else {
-        this.scene.tweens.add({
-          targets: this.dwight.sprite, x: step.char_x, y: step.char_y,
-          duration: ms, ease: 'Linear',
-        });
+    // Characters
+    const dwightState = step.chars.find(c => c.id === this.replay.meta.sprite_key);
+    if (dwightState) {
+      this.dwight.sprite.setVisible(dwightState.visible);
+      if (dwightState.visible) {
+        if (instant) {
+          this.dwight.teleportTo(dwightState.x, dwightState.y);
+        } else {
+          this.scene.tweens.add({
+            targets: this.dwight.sprite, x: dwightState.x, y: dwightState.y,
+            duration: ms, ease: 'Linear',
+          });
+        }
+        this._playCharAnim(dwightState.anim, dwightState.facing);
       }
-      this._playCharAnim(step.char_anim, step.char_facing);
     }
 
     // Camera follow — switch when `follow` field changes
@@ -146,18 +158,22 @@ export class MainMapReplayController {
   // destination position is hidden under occluding tiles naturally.
 
   private _doTransition(step: FullStep): void {
+    const dwightState = step.chars.find(c => c.id === this.replay.meta.sprite_key);
+    if (!dwightState) return;
+
+    this.scene.tweens.killTweensOf(this.dwight.sprite);
     this.dwight.sprite.setVisible(false);
-    this.dwight.teleportTo(step.char_x, step.char_y);
-    this._playCharAnim(step.char_anim, step.char_facing);
+    this.dwight.teleportTo(dwightState.x, dwightState.y);
+    this._playCharAnim(dwightState.anim, dwightState.facing);
 
     const cam = this.scene.cameras.main;
     cam.stopFollow();
     // Disable lerp for this one snap so the camera jumps instantly
     cam.setLerp(1, 1);
-    cam.centerOn(step.char_x, step.char_y);
+    cam.centerOn(dwightState.x, dwightState.y);
     cam.startFollow(this.dwight.sprite);
     cam.setLerp(0.1, 0.1);
-    this.currentFollow = 'char';
+    this.currentFollow = this.replay.meta.sprite_key;
 
     this.hud.setReplayStatus(step.emoji, step.desc, step.step, this.replay.steps.length - 1);
 
