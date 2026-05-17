@@ -82,6 +82,63 @@ const SPRITE_KEY: Record<string, string> = Object.fromEntries(
   CHARACTER_ASSETS.map(a => [a.owner, a.spriteKey])
 );
 
+// ── Talking heads ─────────────────────────────────────────────────────────────
+
+const TALKING_HEAD_CHAIR = { x: 1583.81, y: 180.77 };
+const TALKING_HEAD_ZOOM  = 4;
+
+interface TalkingHeadSegment {
+  text:   string;
+  holdMs: number;
+  gapMs:  number;
+}
+
+interface TalkingHeadDef {
+  triggerStep: number;
+  character:   string;
+  displayName: string;
+  simTime:     string;
+  segments:    TalkingHeadSegment[];
+}
+
+const TALKING_HEADS: TalkingHeadDef[] = [
+  {
+    triggerStep: 366,
+    character:   'kelly',
+    displayName: 'Kelly Kapoor',
+    simTime:     '11:01 AM',
+    segments: [
+      { text: "I went to the kitchen early, which, okay, fine, but the thing is I thought someone would come. Someone always comes.", holdMs: 5500, gapMs: 1200 },
+      { text: "I stood there for like four minutes holding a cup and the whole time I was very casually looking at the door, and nobody walked in.", holdMs: 6500, gapMs: 800 },
+      { text: "I don't know what that means. I'm sure it doesn't mean anything. I'm going to go find out what it means.", holdMs: 5000, gapMs: 0 },
+    ],
+  },
+  {
+    triggerStep: 732,
+    character:   'stanley',
+    displayName: 'Stanley Hudson',
+    simTime:     '12:02 PM',
+    segments: [
+      { text: "I had a plan for lunch. It was a good plan. It involved a newspaper, a table, and nobody talking to me.", holdMs: 5000, gapMs: 600 },
+      { text: "Michael said Alfredo's. Ryan asked if I was coming. And here we are.", holdMs: 3500, gapMs: 600 },
+      { text: "I'm going to Alfredo's.", holdMs: 2500, gapMs: 1000 },
+      { text: "I want it noted that I did not ask to be part of history.", holdMs: 4500, gapMs: 0 },
+    ],
+  },
+  {
+    triggerStep: 768,
+    character:   'michael',
+    displayName: 'Michael Scott',
+    simTime:     '12:08 PM',
+    segments: [
+      { text: "Ryan Howard — temp, future MBA, guy who has never once called me a friend — just co-named my entire philosophy.", holdMs: 5500, gapMs: 600 },
+      { text: "The Michael Scott Energy Code. He said it like it was real.", holdMs: 3500, gapMs: 600 },
+      { text: "And here's the thing... it is real. I've been living it for years, I just didn't have the words for it yet, and now I do, because Ryan gave them to me, which means Ryan gets it, which means I'm not crazy.", holdMs: 9000, gapMs: 1500 },
+      { text: "I'm going to Alfredo's.", holdMs: 2500, gapMs: 0 },
+    ],
+  },
+];
+
 // ── Controller ────────────────────────────────────────────────────────────────
 
 const CHAR_DEPTH          = 17;
@@ -122,6 +179,10 @@ export class MainMapReplayController {
   // Active looping SFX
   private activeLoop:    Phaser.Sound.BaseSound | null = null;
   private activeLoopKey: string | null = null;
+
+  // Talking head cutscenes
+  private _thUsed:    Set<number> = new Set();
+  private _thOverlay: Phaser.GameObjects.Container | null = null;
 
   // POV picker
   private _povKey:       string | null = null;
@@ -332,7 +393,104 @@ export class MainMapReplayController {
       this.hud.setReplayStatus(last.emoji ?? '🏢', last.sim_time ?? last.desc ?? '', last.step, this.replay.steps.length - 1, true);
       return;
     }
+
+    const step = this.replay.steps[this.stepIdx];
+    const th   = TALKING_HEADS.find(t => t.triggerStep === step.step && !this._thUsed.has(step.step));
+    if (th) {
+      this._thUsed.add(step.step);
+      this.pause();
+      this._applyStep(step, false);
+      this.stepIdx++;
+      this._playTalkingHead(th);
+      return;
+    }
+
     this._applyStep(this.replay.steps[this.stepIdx++], false);
+  }
+
+  // ── Talking head cutscene ────────────────────────────────────────────────────
+
+  private _playTalkingHead(def: TalkingHeadDef): void {
+    const cam              = this.scene.cameras.main;
+    const { width, height } = this.scene.scale;
+
+    // Save camera state before snapping
+    const savedZoom    = cam.zoom;
+    const savedScrollX = cam.scrollX;
+    const savedScrollY = cam.scrollY;
+    const savedPovKey  = this._povKey;
+    cam.stopFollow();
+    cam.setZoom(TALKING_HEAD_ZOOM);
+    cam.centerOn(TALKING_HEAD_CHAIR.x, TALKING_HEAD_CHAIR.y - 32);
+
+    // Spawn a dedicated talking-head sprite at the chair (don't disturb the sim sprite)
+    const spriteKey = SPRITE_KEY[def.character] ?? def.character;
+    const thSprite  = this.scene.add.sprite(TALKING_HEAD_CHAIR.x, TALKING_HEAD_CHAIR.y, spriteKey);
+    thSprite.setDepth(CHAR_DEPTH).setOrigin(0.5, 1);
+    this.hud.ignoreWorldObjects(thSprite);
+    this._playCharAnim(thSprite, spriteKey, 'sit', 'front');
+
+    // Build cinematic overlay — rendered by the uiCamera (not the world camera)
+    const BAR_T = Math.floor(height * 0.15);
+    const BAR_B = Math.floor(height * 0.22);
+
+    const overlay = this.scene.add.container(0, 0).setDepth(20000);
+    this.scene.cameras.main.ignore(overlay);
+    this._thOverlay = overlay;
+
+    const topBar = this.scene.add.graphics().fillStyle(0x000000, 1).fillRect(0, 0, width, BAR_T);
+    const botBar = this.scene.add.graphics().fillStyle(0x000000, 1).fillRect(0, height - BAR_B, width, BAR_B);
+    overlay.add([topBar, botBar]);
+
+    // Lower-third name plate
+    const plateX = 40;
+    const plateY = height - BAR_B - 58;
+    const plate  = this.scene.add.graphics().fillStyle(0x0f172a, 0.96).fillRect(plateX, plateY, 248, 46);
+    const accent = this.scene.add.graphics().fillStyle(0xe11d48, 1).fillRect(plateX, plateY, 4, 46);
+    const nameLabel = this.scene.add.text(plateX + 14, plateY + 9, def.displayName, {
+      fontFamily: 'Arial, sans-serif', fontSize: '14px', color: '#ffffff', fontStyle: 'bold',
+    });
+    const timeLabel = this.scene.add.text(plateX + 14, plateY + 29, def.simTime, {
+      fontFamily: 'Arial, sans-serif', fontSize: '10px', color: '#94a3b8',
+    });
+    overlay.add([plate, accent, nameLabel, timeLabel]);
+
+    // Subtitle text (centered in the bottom bar)
+    const subtitle = this.scene.add.text(width / 2, height - BAR_B / 2, '', {
+      fontFamily: 'Georgia, serif',
+      fontSize:   '15px',
+      color:      '#f8fafc',
+      align:      'center',
+      wordWrap:   { width: width * 0.70 },
+      shadow:     { offsetX: 1, offsetY: 1, color: '#000000', blur: 6, stroke: true, fill: true },
+    }).setOrigin(0.5, 0.5);
+    overlay.add(subtitle);
+
+    // Schedule subtitle segments
+    let delay = 400;
+    for (const seg of def.segments) {
+      const d = delay;
+      this.scene.time.delayedCall(d, () => { subtitle.setText(seg.text); });
+      delay += seg.holdMs + seg.gapMs;
+    }
+
+    // Clear subtitle, destroy temp sprite, restore camera, resume
+    this.scene.time.delayedCall(delay, () => { subtitle.setText(''); });
+    this.scene.time.delayedCall(delay + 400, () => {
+      thSprite.destroy();
+      this._thOverlay?.destroy(true);
+      this._thOverlay = null;
+
+      cam.setZoom(savedZoom);
+      cam.setScroll(savedScrollX, savedScrollY);
+      if (savedPovKey) {
+        const followSpr = this.sprites.get(savedPovKey);
+        if (followSpr) cam.startFollow(followSpr, false, 0.08, 0.08);
+      }
+
+      this.resume();
+      this.hud.setPlayPaused(false);
+    });
   }
 
   // ── Apply step ───────────────────────────────────────────────────────────────
