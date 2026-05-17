@@ -5,7 +5,12 @@
     "curve": "convex",
     "params": { "power": 2.5 },
     "color": "#fb923c",
-    "blurb": "Urgency spikes sharply near zero and collapses fast once satisfied. Physiological deprivation is immediately consuming but a full stomach renders the need nearly invisible."
+    "blurb": "Urgency spikes sharply near zero and collapses fast once satisfied. Physiological deprivation is immediately consuming but a full stomach renders the need nearly invisible.",
+    "decay": {
+      "type": "constant",
+      "k": 0.70,
+      "blurb": "Depletes steadily over roughly 12 sim hours. Starting near full at the top of a workday, urgency climbs to meaningful levels by midday — a natural lunch trigger."
+    }
   },
   "thirst": {
     "label": "Thirst",
@@ -13,7 +18,12 @@
     "curve": "convex",
     "params": { "power": 2.5 },
     "color": "#22d3ee",
-    "blurb": "Same shape as hunger: near-zero urgency when satiated, sudden spike as the need becomes critical. Dehydration accelerates fast in the final stretch."
+    "blurb": "Same shape as hunger: near-zero urgency when satiated, sudden spike as the need becomes critical. Dehydration accelerates fast in the final stretch.",
+    "decay": {
+      "type": "constant",
+      "k": 1.0,
+      "blurb": "Faster than hunger and easily remedied. Without a drink break, thirst becomes uncomfortable within a morning. The water cooler and vending machine exist for a reason."
+    }
   },
   "bladder": {
     "label": "Bladder",
@@ -21,7 +31,12 @@
     "curve": "convex",
     "params": { "power": 2.8 },
     "color": "#92400e",
-    "blurb": "Slightly steeper than the other physiological needs. Urgency is negligible for most of the range but becomes overwhelming near empty, mirroring the real physiology of bladder pressure."
+    "blurb": "Slightly steeper than the other physiological needs. Urgency is negligible for most of the range but becomes overwhelming near empty, mirroring the real physiology of bladder pressure.",
+    "decay": {
+      "type": "constant",
+      "k": 1.4,
+      "blurb": "The fastest physiological decay. Starting at 90, a character hits the urgency zone in roughly 4 sim hours — a natural bathroom rhythm. Drinking events add a small spike on top of the baseline rate."
+    }
   },
   "energy": {
     "label": "Energy",
@@ -29,7 +44,12 @@
     "curve": "convex",
     "params": { "power": 2.0 },
     "color": "#eab308",
-    "blurb": "A shallower convex than hunger or thirst. Fatigue accumulates more gradually and the urgency near zero is less abrupt, reflecting that tiredness is a slow drain rather than a sudden crisis."
+    "blurb": "A shallower convex than hunger or thirst. Fatigue accumulates more gradually and the urgency near zero is less abrupt, reflecting that tiredness is a slow drain rather than a sudden crisis.",
+    "decay": {
+      "type": "constant",
+      "k": 0.60,
+      "blurb": "Drains over a full waking day (~14h from full). Sleep restores energy at 6–8× the decay rate. High stress accelerates depletion beyond the baseline."
+    }
   },
   "stress": {
     "label": "Stress",
@@ -37,7 +57,12 @@
     "curve": "ascending",
     "params": { "power": 2.0 },
     "color": "#ef4444",
-    "blurb": "Urgency is low when stress is low and accelerates as it builds. This models stress as a self-amplifying state: the more wound up a character is, the more urgently they seek relief."
+    "blurb": "Urgency is low when stress is low and accelerates as it builds. This models stress as a self-amplifying state: the more wound up a character is, the more urgently they seek relief.",
+    "decay": {
+      "type": "event-driven",
+      "k": null,
+      "blurb": "No passive time decay. Stress accumulates from discrete negative events — conflict, embarrassment, Michael — and dissipates through resolution, positive interactions, and rest. A very slow passive bleed back toward baseline occurs only during extended uninterrupted calm."
+    }
   },
   "health": {
     "label": "Health",
@@ -45,7 +70,12 @@
     "curve": "convex",
     "params": { "power": 2.0 },
     "color": "#16a34a",
-    "blurb": "Urgency rises sharply as health deteriorates. At full health the pull is negligible; near zero it becomes the dominant concern, overriding most other needs."
+    "blurb": "Urgency rises sharply as health deteriorates. At full health the pull is negligible; near zero it becomes the dominant concern, overriding most other needs.",
+    "decay": {
+      "type": "event-driven",
+      "k": null,
+      "blurb": "Health has no time-based decay. It changes only in response to events: illness, injury, or sustained stress above a critical threshold. Sleep provides a small incremental recovery tick."
+    }
   },
   "social": {
     "label": "Social",
@@ -53,7 +83,12 @@
     "curve": "u-shaped",
     "params": { "amplitude": 2.5, "midpoint": 0.45, "baseline": 0.05 },
     "color": "#3b82f6",
-    "blurb": "Both ends of the spectrum generate urgency. Too little social contact creates loneliness; too much creates overwhelm. The trough near the midpoint is the comfortable social range."
+    "blurb": "Both ends of the spectrum generate urgency. Too little social contact creates loneliness; too much creates overwhelm. The trough near the midpoint is the comfortable social range.",
+    "decay": {
+      "type": "psychosocial",
+      "k": 0.17,
+      "blurb": "Drifts over roughly 2 sim days in total isolation. Over a normal workday, social naturally trends toward the comfortable midrange. The U-shape means both extremes generate urgency — too-high social also becomes uncomfortable for introverts."
+    }
   },
   "belonging": {
     "label": "Belonging",
@@ -61,7 +96,12 @@
     "curve": "concave",
     "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.05 },
     "color": "#f472b6",
-    "blurb": "A gradual, always-present pull toward inclusion. The square-root shape means gains are felt most at low levels; the curve never reaches zero because the need for belonging is never fully extinguished."
+    "blurb": "A gradual, always-present pull toward inclusion. The square-root shape means gains are felt most at low levels; the curve never reaches zero because the need for belonging is never fully extinguished.",
+    "decay": {
+      "type": "psychosocial",
+      "k": 0.07,
+      "blurb": "Moves on the timescale of days, not hours. Belonging reflects the cumulative quality of relationships rather than any single interaction, and refills slowly through sustained, meaningful contact."
+    }
   },
   "esteem": {
     "label": "Esteem",
@@ -69,7 +109,12 @@
     "curve": "concave",
     "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.08 },
     "color": "#a3e635",
-    "blurb": "Similar to belonging but with a higher baseline, reflecting that self-worth is slightly more chronically active than social inclusion. Urgency is steady rather than crisis-driven."
+    "blurb": "Similar to belonging but with a higher baseline, reflecting that self-worth is slightly more chronically active than social inclusion. Urgency is steady rather than crisis-driven.",
+    "decay": {
+      "type": "psychosocial",
+      "k": 0.05,
+      "blurb": "The slowest psychosocial drift outside fulfillment. Self-worth erodes almost imperceptibly over a week unless actively reinforced. Event-based hits — praise, humiliation — matter far more than the passive rate."
+    }
   },
   "stimulation": {
     "label": "Stimulation",
@@ -77,7 +122,12 @@
     "curve": "u-shaped",
     "params": { "amplitude": 3.0, "midpoint": 0.55, "baseline": 0.10 },
     "color": "#a855f7",
-    "blurb": "Boredom and overstimulation both generate urgency. The higher amplitude means the sweet spot is harder to sustain: most people need to be genuinely engaged to feel comfortable."
+    "blurb": "Boredom and overstimulation both generate urgency. The higher amplitude means the sweet spot is harder to sustain: most people need to be genuinely engaged to feel comfortable.",
+    "decay": {
+      "type": "psychosocial",
+      "k": 0.23,
+      "blurb": "Boredom registers within a day of low novelty. The U-shape means the comfortable zone collapses quickly in either direction: understimulated characters seek novelty; overstimulated ones need quiet."
+    }
   },
   "productivity": {
     "label": "Productivity",
@@ -85,7 +135,12 @@
     "curve": "concave",
     "params": { "amplitude": 0.75, "power": 0.5, "baseline": 0.10 },
     "color": "#64748b",
-    "blurb": "The highest baseline of all needs: there is always some pull to be doing something useful. Urgency declines gradually as tasks are completed but never fully disappears."
+    "blurb": "The highest baseline of all needs: there is always some pull to be doing something useful. Urgency declines gradually as tasks are completed but never fully disappears.",
+    "decay": {
+      "type": "psychosocial",
+      "k": 0.35,
+      "blurb": "Resets on roughly a daily work cycle. The drive to do something useful accumulates overnight and is discharged through task completion. Urgency is context-gated — off-hours, the pull largely disappears for most characters."
+    }
   },
   "fulfillment": {
     "label": "Fulfillment",
@@ -93,6 +148,11 @@
     "curve": "concave",
     "params": { "amplitude": 0.6, "power": 0.5, "baseline": 0.05 },
     "color": "#be185d",
-    "blurb": "The slowest-moving of all needs. Urgency is always present but mild, and even significant progress only slightly reduces it. Meaning accumulates on a timescale of weeks or years, not hours."
+    "blurb": "The slowest-moving of all needs. Urgency is always present but mild, and even significant progress only slightly reduces it. Meaning accumulates on a timescale of weeks or years, not hours.",
+    "decay": {
+      "type": "psychosocial",
+      "k": 0.02,
+      "blurb": "The slowest-moving need in the simulation. Fulfillment drains imperceptibly tick to tick; its motion is only visible across weeks. Refilled only by rare, high-impact events — genuine creative success, deep connection, recognition that matters."
+    }
   }
 }

@@ -396,6 +396,10 @@ export class MainMapHud {
     this.replayBar.setVisible(true);
   }
 
+  setPlayPaused(isPaused: boolean): void {
+    this.replayPlayPauseBtn.setText(isPaused ? '▶' : '⏸');
+  }
+
   setReplayStatus(emoji: string, desc: string, step: number, total: number, isPaused = false): void {
     this.replayStatusLine.setText(`${emoji}  ${desc}`);
     this._updateScrubber(step, total, isPaused);

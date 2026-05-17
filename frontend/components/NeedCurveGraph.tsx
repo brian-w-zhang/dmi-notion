@@ -12,6 +12,12 @@ export interface NeedCurveParams {
   baseline?: number
 }
 
+export interface NeedDecay {
+  type: 'constant' | 'psychosocial' | 'event-driven'
+  k: number | null
+  blurb: string
+}
+
 export interface NeedConfig {
   label: string
   group: string
@@ -19,6 +25,7 @@ export interface NeedConfig {
   params: NeedCurveParams
   color: string
   blurb?: string
+  decay?: NeedDecay
 }
 
 export function computeUrgency(v: number, curve: NeedCurveType, params: NeedCurveParams): number {

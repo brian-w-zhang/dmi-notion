@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import NeedCurveGraph, { NeedConfig, NeedCurveParams, NeedCurveType } from './NeedCurveGraph'
+import NeedCurveGraph, { NeedConfig, NeedCurveParams, NeedCurveType, NeedDecay } from './NeedCurveGraph'
 import overridesData from '../public/data/character_need_overrides.json'
 
 export interface NeedValue {
@@ -10,9 +10,25 @@ export interface NeedValue {
   color: string
 }
 
-interface CharacterOverride {
-  params: NeedCurveParams
+interface DecayOverride {
+  kMultiplier: number
   blurb: string
+}
+
+interface CharacterOverride {
+  params?: NeedCurveParams
+  blurb?: string
+  decay?: DecayOverride
+}
+
+function humanCycleTime(k: number): string {
+  const simMinutes = 500 / k  // 100 pts / k pts-per-tick * 5 min/tick
+  if (simMinutes < 120) return `~${Math.round(simMinutes)}min`
+  const simHours = simMinutes / 60
+  if (simHours < 36) return `~${Math.round(simHours)}h`
+  const simDays = simHours / 24
+  if (simDays < 14) return `~${simDays < 2 ? simDays.toFixed(1) : Math.round(simDays)}d`
+  return `~${Math.round(simDays / 7)}wk`
 }
 
 type OverridesMap = Record<string, Record<string, CharacterOverride>>
@@ -88,8 +104,9 @@ export default function NeedsCurvesPanel({ needs, needsConfig, slug }: Props) {
         if (!base) return null
 
         const override = characterOverrides[key] as CharacterOverride | undefined
-        const cfg: NeedConfig = override
-          ? { ...base, params: { ...base.params, ...override.params } }
+        const hasCurveOverride = !!(override?.params && Object.keys(override.params).length > 0)
+        const cfg: NeedConfig = hasCurveOverride
+          ? { ...base, params: { ...base.params, ...override!.params } }
           : base
 
         const isInfo = infoKey === key
@@ -127,14 +144,14 @@ export default function NeedsCurvesPanel({ needs, needsConfig, slug }: Props) {
                       <Equation
                         curve={cfg.curve}
                         params={cfg.params}
-                        overrideParams={override?.params}
+                        overrideParams={hasCurveOverride ? override?.params : undefined}
                         color={cfg.color}
                       />
-                      {!override && (
+                      {!hasCurveOverride && (
                         <span style={{ color: '#444', marginLeft: 6 }}>(default curve)</span>
                       )}
                     </p>
-                    {override && (
+                    {hasCurveOverride && (
                       <p>
                         <Equation
                           curve={base.curve}
@@ -149,14 +166,46 @@ export default function NeedsCurvesPanel({ needs, needsConfig, slug }: Props) {
 
                   {/* Blurb */}
                   <p className="text-[9px] leading-relaxed text-[#E8E8E8]">
-                    {override ? override.blurb : base.blurb}
+                    {override?.blurb ?? base.blurb}
                   </p>
+
+                  {/* Decay section */}
+                  {base.decay && (
+                    <div className="border-t border-[#303030] pt-2 flex flex-col gap-1.5">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[8px] uppercase tracking-wider font-medium text-[#555]">Decay</span>
+                        <span className="text-[8px] px-1 py-0.5 rounded bg-[#1A1A1A] border border-[#333] text-[#666]">
+                          {base.decay.type}
+                        </span>
+                        {base.decay.k !== null ? (
+                          <span className="font-mono text-[8px] text-[#555]">
+                            k = {base.decay.k} · {humanCycleTime(base.decay.k)} to empty
+                          </span>
+                        ) : (
+                          <span className="font-mono text-[8px] text-[#555]">no passive decay</span>
+                        )}
+                      </div>
+                      <p className="text-[9px] leading-relaxed text-[#9B9B9B]">{base.decay.blurb}</p>
+
+                      {override?.decay && base.decay.k !== null && (
+                        <>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: cfg.color }} />
+                            <span className="font-mono text-[8px] text-[#9B9B9B]">
+                              ×{override.decay.kMultiplier} → k = {(base.decay.k * override.decay.kMultiplier).toFixed(2)} · {humanCycleTime(base.decay.k * override.decay.kMultiplier)} to empty
+                            </span>
+                          </div>
+                          <p className="text-[9px] leading-relaxed text-[#E8E8E8]">{override.decay.blurb}</p>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <NeedCurveGraph
                   config={cfg}
                   currentValue={need.value}
-                  defaultConfig={override ? base : undefined}
+                  defaultConfig={hasCurveOverride ? base : undefined}
                 />
               )}
             </div>

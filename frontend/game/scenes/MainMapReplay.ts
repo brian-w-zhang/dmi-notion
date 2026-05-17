@@ -68,7 +68,10 @@ export class MainMapReplayController {
 
   pause(): void  { this.paused = true;  }
   resume(): void { this.paused = false; }
-  togglePause(): void { this.paused = !this.paused; }
+  togglePause(): void {
+    this.paused = !this.paused;
+    this.hud.setPlayPaused(this.paused);
+  }
 
   skipSteps(n: number): void {
     // stepIdx points to the NEXT step, so current displayed = stepIdx - 1
