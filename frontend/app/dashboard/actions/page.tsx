@@ -3,6 +3,11 @@ import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import appliancesData from '../../../public/assets/world/appliances.json'
 import officeObjectsData from '../../../public/assets/world/office-objects.json'
+import needsConfig from '../../../public/data/needs_config.json'
+
+const NEED_COLORS: Record<string, string> = Object.fromEntries(
+  Object.entries(needsConfig).map(([k, v]) => [k, (v as { color: string }).color])
+)
 
 interface SitPoint {
   id: number
@@ -212,114 +217,129 @@ export default function ActionsPage() {
                         {ENTITY_TYPE_LABELS[entityType]}
                       </p>
 
-                      {entityType === 'appliance' ? (
-                        /* Appliances: table with actions + need deltas */
-                        <table className="w-full text-xs border-collapse">
-                          <thead>
-                            <tr className="text-[#4A4A4A]">
-                              <th className="text-left pb-1.5 font-normal pr-6 w-44">
-                                Object
-                              </th>
-                              <th className="text-left pb-1.5 font-normal pr-6 w-36">
-                                Action
-                              </th>
-                              <th className="text-left pb-1.5 font-normal pr-6 w-16">
-                                Duration
-                              </th>
-                              <th className="text-left pb-1.5 font-normal text-[#3A3A3A]">
-                                Need Deltas
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {byType[entityType].map((entity) => {
-                              const actions = actionsByObject[entity.name] ?? []
-                              if (actions.length === 0) {
-                                return (
-                                  <tr
-                                    key={entity.name}
-                                    className="border-t border-[#222]"
-                                  >
-                                    <td className="py-1.5 text-[#9B9B9B] pr-6">
-                                      {fmt(entity.name)}
-                                    </td>
-                                    <td
-                                      className="py-1.5 text-[#383838] italic"
-                                      colSpan={3}
-                                    >
-                                      no actions
-                                    </td>
+                      {(() => {
+                        const getActions = (entity: Entity): ApplianceAction[] =>
+                          entityType === 'appliance'
+                            ? (actionsByObject[entity.name] ?? [])
+                            : ((entity.actions ?? []) as ApplianceAction[])
+
+                        const withActions = byType[entityType].filter(
+                          (e) => getActions(e).length > 0
+                        )
+                        const withoutActions = byType[entityType].filter(
+                          (e) => getActions(e).length === 0
+                        )
+
+                        return (
+                          <>
+                            {withActions.length > 0 && (
+                              <table className="w-full text-xs border-collapse mb-2">
+                                <thead>
+                                  <tr className="text-[#4A4A4A]">
+                                    <th className="text-left pb-1.5 font-normal pr-6 w-44">Object</th>
+                                    <th className="text-left pb-1.5 font-normal pr-6 w-36">Action</th>
+                                    <th className="text-left pb-1.5 font-normal pr-6 w-16">Duration</th>
+                                    <th className="text-left pb-1.5 font-normal text-[#3A3A3A]">Need Deltas</th>
                                   </tr>
-                                )
-                              }
-                              return actions.map((action, i) => (
-                                <tr
-                                  key={`${entity.name}-${action.id}`}
-                                  className="border-t border-[#222]"
-                                >
-                                  {i === 0 && (
-                                    <td
-                                      className="py-1.5 text-[#9B9B9B] pr-6 align-top"
-                                      rowSpan={actions.length}
-                                    >
+                                </thead>
+                                <tbody>
+                                  {withActions.map((entity) => {
+                                    const actions = getActions(entity)
+                                    return actions.map((action, i) => (
+                                      <tr
+                                        key={`${entity.name}-${action.id}`}
+                                        className="border-t border-[#222]"
+                                      >
+                                        {i === 0 && (
+                                          <td
+                                            className="py-1.5 text-[#9B9B9B] pr-6 align-top"
+                                            rowSpan={actions.length}
+                                          >
+                                            {fmt(entity.name)}
+                                            {entity.owner && (
+                                              <span className="ml-1.5 text-[#4A4A4A] capitalize">
+                                                ({entity.owner})
+                                              </span>
+                                            )}
+                                          </td>
+                                        )}
+                                        <td className="py-1.5 text-[#E8E8E8] pr-6">
+                                          <span className="flex items-center gap-1.5">
+                                            {action.emoji && (
+                                              // eslint-disable-next-line @next/next/no-img-element
+                                              <img
+                                                src={`/assets/ui/emojis_16x16/${action.emoji}.png`}
+                                                alt={action.emoji}
+                                                width={16}
+                                                height={16}
+                                                className="shrink-0"
+                                                style={{ imageRendering: 'pixelated' }}
+                                              />
+                                            )}
+                                            {action.name}
+                                          </span>
+                                        </td>
+                                        <td className="py-1.5 text-[#9B9B9B] pr-6 tabular-nums">
+                                          {action.durationMs != null
+                                            ? `${(action.durationMs / 1000).toFixed(1)}s`
+                                            : '—'}
+                                        </td>
+                                        <td className="py-1.5">
+                                          {action.needDeltas && Object.keys(action.needDeltas).length > 0 ? (
+                                            <span className="flex flex-wrap gap-1">
+                                              {Object.entries(action.needDeltas).map(([need, delta]) => (
+                                                <span
+                                                  key={need}
+                                                  className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-medium tabular-nums"
+                                                  style={{
+                                                    color: NEED_COLORS[need] ?? '#9B9B9B',
+                                                    backgroundColor: `${NEED_COLORS[need] ?? '#9B9B9B'}18`,
+                                                  }}
+                                                >
+                                                  {delta > 0 ? '+' : ''}{delta} {need}
+                                                </span>
+                                              ))}
+                                            </span>
+                                          ) : (
+                                            <span className="text-[#383838]">—</span>
+                                          )}
+                                        </td>
+                                      </tr>
+                                    ))
+                                  })}
+                                </tbody>
+                              </table>
+                            )}
+
+                            {withoutActions.length > 0 && (
+                              <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 xl:grid-cols-4">
+                                {withoutActions.map((entity) => (
+                                  <div
+                                    key={entity.name}
+                                    className="flex items-center justify-between py-1 px-2.5 bg-[#141414]/70 border border-[#262626]/60 rounded"
+                                  >
+                                    <span className="text-[11px] text-[#9B9B9B] truncate">
                                       {fmt(entity.name)}
-                                    </td>
-                                  )}
-                                  <td className="py-1.5 text-[#E8E8E8] pr-6">
-                                    <span className="flex items-center gap-1.5">
-                                      {action.emoji && (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img
-                                          src={`/assets/ui/emojis_16x16/${action.emoji}.png`}
-                                          alt={action.emoji}
-                                          width={16}
-                                          height={16}
-                                          className="shrink-0"
-                                          style={{ imageRendering: 'pixelated' }}
-                                        />
+                                    </span>
+                                    <div className="flex items-center gap-1.5 ml-2 shrink-0">
+                                      {entity.owner && (
+                                        <span className="text-[11px] text-[#5A5A5A] capitalize">
+                                          {entity.owner}
+                                        </span>
                                       )}
-                                      {action.name}
-                                    </span>
-                                  </td>
-                                  <td className="py-1.5 text-[#9B9B9B] pr-6 tabular-nums">
-                                    {action.durationMs != null
-                                      ? `${(action.durationMs / 1000).toFixed(1)}s`
-                                      : '—'}
-                                  </td>
-                                  <td className="py-1.5 text-[#383838]">—</td>
-                                </tr>
-                              ))
-                            })}
-                          </tbody>
-                        </table>
-                      ) : (
-                        /* Seating / Tables / Storage: compact grid */
-                        <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 xl:grid-cols-4">
-                          {byType[entityType].map((entity) => (
-                            <div
-                              key={entity.name}
-                              className="flex items-center justify-between py-1 px-2.5 bg-[#141414]/70 border border-[#262626]/60 rounded"
-                            >
-                              <span className="text-[11px] text-[#9B9B9B] truncate">
-                                {fmt(entity.name)}
-                              </span>
-                              <div className="flex items-center gap-1.5 ml-2 shrink-0">
-                                {entity.owner && (
-                                  <span className="text-[11px] text-[#5A5A5A] capitalize">
-                                    {entity.owner}
-                                  </span>
-                                )}
-                                {entity.sitPoints &&
-                                  entity.sitPoints.length > 0 && (
-                                    <span className="text-[10px] text-[#404040] tabular-nums">
-                                      {entity.sitPoints.length}×
-                                    </span>
-                                  )}
+                                      {entity.sitPoints && entity.sitPoints.length > 0 && (
+                                        <span className="text-[10px] text-[#404040] tabular-nums">
+                                          {entity.sitPoints.length}×
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                            )}
+                          </>
+                        )
+                      })()}
                     </div>
                   ))}
                 </div>

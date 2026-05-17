@@ -4,7 +4,7 @@
     "group": "physiological",
     "curve": "convex",
     "params": { "power": 2.5 },
-    "color": "#f97316",
+    "color": "#fb923c",
     "blurb": "Urgency spikes sharply near zero and collapses fast once satisfied. Physiological deprivation is immediately consuming but a full stomach renders the need nearly invisible."
   },
   "thirst": {
@@ -12,7 +12,7 @@
     "group": "physiological",
     "curve": "convex",
     "params": { "power": 2.5 },
-    "color": "#06b6d4",
+    "color": "#22d3ee",
     "blurb": "Same shape as hunger: near-zero urgency when satiated, sudden spike as the need becomes critical. Dehydration accelerates fast in the final stretch."
   },
   "bladder": {
@@ -20,7 +20,7 @@
     "group": "physiological",
     "curve": "convex",
     "params": { "power": 2.8 },
-    "color": "#84cc16",
+    "color": "#92400e",
     "blurb": "Slightly steeper than the other physiological needs. Urgency is negligible for most of the range but becomes overwhelming near empty, mirroring the real physiology of bladder pressure."
   },
   "energy": {
@@ -44,7 +44,7 @@
     "group": "safety",
     "curve": "convex",
     "params": { "power": 2.0 },
-    "color": "#22c55e",
+    "color": "#16a34a",
     "blurb": "Urgency rises sharply as health deteriorates. At full health the pull is negligible; near zero it becomes the dominant concern, overriding most other needs."
   },
   "social": {
@@ -60,7 +60,7 @@
     "group": "belonging",
     "curve": "concave",
     "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.05 },
-    "color": "#ec4899",
+    "color": "#f472b6",
     "blurb": "A gradual, always-present pull toward inclusion. The square-root shape means gains are felt most at low levels; the curve never reaches zero because the need for belonging is never fully extinguished."
   },
   "esteem": {
@@ -68,7 +68,7 @@
     "group": "esteem",
     "curve": "concave",
     "params": { "amplitude": 0.8, "power": 0.5, "baseline": 0.08 },
-    "color": "#f59e0b",
+    "color": "#a3e635",
     "blurb": "Similar to belonging but with a higher baseline, reflecting that self-worth is slightly more chronically active than social inclusion. Urgency is steady rather than crisis-driven."
   },
   "stimulation": {
@@ -92,7 +92,7 @@
     "group": "self-actualization",
     "curve": "concave",
     "params": { "amplitude": 0.6, "power": 0.5, "baseline": 0.05 },
-    "color": "#8b5cf6",
+    "color": "#be185d",
     "blurb": "The slowest-moving of all needs. Urgency is always present but mild, and even significant progress only slightly reduces it. Meaning accumulates on a timescale of weeks or years, not hours."
   }
 }

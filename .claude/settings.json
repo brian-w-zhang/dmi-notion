@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c ':*)",
-      "Edit(/.claude/skills/gen-appliances/**)"
+      "Edit(/.claude/skills/gen-appliances/**)",
+      "Read(//Users/junzhang/Projects/notion-agents-sdk-js/src/**)",
+      "Read(//Users/junzhang/Projects/notion-agents-sdk-js/examples/**)",
+      "Read(//Users/junzhang/Projects/notion-agents-sdk-js/examples/cli-tool/components/**)"
     ]
   }
 }

@@ -2602,7 +2602,24 @@
         }
       ],
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "nap",
+          "emoji": "sleeping",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "dozing off in the lobby like it was scheduled all along",
+            "catching a quick rest before the next interruption",
+            "napping through the ambient sound of ringing phones"
+          ],
+          "durationMs": 15000,
+          "needDeltas": {
+            "energy": 40,
+            "stress": -10
+          }
+        }
+      ]
     },
     "60": {
       "id": 60,
@@ -2667,7 +2684,58 @@
           "facing": "left"
         }
       ],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "answer phones",
+          "emoji": "phone",
+          "actionPointId": 303,
+          "loadingPhrases": [
+            "picking up before the second ring like a professional",
+            "transferring the call to whoever they actually asked for",
+            "handling three things at once behind the front desk"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 15,
+            "stress": 3
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "manage schedule",
+          "emoji": "calendar",
+          "actionPointId": 304,
+          "loadingPhrases": [
+            "blocking off conference room time before it disappears",
+            "fitting Michael's ideas into an already impossible calendar",
+            "keeping the schedule sane against all reasonable odds"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 20
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "sketch in notebook",
+          "emoji": "paint_palette",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "doodling in the margins of a very official-looking form",
+            "sketching something that was supposed to be a quick drawing",
+            "filling a notebook page while the phone stays quiet"
+          ],
+          "durationMs": 7000,
+          "needDeltas": {
+            "fulfillment": 15,
+            "stimulation": 10,
+            "stress": -8
+          }
+        }
+      ]
     },
     "64": {
       "id": 64,
@@ -2757,7 +2825,24 @@
         }
       ],
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "nap",
+          "emoji": "sleeping",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "dozing off in the lobby like it was scheduled all along",
+            "catching a quick rest before the next interruption",
+            "napping through the ambient sound of ringing phones"
+          ],
+          "durationMs": 15000,
+          "needDeltas": {
+            "energy": 40,
+            "stress": -10
+          }
+        }
+      ]
     },
     "76": {
       "id": 76,
@@ -2798,7 +2883,61 @@
           "facing": "back"
         }
       ],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "review reports",
+          "emoji": "folder",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "flipping through reports while nodding in all the right places",
+            "skimming quarterly numbers and turning them into anecdotes",
+            "reviewing data before converting it into a monologue"
+          ],
+          "durationMs": 7000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 12,
+            "esteem": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "make important call",
+          "emoji": "phone",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "dialing corporate with a very rehearsed casual tone",
+            "calling Jan with the confidence of someone who practiced",
+            "making the call that will definitely not spiral"
+          ],
+          "durationMs": 9000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 15,
+            "esteem": 10,
+            "stress": 8
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "plan office event",
+          "emoji": "calendar",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "brainstorming a theme that will definitely not offend anyone",
+            "planning a party that HR will have opinions about",
+            "writing the invite list and then adding everyone back on"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "esteem": 10,
+            "stimulation": 15,
+            "belonging": 8
+          }
+        }
+      ]
     },
     "77": {
       "id": 77,
@@ -2859,7 +2998,59 @@
       },
       "owner": "oscar",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "reconcile accounts",
+          "emoji": "pencil",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "finding the discrepancy that everyone else missed",
+            "walking through the ledger line by careful line",
+            "reconciling with meticulous detail and quiet satisfaction"
+          ],
+          "durationMs": 7000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 5,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "analyze data",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "running a pivot table before anyone asks for the summary",
+            "turning raw numbers into something Michael might understand",
+            "building a model that will be politely ignored at the next meeting"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stimulation": 12
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "read think piece",
+          "emoji": "newspaper",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "reading an essay no one else in the office has heard of",
+            "annotating an article he will bring up at lunch unprompted",
+            "finishing a piece from a publication that is definitely not local"
+          ],
+          "durationMs": 7000,
+          "needDeltas": {
+            "stimulation": 15,
+            "esteem": 5
+          }
+        }
+      ]
     },
     "90": {
       "id": 90,
@@ -2872,7 +3063,60 @@
       },
       "owner": "angela",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "reconcile accounts",
+          "emoji": "pencil",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "reconciling columns with zero tolerance for rounding errors",
+            "making the numbers match or staying until they do",
+            "catching a discrepancy that has been hiding since Q3"
+          ],
+          "durationMs": 7000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 5,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "review budget",
+          "emoji": "folder",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "approving expenditures with a visibly disappointed expression",
+            "reviewing the party budget for the third time this week",
+            "flagging line items that have no business being in accounting"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "esteem": 8
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "look at cat photos",
+          "emoji": "cat",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "browsing a folder of Sprinkles photos labeled work documents",
+            "reviewing cat show results from last weekend with deep focus",
+            "cataloguing new pictures of Mr. Ash with professional care"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "stress": -15,
+            "stimulation": 8,
+            "belonging": 5
+          }
+        }
+      ]
     },
     "91": {
       "id": 91,
@@ -2885,7 +3129,59 @@
       },
       "owner": "kevin",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "reconcile accounts",
+          "emoji": "pencil",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "adding up the numbers and then checking them again by hand",
+            "working through the ledger at a comfortable, deliberate pace",
+            "doing the accounting and occasionally thinking about lunch"
+          ],
+          "durationMs": 7000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 5,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "review budget",
+          "emoji": "folder",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "going over the spreadsheet and finding nothing alarming",
+            "reviewing the budget with one eye and a quiet optimism",
+            "checking numbers while keeping an eye on the clock"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "esteem": 8
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "browse internet",
+          "emoji": "internet",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "visiting the same three sites in the same order as always",
+            "watching a video that has nothing to do with accounting",
+            "going down a rabbit hole that started with chili recipes"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "stimulation": 15,
+            "productivity": -8
+          }
+        }
+      ]
     },
     "92": {
       "id": 92,
@@ -2946,7 +3242,59 @@
       },
       "owner": "jim",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "make sales call",
+          "emoji": "phone",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "dialing prospects until someone actually picks up",
+            "running through the call script with quiet confidence",
+            "closing a client before the hold music kicks in"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 8,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "research client",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "pulling up client history before the next pitch",
+            "cross-referencing leads against last quarter's numbers",
+            "researching accounts like the commission depends on it"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stimulation": 10
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "zone out",
+          "emoji": "neutral_face",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "staring at a fixed point and thinking about literally anything else",
+            "mentally clocking out while technically still at his desk",
+            "drifting somewhere far from Scranton for a few minutes"
+          ],
+          "durationMs": 6000,
+          "needDeltas": {
+            "stress": -15,
+            "stimulation": 8
+          }
+        }
+      ]
     },
     "98": {
       "id": 98,
@@ -2983,7 +3331,60 @@
       },
       "owner": "dwight",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "make sales call",
+          "emoji": "phone",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "executing a sales call with military precision",
+            "running through the pitch at double speed",
+            "closing a deal before the competition even dials"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 8,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "research client",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "building a client profile with Schrute-level thoroughness",
+            "cross-referencing intel with known beet yield data",
+            "documenting every detail for maximum accountability"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stimulation": 10
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "surveil office",
+          "emoji": "eye",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "cataloguing suspicious movements from the sales floor",
+            "monitoring foot traffic patterns near the printer",
+            "noting behavioral anomalies for the weekly security log"
+          ],
+          "durationMs": 6000,
+          "needDeltas": {
+            "productivity": 8,
+            "esteem": 5,
+            "stimulation": 5
+          }
+        }
+      ]
     },
     "101": {
       "id": 101,
@@ -3020,7 +3421,60 @@
       },
       "owner": "phyllis",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "make sales call",
+          "emoji": "phone",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "dialing prospects until someone actually picks up",
+            "running through the call script with quiet confidence",
+            "closing a client before the hold music kicks in"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 8,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "research client",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "pulling up client history before the next pitch",
+            "cross-referencing leads against last quarter's numbers",
+            "researching accounts like the commission depends on it"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stimulation": 10
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "shop online",
+          "emoji": "shopping_bag",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "browsing for something Bob Vance would never pick himself",
+            "adding items to a cart with quiet, decisive confidence",
+            "comparing shipping times between tabs while looking busy"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "stimulation": 10,
+            "stress": -5,
+            "belonging": 5
+          }
+        }
+      ]
     },
     "104": {
       "id": 104,
@@ -3081,7 +3535,59 @@
       },
       "owner": "stanley",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "make sales call",
+          "emoji": "phone",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "dialing prospects until someone actually picks up",
+            "running through the call script with quiet confidence",
+            "closing a client before the hold music kicks in"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 8,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "research client",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "pulling up client history before the next pitch",
+            "cross-referencing leads against last quarter's numbers",
+            "researching accounts like the commission depends on it"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stimulation": 10
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "do crossword",
+          "emoji": "pencil",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "filling in seventeen across without breaking eye contact with no one",
+            "solving the crossword before the morning meeting ends",
+            "completing another puzzle with zero interest in being interrupted"
+          ],
+          "durationMs": 10000,
+          "needDeltas": {
+            "stimulation": 22,
+            "stress": -12
+          }
+        }
+      ]
     },
     "109": {
       "id": 109,
@@ -3094,7 +3600,58 @@
       },
       "owner": "meredith",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "contact supplier",
+          "emoji": "phone",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "calling the supplier before the distributor calls first",
+            "following up on a shipment that was due last Tuesday",
+            "keeping supplier relations warm and non-litigious"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 15,
+            "stress": 3
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "research supplier",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "vetting a new supplier before committing to the contract",
+            "comparing distributor rates on a very old spreadsheet",
+            "tracking down better pricing before the quarter closes"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 12,
+            "stimulation": 5
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "read tabloid",
+          "emoji": "newspaper",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "catching up on celebrity news that actually matters to her",
+            "reading a story that is somehow wilder than her own week",
+            "flipping through pages with genuine editorial investment"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "stimulation": 12,
+            "stress": -5
+          }
+        }
+      ]
     },
     "110": {
       "id": 110,
@@ -3131,7 +3688,61 @@
       },
       "owner": "ryan",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "make sales call",
+          "emoji": "phone",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "dialing prospects until someone actually picks up",
+            "running through the call script with quiet confidence",
+            "closing a client before the hold music kicks in"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 8,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "research client",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "pulling up client history before the next pitch",
+            "cross-referencing leads against last quarter's numbers",
+            "researching accounts like the commission depends on it"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stimulation": 10
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "work on startup pitch",
+          "emoji": "rocket",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "refining a deck for a company that pivoted twice this morning",
+            "writing a mission statement that is deliberately vague",
+            "mapping out a go-to-market strategy instead of making calls"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "esteem": 10,
+            "stimulation": 15,
+            "fulfillment": 8
+          }
+        }
+      ]
     },
     "113": {
       "id": 113,
@@ -3168,7 +3779,56 @@
       },
       "owner": "creed",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "audit report",
+          "emoji": "folder",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "reviewing quality logs that no one else has touched in years",
+            "auditing a batch report with selective attention",
+            "signing off on a form that seems roughly correct"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "esteem": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "check inventory",
+          "emoji": "magnify",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "counting inventory numbers that do not quite add up",
+            "checking stock against a suspiciously outdated list",
+            "tracking items that may or may not still be in the building"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "productivity": 10
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "run side scheme",
+          "emoji": "skull_crossbones",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "updating records that do not officially exist",
+            "corresponding with someone from a previous life",
+            "handling business that predates his employment here by some years"
+          ],
+          "durationMs": 6000,
+          "needDeltas": {
+            "stimulation": 15,
+            "esteem": 8
+          }
+        }
+      ]
     },
     "119": {
       "id": 119,
@@ -3205,7 +3865,57 @@
       },
       "owner": "kelly",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "answer customer email",
+          "emoji": "mail",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "writing a reply that balances friendly and frantic",
+            "answering five emails before Ryan's meeting even ends",
+            "responding with enthusiasm to a very frustrated customer"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "log customer issue",
+          "emoji": "computer",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "logging an issue and immediately wanting to discuss it",
+            "recording the complaint before it escalates to a crisis",
+            "tracking customer feedback with color-coded sticky notes"
+          ],
+          "durationMs": 4000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 12
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "follow celebrity news",
+          "emoji": "star",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "refreshing a gossip page for the third time in ten minutes",
+            "reading a breakup story that is more dramatic than her own",
+            "staying completely current on everything Ryan does not care about"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "stimulation": 12,
+            "social": 5
+          }
+        }
+      ]
     },
     "131": {
       "id": 131,
@@ -3218,7 +3928,59 @@
       },
       "owner": "toby",
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "file HR report",
+          "emoji": "folder",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "documenting an incident that may or may not go anywhere",
+            "carefully writing up a report that corporate will eventually find",
+            "filling out forms in the quiet corner nobody visits"
+          ],
+          "durationMs": 6000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stress": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "review complaint",
+          "emoji": "paper",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "reading a complaint and sighing in the direction of the sales floor",
+            "processing the fourth grievance this week from the same person",
+            "reviewing a formal complaint with professional neutrality"
+          ],
+          "durationMs": 5000,
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 10,
+            "stress": 8
+          }
+        },
+        {
+          "id": "action_3",
+          "name": "write in journal",
+          "emoji": "book",
+          "actionPointId": null,
+          "loadingPhrases": [
+            "writing a journal entry that will never be read by anyone",
+            "drafting chapter four of a novel set in Costa Rica",
+            "processing the day through the only outlet that listens back"
+          ],
+          "durationMs": 7000,
+          "needDeltas": {
+            "fulfillment": 10,
+            "stress": -10,
+            "productivity": 3
+          }
+        }
+      ]
     },
     "132": {
       "id": 132,
@@ -4926,7 +5688,31 @@
         }
       ],
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "gossip",
+          "emoji": "talk",
+          "actionPointId": null,
+          "preconditions": [
+            {
+              "type": "nearby_character",
+              "radiusTiles": 4
+            }
+          ],
+          "loadingPhrases": [
+            "catching up on everything that happened before lunch",
+            "sharing intel in the one place no one records anything",
+            "whispering the real story behind the all-hands memo"
+          ],
+          "durationMs": 10000,
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8
+          }
+        }
+      ]
     },
     "264": {
       "id": 264,
@@ -4950,7 +5736,31 @@
         }
       ],
       "actionPoints": [],
-      "actions": []
+      "actions": [
+        {
+          "id": "action_1",
+          "name": "gossip",
+          "emoji": "talk",
+          "actionPointId": null,
+          "preconditions": [
+            {
+              "type": "nearby_character",
+              "radiusTiles": 4
+            }
+          ],
+          "loadingPhrases": [
+            "catching up on everything that happened before lunch",
+            "sharing intel in the one place no one records anything",
+            "whispering the real story behind the all-hands memo"
+          ],
+          "durationMs": 10000,
+          "needDeltas": {
+            "social": 10,
+            "belonging": 8,
+            "stress": -8
+          }
+        }
+      ]
     },
     "316": {
       "id": 316,

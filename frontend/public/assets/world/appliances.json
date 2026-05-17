@@ -31,7 +31,28 @@
             "feeding crumpled dollars to the snack machine",
             "staring down the spiral to free a stuck snack"
           ],
-          "durationMs": 3000
+          "durationMs": 3000,
+          "needDeltas": {
+            "hunger": 20,
+            "stimulation": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "buy drink",
+          "emoji": "soda_cup",
+          "actionPointId": 149,
+          "sfxStartKey": "vending_machine",
+          "loadingPhrases": [
+            "deciding between diet and full-sugar like a budget line item",
+            "slapping the machine for the five cents it owes you",
+            "picking a cold drink before the next surprise meeting"
+          ],
+          "durationMs": 3000,
+          "needDeltas": {
+            "thirst": 18,
+            "stimulation": 3
+          }
         }
       ]
     },
@@ -67,7 +88,10 @@
           ],
           "durationMs": 2500,
           "sfxStartKey": "wooded_box_open",
-          "sfxEndKey": "door_close_01"
+          "sfxEndKey": "door_close_01",
+          "needDeltas": {
+            "hunger": 28
+          }
         }
       ]
     },
@@ -102,7 +126,10 @@
             "washing hands while humming the Dunder Mifflin jingle"
           ],
           "durationMs": 2000,
-          "sfxLoopKey": "wash_hands"
+          "sfxLoopKey": "wash_hands",
+          "needDeltas": {
+            "health": 5
+          }
         }
       ]
     },
@@ -138,7 +165,11 @@
           ],
           "durationMs": 2500,
           "sfxStartKey": "microwave_on",
-          "sfxEndKey": "microwave_ding"
+          "sfxEndKey": "microwave_ding",
+          "needDeltas": {
+            "hunger": 40,
+            "energy": 5
+          }
         }
       ]
     },
@@ -173,7 +204,11 @@
             "resetting with a cold splash and deep sigh"
           ],
           "durationMs": 2000,
-          "sfxLoopKey": "wash_hands"
+          "sfxLoopKey": "wash_hands",
+          "needDeltas": {
+            "health": 5,
+            "stress": -3
+          }
         }
       ]
     },
@@ -208,7 +243,11 @@
             "washing hands while planning the next email"
           ],
           "durationMs": 2000,
-          "sfxLoopKey": "wash_hands"
+          "sfxLoopKey": "wash_hands",
+          "needDeltas": {
+            "health": 5,
+            "stress": -3
+          }
         }
       ]
     },
@@ -243,7 +282,11 @@
             "quick sink break before the next interruption"
           ],
           "durationMs": 2000,
-          "sfxLoopKey": "wash_hands"
+          "sfxLoopKey": "wash_hands",
+          "needDeltas": {
+            "health": 5,
+            "stress": -3
+          }
         }
       ]
     },
@@ -278,7 +321,11 @@
             "cleaning up before jumping back into work"
           ],
           "durationMs": 2000,
-          "sfxLoopKey": "wash_hands"
+          "sfxLoopKey": "wash_hands",
+          "needDeltas": {
+            "health": 5,
+            "stress": -3
+          }
         }
       ]
     },
@@ -312,7 +359,25 @@
             "unsticking pages from a suspicious paper jam",
             "sending forms to the accounting print queue"
           ],
-          "durationMs": 2500
+          "durationMs": 2500,
+          "needDeltas": {
+            "productivity": 10
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "scan document",
+          "emoji": "file_save",
+          "actionPointId": 291,
+          "loadingPhrases": [
+            "feeding papers into the scanner one careful sheet at a time",
+            "re-scanning because someone left it face-down again",
+            "archiving the document before anyone asks for the original"
+          ],
+          "durationMs": 3000,
+          "needDeltas": {
+            "productivity": 10
+          }
         }
       ]
     },
@@ -346,7 +411,33 @@
             "checking emergency gear like a compliance hero",
             "making sure the red hydrant is still on duty"
           ],
-          "durationMs": 2000
+          "durationMs": 2000,
+          "needDeltas": {
+            "productivity": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "use hydrant",
+          "emoji": "raindrop",
+          "actionPointId": 290,
+          "preconditions": [
+            {
+              "type": "world_event",
+              "event": "fire_active"
+            }
+          ],
+          "loadingPhrases": [
+            "cranking the hydrant before things get any worse",
+            "aiming the stream directly at the source",
+            "fighting the blaze with full pressure and a steady hand"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "health": 20,
+            "stress": 25,
+            "energy": -8
+          }
         }
       ]
     },
@@ -380,7 +471,25 @@
             "coaxing the printer to stop eating paper",
             "running off one more quote for a client"
           ],
-          "durationMs": 2500
+          "durationMs": 2500,
+          "needDeltas": {
+            "productivity": 10
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "scan document",
+          "emoji": "file_save",
+          "actionPointId": 288,
+          "loadingPhrases": [
+            "feeding papers into the scanner one careful sheet at a time",
+            "re-scanning because someone left it face-down again",
+            "archiving the document before anyone asks for the original"
+          ],
+          "durationMs": 3000,
+          "needDeltas": {
+            "productivity": 10
+          }
         }
       ]
     },
@@ -414,7 +523,35 @@
             "cueing up the quarterly slideshow",
             "pretending this is a very high-budget presentation"
           ],
-          "durationMs": 2500
+          "durationMs": 2500,
+          "needDeltas": {
+            "stimulation": 10,
+            "productivity": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "present to group",
+          "emoji": "megaphone",
+          "actionPointId": 273,
+          "preconditions": [
+            {
+              "type": "others_in_zone",
+              "minCount": 1
+            }
+          ],
+          "loadingPhrases": [
+            "clicking through slides while the room slowly wakes up",
+            "presenting quarterly numbers with rehearsed confidence",
+            "walking everyone through a deck no one read beforehand"
+          ],
+          "durationMs": 12000,
+          "needDeltas": {
+            "esteem": 15,
+            "productivity": 20,
+            "social": 10,
+            "stress": 5
+          }
         }
       ]
     },
@@ -448,7 +585,29 @@
             "drawing arrows until the plan looks smart",
             "mapping ideas with peak conference-room energy"
           ],
-          "durationMs": 3000
+          "durationMs": 3000,
+          "needDeltas": {
+            "esteem": 12,
+            "productivity": 15,
+            "stimulation": 10
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "brainstorm",
+          "emoji": "pencil",
+          "actionPointId": 272,
+          "loadingPhrases": [
+            "scribbling half-ideas until one actually sticks",
+            "filling the board with arrows and open questions",
+            "going broad before narrowing to something defensible"
+          ],
+          "durationMs": 8000,
+          "needDeltas": {
+            "stimulation": 15,
+            "productivity": 10,
+            "esteem": 5
+          }
         }
       ]
     },
@@ -510,7 +669,33 @@
             "topping off water before a long sales call",
             "taking a classic water-cooler pause"
           ],
-          "durationMs": 1500
+          "durationMs": 1500,
+          "needDeltas": {
+            "thirst": 20
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "chat",
+          "emoji": "talk",
+          "actionPointId": 298,
+          "preconditions": [
+            {
+              "type": "nearby_character",
+              "radiusTiles": 3
+            }
+          ],
+          "loadingPhrases": [
+            "lingering by the cooler for just one more update",
+            "stretching a water break into a full office debrief",
+            "catching up on news with a paper cup in hand"
+          ],
+          "durationMs": 8000,
+          "needDeltas": {
+            "social": 12,
+            "belonging": 5,
+            "stress": -8
+          }
         }
       ]
     },
@@ -544,7 +729,33 @@
             "checking that emergency gear is ready",
             "making sure the sales wing is still up to code"
           ],
-          "durationMs": 2000
+          "durationMs": 2000,
+          "needDeltas": {
+            "productivity": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "use hydrant",
+          "emoji": "raindrop",
+          "actionPointId": 287,
+          "preconditions": [
+            {
+              "type": "world_event",
+              "event": "fire_active"
+            }
+          ],
+          "loadingPhrases": [
+            "cranking the hydrant before things get any worse",
+            "aiming the stream directly at the source",
+            "fighting the blaze with full pressure and a steady hand"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "health": 20,
+            "stress": 25,
+            "energy": -8
+          }
         }
       ]
     },
@@ -579,7 +790,12 @@
             "waiting for coffee strong enough for Michael ideas",
             "pouring a cup before the next surprise meeting"
           ],
-          "durationMs": 2500
+          "durationMs": 2500,
+          "needDeltas": {
+            "thirst": 10,
+            "energy": 25,
+            "stress": -5
+          }
         }
       ]
     },
@@ -613,7 +829,10 @@
             "watching the toaster like it owes you money",
             "making quick toast before someone steals it"
           ],
-          "durationMs": 2000
+          "durationMs": 2000,
+          "needDeltas": {
+            "hunger": 18
+          }
         }
       ]
     },
@@ -647,7 +866,33 @@
             "confirming the hydrant is ready for emergencies",
             "giving the hydrant one cautious nod"
           ],
-          "durationMs": 2000
+          "durationMs": 2000,
+          "needDeltas": {
+            "productivity": 5
+          }
+        },
+        {
+          "id": "action_2",
+          "name": "use hydrant",
+          "emoji": "raindrop",
+          "actionPointId": 269,
+          "preconditions": [
+            {
+              "type": "world_event",
+              "event": "fire_active"
+            }
+          ],
+          "loadingPhrases": [
+            "cranking the hydrant before things get any worse",
+            "aiming the stream directly at the source",
+            "fighting the blaze with full pressure and a steady hand"
+          ],
+          "durationMs": 5000,
+          "needDeltas": {
+            "health": 20,
+            "stress": 25,
+            "energy": -8
+          }
         }
       ]
     },
@@ -681,7 +926,11 @@
             "disposing of paper trails and snack wrappers",
             "doing a tiny cleanup sprint in the kitchen"
           ],
-          "durationMs": 1500
+          "durationMs": 1500,
+          "needDeltas": {
+            "productivity": 5,
+            "health": 3
+          }
         }
       ]
     },
@@ -717,7 +966,11 @@
           ],
           "durationMs": 2500,
           "sfxStartKey": "microwave_on",
-          "sfxEndKey": "microwave_ding"
+          "sfxEndKey": "microwave_ding",
+          "needDeltas": {
+            "hunger": 40,
+            "energy": 5
+          }
         }
       ]
     },
@@ -752,7 +1005,11 @@
             "keeping it quick before someone needs the mirror"
           ],
           "durationMs": 2000,
-          "sfxEndKey": "toilet_02"
+          "sfxEndKey": "toilet_02",
+          "needDeltas": {
+            "bladder": 65,
+            "stress": -5
+          }
         }
       ]
     },
@@ -787,7 +1044,11 @@
             "making this break as efficient as possible"
           ],
           "durationMs": 2000,
-          "sfxEndKey": "toilet_02"
+          "sfxEndKey": "toilet_02",
+          "needDeltas": {
+            "bladder": 65,
+            "stress": -5
+          }
         }
       ]
     },
@@ -822,7 +1083,11 @@
             "locking in a quick pause away from the noise"
           ],
           "durationMs": 2500,
-          "sfxEndKey": "toilet_02"
+          "sfxEndKey": "toilet_02",
+          "needDeltas": {
+            "bladder": 65,
+            "stress": -5
+          }
         }
       ]
     },
@@ -857,7 +1122,11 @@
             "catching a breath in peace for a moment"
           ],
           "durationMs": 2500,
-          "sfxEndKey": "toilet_02"
+          "sfxEndKey": "toilet_02",
+          "needDeltas": {
+            "bladder": 65,
+            "stress": -5
+          }
         }
       ]
     },
@@ -892,7 +1161,11 @@
             "using a quick pause to regroup"
           ],
           "durationMs": 2500,
-          "sfxEndKey": "toilet_02"
+          "sfxEndKey": "toilet_02",
+          "needDeltas": {
+            "bladder": 65,
+            "stress": -5
+          }
         }
       ]
     },
@@ -927,7 +1200,11 @@
             "stepping out of the chaos for a beat"
           ],
           "durationMs": 2500,
-          "sfxEndKey": "toilet_02"
+          "sfxEndKey": "toilet_02",
+          "needDeltas": {
+            "bladder": 65,
+            "stress": -5
+          }
         }
       ]
     },
@@ -961,7 +1238,11 @@
             "tidying the front desk like Pam might walk in",
             "binning old flyers and coffee lids"
           ],
-          "durationMs": 1500
+          "durationMs": 1500,
+          "needDeltas": {
+            "productivity": 5,
+            "health": 3
+          }
         }
       ]
     },
@@ -986,7 +1267,11 @@
             "pulling up Dunder Mifflin pricing like it is classified intel"
           ],
           "durationMs": 2500,
-          "sfxLoopKey": "keyboard_typing"
+          "sfxLoopKey": "keyboard_typing",
+          "needDeltas": {
+            "productivity": 15,
+            "stimulation": 10
+          }
         }
       ],
       "hotkeySlot": 2
@@ -1012,7 +1297,12 @@
             "closing a sale while the hold music tests your patience"
           ],
           "durationMs": 3800,
-          "sfxLoopKey": "phone_dial"
+          "sfxLoopKey": "phone_dial",
+          "needDeltas": {
+            "productivity": 20,
+            "esteem": 10,
+            "stress": 5
+          }
         }
       ],
       "hotkeySlot": 1

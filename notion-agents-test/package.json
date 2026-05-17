@@ -1,0 +1,11 @@
+{
+  "name": "notion-agents-test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --env-file=.env test.js"
+  },
+  "dependencies": {
+    "@notionhq/agents-client": "file:../../notion-agents-sdk-js"
+  }
+}
