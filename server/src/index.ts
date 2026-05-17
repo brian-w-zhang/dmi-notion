@@ -9,6 +9,8 @@ import { CHARACTER_NAMES } from "./agents/characters.js"
 import { CHARACTER_PLANS, PLAN_ADHERENCE, INITIAL_CURRENTLY } from "./simulation/character_plans.js"
 import { logDecayRates } from "./simulation/needsDecay.js"
 import initialNeedsJson from "./simulation/initial_needs.json" assert { type: "json" }
+import { COMMUTE_STEPS } from "./simulation/CommuteSimulator.js"
+import { SEC_PER_STEP } from "./simulation/config.js"
 
 const INITIAL_NEEDS = initialNeedsJson as Record<string, Record<string, number>>
 
@@ -22,7 +24,6 @@ const client = new NotionAgentsClient({ auth: process.env.NOTION_API_TOKEN })
 // ── World setup ───────────────────────────────────────────────────────────────
 
 const SIM_START = new Date("2023-02-13T07:00:00")  // 7 AM — covers Dwight's early arrival
-const SEC_PER_STEP = 10   // 10 sim seconds per step; 1 tile = 10 sim sec; 3600 steps per workday
 
 logDecayRates()
 const world = new WorldState(SIM_START, SEC_PER_STEP)
@@ -55,6 +56,11 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
     plannedPath: [],
     needsPerception: false,
     lastPerceptionStep: 0,
+
+    // Commute starts COMMUTE_STEPS before first plan block; clamped to 0
+    commuteStartStep: Math.max(0,
+      Math.floor(((dayPlan[0]?.startMin ?? 0) * 60) / SEC_PER_STEP) - COMMUTE_STEPS
+    ),
   })
 }
 

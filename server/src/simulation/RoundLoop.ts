@@ -5,7 +5,7 @@ import { runTickRound, applyDecisions, runReflectionRound } from "../agents/orch
 
 // Fallback: even if no event fires, perceive at least every N steps.
 // Prevents characters from going completely dark during long uninterrupted activity.
-const PERCEPTION_FALLBACK_INTERVAL = 120   // ~20 sim minutes at sec_per_step=10
+const PERCEPTION_FALLBACK_INTERVAL = 30    // ~5 sim minutes at sec_per_step=10
 
 interface RoundLoopOptions {
   totalRounds: number

@@ -7,8 +7,8 @@ const ASSETS = path.resolve(__dirname, "../../../frontend/public/assets/world")
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-// Simulation step duration — must match WorldState constructor default.
-export const SEC_PER_STEP = 300  // 5 game-minutes per step
+// Simulation step duration — must match index.ts SEC_PER_STEP.
+export const SEC_PER_STEP = 10   // 10 sim-seconds per step
 
 export interface ApplianceAction {
   id: string

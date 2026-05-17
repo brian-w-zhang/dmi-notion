@@ -50,6 +50,7 @@
 
 import fs from "fs"
 import path from "path"
+import { getCarTextureKey } from "../simulation/CommuteSimulator.js"
 
 const TILE_SIZE = 32
 const OUTPUT_PATH = path.resolve("../frontend/public/assets/simulation/replay.json")
@@ -122,7 +123,7 @@ const replaySteps = stepFiles.map(filename => {
       y,
       facing:    c.facing    ?? "front",
       anim:      animBase(c.animationKey ?? "idle_front"),
-      visible:   c.state !== "blocked" && c.state !== "pre_arrival",
+      visible:   c.state !== "blocked" && c.state !== "pre_arrival" && c.state !== "commuting",
       action:    c.action    ?? "",
       emoji:     c.emoji     ?? "",
       currently: c.currently ?? "",
@@ -137,11 +138,18 @@ const replaySteps = stepFiles.map(filename => {
     step:          raw.step,
     sim_time:      simTime,
     chars,
+    cars:          raw.cars ?? {},
     conversations:  raw.conversations  ?? [],
     announcements:  raw.announcements  ?? [],
     events:         raw.events         ?? [],
   }
 })
+
+const carTextures: Record<string, string> = {}
+for (const key of (meta.characters ?? [])) {
+  const tex = getCarTextureKey(key)
+  if (tex) carTextures[key] = tex
+}
 
 const replay = {
   meta: {
@@ -150,6 +158,7 @@ const replay = {
     sim_code:        meta.simCode,
     start_sim_time:  meta.startSimTime,
     characters:      meta.characters ?? [],
+    car_textures:    carTextures,
   },
   steps: replaySteps,
 }

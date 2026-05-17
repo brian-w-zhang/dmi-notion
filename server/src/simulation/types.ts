@@ -3,7 +3,15 @@
 // Read by Phaser for replay. Must be stable — changing this breaks saved runs.
 
 export type Facing = "front" | "back" | "left" | "right"
-export type CharacterState = "active" | "in_conversation" | "using_appliance" | "idle" | "blocked" | "pre_arrival"
+export type CharacterState = "active" | "in_conversation" | "using_appliance" | "idle" | "blocked" | "pre_arrival" | "commuting"
+
+export interface CarStepState {
+  x: number
+  y: number
+  facing: Facing
+  anim: "drive" | "idle"
+  visible: boolean
+}
 
 // ── Planning types ────────────────────────────────────────────────────────────
 
@@ -139,6 +147,7 @@ export interface StepFile {
   simTime: string
   realTimestamp: string
   characters: Record<string, CharacterStepState>
+  cars: Record<string, CarStepState>           // keyed by character key
   conversations: ConversationRecord[]
   groupConversations: GroupConversationRecord[]
   announcements: { from: string; message: string }[]
@@ -178,6 +187,11 @@ export interface LiveCharacter {
   destinationId?: string            // locationId passed to setDestination — cleared when path empties
   interruptedDestinationId?: string // raw locationId saved when a conversation interrupts transit
                                     // persists until setDestination is called with a new destination
+
+  // Commute — scripted car sequence before the character becomes active
+  commuteStartStep: number     // sim step at which commute animation begins
+  commuteQueue?: { frames: import("./CommuteSimulator.js").CarFrame[]; idx: number; walkOutTile: [number, number] }
+  carState?: CarStepState      // current car pixel position — included in step files while commuting
 
   // Event-driven perception flag — set when a task completes or character arrives.
   // RoundLoop fires a perception tick for this character on the next step, then clears it.

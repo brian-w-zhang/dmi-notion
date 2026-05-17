@@ -3,6 +3,7 @@ import type {
   CharacterStepState, StepFile, LogEntry, PlanBlock, PADState, MeetingState,
 } from "./types.js"
 import { resolveLocationTile, getArrivalTile } from "./WorldData.js"
+import { buildCommuteFrames, COMMUTE_STEPS } from "./CommuteSimulator.js"
 import { decayNeeds } from "./needsDecay.js"
 import { findTilePath } from "./ServerPathfinder.js"
 
@@ -373,28 +374,51 @@ export class WorldState {
 
   // ── Arrival management ───────────────────────────────────────────────────────
 
-  // Transitions pre_arrival characters to active when their first plan block begins.
-  // Spawns them at their parking spot and navigates to the first plan location.
+  // Manages the two-phase arrival sequence for pre_arrival and commuting characters.
   private tickArrivals(): void {
-    const now = this.simMinutes
     for (const [key, c] of this.characters) {
-      if (c.state !== "pre_arrival") continue
-      const firstBlock = c.dayPlan[0]
-      if (!firstBlock || now < firstBlock.startMin) continue
+      // ── Start commute when the window opens ────────────────────────────────
+      if (c.state === "pre_arrival" && this.step >= c.commuteStartStep) {
+        const seq = buildCommuteFrames(key)
+        if (seq) {
+          c.state = "commuting"
+          c.commuteQueue = { frames: seq.frames, idx: 0, walkOutTile: seq.walkOutTile }
+          c.carState = { ...seq.frames[0], visible: true }
+          console.log(`  [Commute] ${key} → ${seq.frames.length} frames, parks at tile ${seq.walkOutTile}`)
+        } else {
+          // No car config — fall back to foot arrival
+          c.tile = getArrivalTile(key)
+          c.state = "active"
+          c.facing = "front"
+          c.animationKey = "walk_front"
+          c.needsPerception = true
+          this.setDestination(key, c.dayPlan[0]?.locationId ?? "")
+        }
+      }
 
-      // Arrival: place character at their parking spot
-      c.tile = getArrivalTile(key)
-      c.state = "active"
-      c.facing = "front"
-      c.animationKey = "walk_front"
-      c.action = "arriving at the office"
-      c.emoji = "🚶"
-      c.needsPerception = true   // first perception fires immediately on arrival
-
-      // Navigate to the first plan block's location
-      this.setDestination(key, firstBlock.locationId)
-      this.addEvent({ type: "action_complete", character: key, detail: `arrived — heading to ${firstBlock.locationId}` })
-      console.log(`  [Arrival] ${key} → spawned at parking, heading to ${firstBlock.locationId}`)
+      // ── Advance commute frame ──────────────────────────────────────────────
+      if (c.state === "commuting" && c.commuteQueue) {
+        const q = c.commuteQueue
+        q.idx++
+        if (q.idx < q.frames.length) {
+          c.carState = { ...q.frames[q.idx] }
+        } else {
+          // Commute complete — character dismounts and becomes active
+          c.carState = { ...q.frames[q.frames.length - 1], visible: true }  // parked
+          c.tile = q.walkOutTile
+          c.state = "active"
+          c.facing = "front"
+          c.animationKey = "walk_front"
+          c.action = "arriving at the office"
+          c.emoji = "🚶"
+          c.needsPerception = true
+          c.commuteQueue = undefined
+          const firstBlock = c.dayPlan[0]
+          if (firstBlock) this.setDestination(key, firstBlock.locationId)
+          this.addEvent({ type: "action_complete", character: key, detail: "arrived — heading to desk" })
+          console.log(`  [Arrival] ${key} → dismounted, heading to ${c.dayPlan[0]?.locationId}`)
+        }
+      }
     }
   }
 
@@ -405,8 +429,8 @@ export class WorldState {
   // Characters in conversation or using an appliance do not move.
   advancePhysics(): void {
     for (const c of this.characters.values()) {
-      // Characters not yet on-site don't decay needs or move
-      if (c.state === "pre_arrival") continue
+      // Characters not yet on-site or in their car don't decay needs or tile-move
+      if (c.state === "pre_arrival" || c.state === "commuting") continue
 
       // Decay needs every tick
       decayNeeds(c.name, c.needs)
@@ -515,7 +539,9 @@ export class WorldState {
     events: WorldEvent[]
   ): StepFile {
     const characters: Record<string, CharacterStepState> = {}
+    const cars: Record<string, import("./types.js").CarStepState> = {}
     for (const [name, c] of this.characters) {
+      if (c.carState) cars[name] = { ...c.carState }
       characters[name] = {
         tile: c.tile,
         action: c.action,
@@ -542,6 +568,7 @@ export class WorldState {
       simTime: this.simTime.toISOString(),
       realTimestamp: new Date().toISOString(),
       characters,
+      cars,
       conversations: completedConversations,
       groupConversations: completedGroupConversations,
       announcements,

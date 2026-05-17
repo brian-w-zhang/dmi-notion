@@ -42,12 +42,32 @@ export const INITIAL_CURRENTLY: Record<string, string> = {
   creed:    "Present. Or nearby.",
 }
 
-// ── Daily plans ───────────────────────────────────────────────────────────────
-// Minutes since midnight. Sim day is a typical Tuesday at Dunder Mifflin S2.
-// Arrival gaps are built in — characters "arrive" at their first block.
-// locationId maps to zone names Phaser resolves from office-objects.json.
+// ── Arrival schedule ─────────────────────────────────────────────────────────
+// Minutes since midnight when each character's car enters the parking lot.
+// Commute animation starts COMMUTE_STEPS before this; character becomes active here.
 
 const h = (hours: number, mins = 0) => hours * 60 + mins
+
+export const ARRIVAL_TIMES: Record<string, number> = {
+  dwight:   h(8, 31),
+  angela:   h(8, 47),
+  oscar:    h(8, 53),
+  toby:     h(9,  2),
+  pam:      h(9,  8),
+  jim:      h(9, 14),
+  phyllis:  h(9, 21),
+  ryan:     h(9, 27),
+  stanley:  h(9, 33),
+  kelly:    h(9, 39),
+  kevin:    h(9, 46),
+  michael:  h(9, 53),
+  meredith: h(9, 59),
+  creed:    h(10, 7),
+}
+
+// ── Daily plans ───────────────────────────────────────────────────────────────
+// Minutes since midnight. Sim day is a typical Tuesday at Dunder Mifflin S2.
+// locationId maps to zone names Phaser resolves from office-objects.json.
 
 export const CHARACTER_PLANS: Record<string, PlanBlock[]> = {
 

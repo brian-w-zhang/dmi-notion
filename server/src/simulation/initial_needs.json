@@ -5,12 +5,12 @@
     "energy":       0.85,
     "bladder":      0.80,
     "stress":       0.15,
-    "social":       0.30,
-    "belonging":    0.45,
-    "esteem":       0.50,
-    "stimulation":  0.35,
-    "productivity": 0.55,
-    "fulfillment":  0.60
+    "social":       0.85,
+    "belonging":    0.80,
+    "esteem":       0.72,
+    "stimulation":  0.80,
+    "productivity": 0.70,
+    "fulfillment":  0.75
   },
   "dwight": {
     "hunger":       0.88,
@@ -18,12 +18,12 @@
     "energy":       0.95,
     "bladder":      0.65,
     "stress":       0.10,
-    "social":       0.60,
-    "belonging":    0.70,
-    "esteem":       0.55,
-    "stimulation":  0.65,
-    "productivity": 0.40,
-    "fulfillment":  0.65
+    "social":       0.78,
+    "belonging":    0.82,
+    "esteem":       0.85,
+    "stimulation":  0.75,
+    "productivity": 0.60,
+    "fulfillment":  0.80
   },
   "jim": {
     "hunger":       0.75,
@@ -31,12 +31,12 @@
     "energy":       0.88,
     "bladder":      0.85,
     "stress":       0.12,
-    "social":       0.55,
-    "belonging":    0.62,
-    "esteem":       0.68,
-    "stimulation":  0.42,
-    "productivity": 0.60,
-    "fulfillment":  0.55
+    "social":       0.82,
+    "belonging":    0.75,
+    "esteem":       0.78,
+    "stimulation":  0.72,
+    "productivity": 0.75,
+    "fulfillment":  0.70
   },
   "pam": {
     "hunger":       0.82,
@@ -44,12 +44,12 @@
     "energy":       0.80,
     "bladder":      0.88,
     "stress":       0.18,
-    "social":       0.58,
-    "belonging":    0.50,
-    "esteem":       0.45,
-    "stimulation":  0.60,
-    "productivity": 0.55,
-    "fulfillment":  0.40
+    "social":       0.78,
+    "belonging":    0.72,
+    "esteem":       0.65,
+    "stimulation":  0.75,
+    "productivity": 0.72,
+    "fulfillment":  0.65
   },
   "ryan": {
     "hunger":       0.70,
@@ -57,12 +57,12 @@
     "energy":       0.82,
     "bladder":      0.90,
     "stress":       0.22,
-    "social":       0.50,
+    "social":       0.75,
     "belonging":    0.68,
-    "esteem":       0.38,
-    "stimulation":  0.45,
-    "productivity": 0.52,
-    "fulfillment":  0.42
+    "esteem":       0.62,
+    "stimulation":  0.72,
+    "productivity": 0.70,
+    "fulfillment":  0.62
   },
   "kelly": {
     "hunger":       0.72,
@@ -70,12 +70,12 @@
     "energy":       0.85,
     "bladder":      0.82,
     "stress":       0.20,
-    "social":       0.25,
-    "belonging":    0.40,
-    "esteem":       0.42,
-    "stimulation":  0.38,
-    "productivity": 0.75,
-    "fulfillment":  0.62
+    "social":       0.80,
+    "belonging":    0.75,
+    "esteem":       0.72,
+    "stimulation":  0.80,
+    "productivity": 0.80,
+    "fulfillment":  0.75
   },
   "oscar": {
     "hunger":       0.80,
@@ -83,12 +83,12 @@
     "energy":       0.87,
     "bladder":      0.85,
     "stress":       0.10,
-    "social":       0.62,
-    "belonging":    0.65,
-    "esteem":       0.70,
-    "stimulation":  0.48,
-    "productivity": 0.45,
-    "fulfillment":  0.65
+    "social":       0.80,
+    "belonging":    0.75,
+    "esteem":       0.82,
+    "stimulation":  0.75,
+    "productivity": 0.72,
+    "fulfillment":  0.78
   },
   "angela": {
     "hunger":       0.85,
@@ -96,12 +96,12 @@
     "energy":       0.92,
     "bladder":      0.88,
     "stress":       0.25,
-    "social":       0.72,
-    "belonging":    0.75,
-    "esteem":       0.55,
-    "stimulation":  0.68,
-    "productivity": 0.38,
-    "fulfillment":  0.60
+    "social":       0.82,
+    "belonging":    0.85,
+    "esteem":       0.75,
+    "stimulation":  0.72,
+    "productivity": 0.70,
+    "fulfillment":  0.78
   },
   "kevin": {
     "hunger":       0.55,
@@ -109,12 +109,12 @@
     "energy":       0.78,
     "bladder":      0.80,
     "stress":       0.08,
-    "social":       0.52,
-    "belonging":    0.58,
-    "esteem":       0.65,
-    "stimulation":  0.60,
-    "productivity": 0.72,
-    "fulfillment":  0.68
+    "social":       0.78,
+    "belonging":    0.75,
+    "esteem":       0.78,
+    "stimulation":  0.75,
+    "productivity": 0.80,
+    "fulfillment":  0.80
   },
   "stanley": {
     "hunger":       0.78,
@@ -122,12 +122,12 @@
     "energy":       0.68,
     "bladder":      0.82,
     "stress":       0.30,
-    "social":       0.78,
-    "belonging":    0.72,
-    "esteem":       0.65,
-    "stimulation":  0.72,
-    "productivity": 0.80,
-    "fulfillment":  0.70
+    "social":       0.88,
+    "belonging":    0.78,
+    "esteem":       0.75,
+    "stimulation":  0.78,
+    "productivity": 0.82,
+    "fulfillment":  0.75
   },
   "phyllis": {
     "hunger":       0.80,
@@ -135,12 +135,12 @@
     "energy":       0.83,
     "bladder":      0.85,
     "stress":       0.12,
-    "social":       0.55,
-    "belonging":    0.52,
-    "esteem":       0.65,
-    "stimulation":  0.60,
-    "productivity": 0.50,
-    "fulfillment":  0.68
+    "social":       0.80,
+    "belonging":    0.75,
+    "esteem":       0.78,
+    "stimulation":  0.72,
+    "productivity": 0.72,
+    "fulfillment":  0.72
   },
   "meredith": {
     "hunger":       0.65,
@@ -148,12 +148,12 @@
     "energy":       0.70,
     "bladder":      0.75,
     "stress":       0.08,
-    "social":       0.48,
-    "belonging":    0.62,
-    "esteem":       0.68,
-    "stimulation":  0.42,
-    "productivity": 0.75,
-    "fulfillment":  0.72
+    "social":       0.75,
+    "belonging":    0.72,
+    "esteem":       0.72,
+    "stimulation":  0.70,
+    "productivity": 0.78,
+    "fulfillment":  0.75
   },
   "creed": {
     "hunger":       0.75,
@@ -161,12 +161,12 @@
     "energy":       0.88,
     "bladder":      0.90,
     "stress":       0.05,
-    "social":       0.65,
-    "belonging":    0.80,
-    "esteem":       0.75,
-    "stimulation":  0.55,
-    "productivity": 0.85,
-    "fulfillment":  0.78
+    "social":       0.80,
+    "belonging":    0.88,
+    "esteem":       0.85,
+    "stimulation":  0.72,
+    "productivity": 0.88,
+    "fulfillment":  0.85
   },
   "toby": {
     "hunger":       0.78,
@@ -174,11 +174,11 @@
     "energy":       0.75,
     "bladder":      0.85,
     "stress":       0.35,
-    "social":       0.65,
-    "belonging":    0.38,
-    "esteem":       0.35,
-    "stimulation":  0.58,
-    "productivity": 0.52,
-    "fulfillment":  0.32
+    "social":       0.78,
+    "belonging":    0.62,
+    "esteem":       0.58,
+    "stimulation":  0.72,
+    "productivity": 0.70,
+    "fulfillment":  0.55
   }
 }

@@ -1,6 +1,7 @@
 import fs from "fs"
 import path from "path"
 import { fileURLToPath } from "url"
+import { TICKS_PER_DAY } from "./config.js"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const DATA_DIR = path.resolve(__dirname, "../../../frontend/public/data")
@@ -22,7 +23,6 @@ const OVERRIDES: NeedOverrides = JSON.parse(
 // All base rates below are "units drained per full day at decay_rate 1.0".
 // Per-tick rate = base / TICKS_PER_DAY × kMultiplier.
 
-const TICKS_PER_DAY = 108  // 9 hours × 60 min ÷ 5 min/tick
 
 // ── Base decay rates ──────────────────────────────────────────────────────────
 
