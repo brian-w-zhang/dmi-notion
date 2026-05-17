@@ -43,11 +43,11 @@ Phaser frontend  <── WebSocket ──>  Backend bridge  <──>  LLM agents
   (body + world)                    (Node/Python)          (mind + memory)
 ```
 
-**Phaser (body + world):** renders the tilemap, handles character movement and animation, manages needs decay, enforces world rules, assembles candidate action sets, and executes action chains (walk, face, animate, SFX, complete).
+**Phaser (body + world):** renders the tilemap, handles character movement and animation, manages needs decay, enforces world rules, assembles candidate action sets, and executes action chains (walk, face, animate, SFX, complete). Two modes: **Sandbox** (player-controlled, dev/testing) and **Simulation** (replay-driven, agent output).
 
 **LLM agents (mind + memory):** one agent per character (Michael, Dwight, Jim, Pam, etc.). Each runs a full cognitive pipeline in a single invocation: perception, needs appraisal, memory retrieval, action selection, dialogue, reflection.
 
-**Backend bridge (in progress):** a thin Node/Python server that mediates between the agents and Phaser. Exposes REST endpoints and pushes state changes to the frontend over WebSocket.
+**Backend bridge (planned):** a thin Node/Python server that mediates between the agents and Phaser. Exposes REST endpoints and pushes state changes to the frontend over WebSocket.
 
 ---
 
@@ -56,8 +56,20 @@ Phaser frontend  <── WebSocket ──>  Backend bridge  <──>  LLM agents
 ```
 frontend/              Next.js + Phaser frontend (the rendered simulation)
   app/                 Next.js App Router entry point
-  game/                All Phaser game code (scenes, systems, entities)
-  public/assets/       Tilemap, tilesets, sprites, sound effects
+    dashboard/         Character roster + per-character inspect pages
+  components/          React UI components (CharacterCard, NeedsCurvesPanel, PersonalityRadar, …)
+  game/                All Phaser game code
+    scenes/            Boot → ModeSelect → MainMap (sandbox) or MainMapReplay (simulation)
+    systems/           NpcActionRunner, PathfindingSystem, ChairSystem, ApplianceInteractionSystem, …
+    entities/          Character, Car, SpeechBubbleOverlay, TalkHeadEmojiOverlay
+    config/            characters.ts, characterArrivals.ts, characterCars.ts, npcActionLoops.ts, …
+    data/              appliances.ts, officeObjects.ts, characterAnimations.ts
+  public/assets/
+    tilemap/           Tiled map JSON + tileset PNGs
+    sprites/           Character spritesheets (one per cast member, LimeZu format)
+    sound effects/     SFX library
+    simulation/        replay.json — serialized agent-driven simulation run
+  public/data/         needs_config.json, personalities.json, character_need_overrides.json
 
 generative_agents/     Park et al. reference implementation (Django + Python)
                        Kept as a reference; DMI's architecture diverges significantly.
@@ -77,7 +89,7 @@ scripts/               Code generation utilities
 
 ## Running the Frontend
 
-The Phaser game runs inside a Next.js app. The simulation backend is not yet connected; this runs the visual frontend independently.
+The Phaser game runs inside a Next.js app. The simulation backend is not yet connected; the frontend runs standalone against a pre-recorded `replay.json`.
 
 ```bash
 cd frontend
@@ -85,9 +97,14 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The Dunder Mifflin office loads and you can control Dwight with WASD / arrow keys.
+Open [http://localhost:3000](http://localhost:3000). A mode-select screen appears with two options:
 
-**Controls:**
+- **SANDBOX** — player-controlled (WASD), used for dev and map testing.
+- **SIMULATION** — replay mode; plays back a pre-recorded agent-driven session with all 14 cast members moving, talking, and interacting autonomously.
+
+The **dashboard** at [http://localhost:3000/dashboard](http://localhost:3000/dashboard) shows the full cast roster and links to per-character pages with needs curves, Big Five personality radar, and sprite preview.
+
+**Sandbox controls:**
 | Key | Action |
 |-----|--------|
 | WASD / Arrow keys | Move Dwight (dismounted) / drive car (mounted) |
@@ -103,36 +120,44 @@ Open [http://localhost:3000](http://localhost:3000). The Dunder Mifflin office l
 
 ## Milestones
 
-### 1. World Layer
-The office map as a structured affordance space, not just visuals. Every object is a data entity that advertises what characters can do with it.
+### ✅ 1. World Layer
+The office map as a structured affordance space, not just visuals.
 
 - Tiled map with named semantic zones (open plan, Michael's office, conference room, kitchen, reception, warehouse)
 - Object metadata layer: desks, copier, fridge, water cooler, whiteboard, printers — each with action point coordinates and affordance tags
 - Appliance interaction system with progress bars and SFX
 - Chair sit/stand system with per-seat ownership and sit point data
 - Building entrance transitions (interior ↔ exterior)
-- Car system with mount/dismount and driving state
-- NPC simulation scaffolding: action loops, dialogue overlays, HUD
+- Car system with mount/dismount, driving state, and auto-park
+- Collision and walkability zones; polygon-based pathfinding grid
 
-### 2. Character System
-All cast members running as independent agents in the same world, each with persistent identity.
+### ✅ 2. Character System
+All 14 canon cast members running as independent agents in the same world.
 
-- Remaining cast spawned as autonomous agents (Michael, Jim, Pam, Ryan, Kelly, Stanley, Kevin, Angela, Andy, Toby)
-- Per-character spritesheet + animation registration
-- Pathfinding and navigation to target tiles/zones
-- Character-to-character proximity detection
-- Active character switching (player can follow any cast member)
+- All cast members spawned with individual spritesheets and animation registration
+- NPC action runner: scripted daily loops (desk work, appliance use, chair sit/stand, dialogue)
+- Pathfinding (A\* on a walkability grid) and navigation to target tiles/zones
+- Commuting system: characters arrive by car, park, and enter the building at scene start
+- Character-to-character proximity detection; `NpcDialogueCoordinator` manages conversation turns
+- Speech bubble overlays and talking-head emoji overlays during dialogue
+- Mode select screen: **Sandbox** (player-controlled) vs. **Simulation** (replay-driven)
 
-### 3. Needs System
-The Sims-style need decay creating constant action pressure. Characters don't invent actions — the world advertises them and need urgency scores them.
+### 🔄 3. Needs System
+The Sims-style need decay creating constant action pressure.
 
-- Per-character needs vector: hunger, social, stimulation, belonging, esteem, autonomy
-- Need decay rates driven by Big Five personality parameters (extraversion → social decay rate, etc.)
-- Urgency-to-language bridge: numeric needs translated to natural-language desire strings for LLM context
-- Candidate action assembly: world affordances scored by `need_urgency × weight × proximity × social_context`
-- Object advertising: each world entity emits a scored action candidate to nearby characters
+- Needs data layer: `needs_config.json` with decay curves and per-character overrides
+- Big Five personality data: `personalities.json` maps each character's OCEAN scores
+- Dashboard UI: per-character needs curves (graphed over time) and Big Five radar chart
+- *Not yet wired:* runtime need decay in the simulation loop; urgency-scored action candidate assembly
 
-### 4. Cognitive Loop
+### 🔄 4. DVR / Replay Layer
+Every simulation run is a replayable episode.
+
+- `replay.json` format: timestamped event log with character positions, facing, animation, action, emoji, PAD state, needs snapshot, and active conversation turns
+- `MainMapReplay` scene plays back a recorded run against the full tilemap with all 14 characters
+- *Not yet implemented:* scrub controls, timeline UI, auto POV "documentary crew" camera
+
+### ⬜ 5. Cognitive Loop
 The per-tick decision pipeline that runs inside each character agent.
 
 - Perception snapshot: what each character can currently see and hear within their radius
@@ -144,7 +169,7 @@ The per-tick decision pipeline that runs inside each character agent.
 - Post-action appraisal: fixed delta for physical actions; appraisal agent for social/dialogue outcomes
 - Micro-reflections after significant events; end-of-day synthesis into narrative identity updates
 
-### 5. Memory Architecture
+### ⬜ 6. Memory Architecture
 Episodic memory seeded from canon and extended by simulation — the core identity persistence layer.
 
 - Memory DB per character, seeded with annotated memories from S1–S2 canon dialogue
@@ -154,7 +179,7 @@ Episodic memory seeded from canon and extended by simulation — the core identi
 - Constructive simulation: retrieved memories passed as predictive priors, not just historical facts
 - Relationship DB: per-pair relationship summaries updated with deltas and triggering events
 
-### 6. Notion Agents + Backend Bridge
+### ⬜ 7. Notion Agents + Backend Bridge
 The mind-body connection: Notion agents handle cognition, the backend bridge relays decisions to Phaser.
 
 - One Notion custom agent per cast member with a full cognitive pipeline instruction page
@@ -164,7 +189,7 @@ The mind-body connection: Notion agents handle cognition, the backend bridge rel
 - Phaser subscribes to WebSocket and executes the visual side (movement, animation, SFX) independently of the decision loop
 - Inter-character dialogue mediated by the orchestrator: Character A's decision triggers Character B's context assembly and invocation
 
-### 7. Conversation System
+### ⬜ 8. Conversation System
 Character-to-character dialogue as a first-class mechanic, not a post-hoc text dump.
 
 - Proximity-triggered conversation initiation (Smallville-style)
@@ -174,15 +199,7 @@ Character-to-character dialogue as a first-class mechanic, not a post-hoc text d
 - Conversation DB in Notion: both sides' internal thought, emotional state, and relationship context stored per turn
 - Talking heads: situation-triggered performative cutaways (not once-per-day) — audience-aware reflections distinct from private internal reflection
 
-### 8. DVR / Replay Layer
-Every simulation day is a replayable episode. The event log makes it deterministic and inspectable.
-
-- Append-only event log: every agent action timestamped with character, action type, target, content summary, PAD state
-- Full-day replay with play/pause/scrub controls
-- Timeline-driven camera: jump to any moment, follow any character at any timestamp
-- Auto POV "documentary crew": switches to high-salience moments (confrontations, dense clusters, meeting starts, sharp relationship deltas)
-
-### 9. Inspectability Layer
+### ⬜ 9. Inspectability Layer
 The research hook. Clicking any character at any moment reveals the full cognitive trace.
 
 - Needs vector snapshot at any timestamp
@@ -193,7 +210,7 @@ The research hook. Clicking any character at any moment reveals the full cogniti
 - Internal thought vs. talking head (private vs. performative reflection)
 - Wiki-style character profiles: Big Five parameters, memory log, relationship graph, narrative identity summary
 
-### 10. Episode Demos
+### ⬜ 10. Episode Demos
 Pre-run simulation days seeded with a perturbation premise and hosted as interactive artifacts.
 
 - Perturbation seeds: downsizing rumor, corporate audit, HR crackdown, sales leaderboard contest, prank escalation chain

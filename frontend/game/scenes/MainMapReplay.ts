@@ -87,7 +87,7 @@ const SPRITE_KEY: Record<string, string> = Object.fromEntries(
 const CHAR_DEPTH          = 17;
 const SPEECH_BUBBLE_DEPTH = 10000;
 const INSPECT_WIDTH   = 420;
-const INSPECT_PANEL_H = 460;  // fixed height — panel anchors to bottom-left
+const INSPECT_PANEL_H = 560;  // fixed height — panel anchors to bottom-left
 const INSPECT_MARGIN  = 12;
 const POV_WIDTH       = 160;  // camera picker is narrower than the inspect panel
 const POV_H           = 30;   // collapsed POV picker height
@@ -211,6 +211,14 @@ export class MainMapReplayController {
     const cam = this.scene.cameras.main;
     cam.setLerp(0.08, 0.08);
     cam.centerOn(2714, 1442);
+
+    // Drag-to-pan in free camera mode (same pattern as sandbox)
+    this.scene.input.on(Phaser.Input.Events.POINTER_MOVE, (pointer: Phaser.Input.Pointer) => {
+      if (!pointer.isDown || this._povKey !== null) return;
+      const dx = (pointer.x - pointer.prevPosition.x) / cam.zoom;
+      const dy = (pointer.y - pointer.prevPosition.y) / cam.zoom;
+      cam.setScroll(cam.scrollX - dx, cam.scrollY - dy);
+    });
   }
 
   destroy(): void {
@@ -516,10 +524,10 @@ export class MainMapReplayController {
       ? (CHARACTER_ASSETS.find(a => a.owner === this._povKey)?.displayName ?? this._povKey)
       : 'Free camera';
     const headerTxt = this.scene.add.text(10, 8, `CAM  ${selName}`, {
-      fontFamily: 'monospace', fontSize: '9px', color: '#cccccc',
+      fontFamily: 'Arial, sans-serif', fontSize: '11px', color: '#9ca3af',
     });
     const arrow = this.scene.add.text(W - 16, 10, this._povOpen ? '▲' : '▼', {
-      fontFamily: 'monospace', fontSize: '8px', color: '#4a90d9',
+      fontFamily: 'Arial, sans-serif', fontSize: '9px', color: '#6b7280',
     });
     this._povContainer.add([headerTxt, arrow]);
 
@@ -527,7 +535,7 @@ export class MainMapReplayController {
     const headerHit = this.scene.add.rectangle(0, 0, W, POV_H, 0, 0).setOrigin(0, 0)
       .setInteractive({ useHandCursor: true });
     headerHit.on('pointerover', () => { headerTxt.setColor('#ffffff'); });
-    headerHit.on('pointerout',  () => { headerTxt.setColor('#cccccc'); });
+    headerHit.on('pointerout',  () => { headerTxt.setColor('#9ca3af'); });
     headerHit.on('pointerdown', () => { this._povOpen = !this._povOpen; this._renderPovPicker(); });
     this._povContainer.add(headerHit);
 
@@ -551,27 +559,27 @@ export class MainMapReplayController {
     items.forEach((item, i) => {
       const iy      = POV_H + i * POV_ITEM_H;
       const isSelected = item.key === this._povKey;
-      const color   = isSelected ? '#ffffff' : '#888888';
+      const color   = isSelected ? '#ffffff' : '#9ca3af';
 
       if (isSelected) {
         const selBg = this.scene.add.graphics();
-        selBg.fillStyle(0x1a3a5c, 1);
+        selBg.fillStyle(0x1e293b, 1);
         selBg.fillRect(0, iy, W, POV_ITEM_H);
         this._povContainer.add(selBg);
       }
 
       const bullet = this.scene.add.text(8, iy + 5, isSelected ? '●' : ' ', {
-        fontFamily: 'monospace', fontSize: '8px', color: '#4a90d9',
+        fontFamily: 'Arial, sans-serif', fontSize: '8px', color: '#6b7280',
       });
       const label = this.scene.add.text(20, iy + 5, item.label, {
-        fontFamily: 'monospace', fontSize: '9px', color,
+        fontFamily: 'Arial, sans-serif', fontSize: '11px', color,
       });
       this._povContainer.add([bullet, label]);
 
       const rowHit = this.scene.add.rectangle(0, iy, W, POV_ITEM_H, 0, 0).setOrigin(0, 0)
         .setInteractive({ useHandCursor: true });
       rowHit.on('pointerover', () => { label.setColor('#ffffff'); });
-      rowHit.on('pointerout',  () => { label.setColor(isSelected ? '#ffffff' : '#888888'); });
+      rowHit.on('pointerout',  () => { label.setColor(isSelected ? '#ffffff' : '#9ca3af'); });
       rowHit.on('pointerdown', () => { this._setPov(item.key); });
       this._povContainer.add(rowHit);
     });

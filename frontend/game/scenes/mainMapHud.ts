@@ -4,12 +4,16 @@ import { HUD_BOTTOM_HINT_OFFSET, HUD_DEPTH } from './mainMap.constants';
 type EntranceMode = 'enter' | 'exit';
 type CameraMode = 'manual' | 'follow';
 
+const BTN_FONT  = 'Arial, sans-serif';
+const BTN_COLOR = '#9ca3af';
+const BTN_BG    = '#111827dd';
+
 const TOGGLE_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
-  fontSize: '13px',
-  fontFamily: 'monospace',
-  color: '#ffffff',
-  backgroundColor: '#00000088',
-  padding: { x: 6, y: 4 },
+  fontSize: '12px',
+  fontFamily: BTN_FONT,
+  color: BTN_COLOR,
+  backgroundColor: BTN_BG,
+  padding: { x: 8, y: 5 },
 };
 
 const CONTEXT_HINT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = {
@@ -86,14 +90,14 @@ export class MainMapHud {
     this.bottomHintY = sceneH - HUD_BOTTOM_HINT_OFFSET;
 
     const homeBtn = scene.add.text(8, 8, '⌂  menu', {
-      fontSize: '13px',
-      fontFamily: 'monospace',
-      color: '#94a3b8',
-      backgroundColor: '#00000088',
-      padding: { x: 6, y: 4 },
+      fontSize: '12px',
+      fontFamily: BTN_FONT,
+      color: BTN_COLOR,
+      backgroundColor: BTN_BG,
+      padding: { x: 8, y: 5 },
     }).setInteractive({ useHandCursor: true });
     homeBtn.on('pointerover', () => homeBtn.setColor('#ffffff'));
-    homeBtn.on('pointerout', () => homeBtn.setColor('#94a3b8'));
+    homeBtn.on('pointerout', () => homeBtn.setColor(BTN_COLOR));
     homeBtn.on('pointerdown', () => this.onHome());
 
     this.positionText = scene.add.text(8, 36, '', {
@@ -105,11 +109,11 @@ export class MainMapHud {
     });
 
     this.cameraModeToggle = scene.add.text(8, 64, '', {
-      fontSize: '13px',
-      fontFamily: 'monospace',
-      color: '#ffffff',
-      backgroundColor: '#00000088',
-      padding: { x: 6, y: 4 },
+      fontSize: '12px',
+      fontFamily: BTN_FONT,
+      color: BTN_COLOR,
+      backgroundColor: BTN_BG,
+      padding: { x: 8, y: 5 },
     });
 
     this.setCameraMode(initialCameraMode);
@@ -195,17 +199,17 @@ export class MainMapHud {
 
     // Button style
     const btnStyle: Phaser.Types.GameObjects.Text.TextStyle = {
-      fontFamily: 'monospace',
+      fontFamily: BTN_FONT,
       fontSize: '12px',
-      color: '#94a3b8',
+      color: BTN_COLOR,
       backgroundColor: '#0f172a',
       padding: { x: 7, y: 4 },
     };
 
     // Speed cycle button: 1x → 2x → 0.5x → 1x …
     this.replaySpeedBtn = scene.add.text(speedBtnX, ctrlY, '1x', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    this.replaySpeedBtn.on('pointerover', () => this.replaySpeedBtn.setColor('#e2e8f0'));
-    this.replaySpeedBtn.on('pointerout',  () => this.replaySpeedBtn.setColor('#94a3b8'));
+    this.replaySpeedBtn.on('pointerover', () => this.replaySpeedBtn.setColor('#ffffff'));
+    this.replaySpeedBtn.on('pointerout',  () => this.replaySpeedBtn.setColor(BTN_COLOR));
     this.replaySpeedBtn.on('pointerdown', () => {
       this._speedIdx = (this._speedIdx + 1) % this._speedSteps.length;
       const mult = this._speedSteps[this._speedIdx];
@@ -214,8 +218,8 @@ export class MainMapHud {
     });
 
     this.replayPlayPauseBtn = scene.add.text(btnPlayX, ctrlY, '⏸', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    this.replayPlayPauseBtn.on('pointerover', () => this.replayPlayPauseBtn.setColor('#e2e8f0'));
-    this.replayPlayPauseBtn.on('pointerout',  () => this.replayPlayPauseBtn.setColor('#94a3b8'));
+    this.replayPlayPauseBtn.on('pointerover', () => this.replayPlayPauseBtn.setColor('#ffffff'));
+    this.replayPlayPauseBtn.on('pointerout',  () => this.replayPlayPauseBtn.setColor(BTN_COLOR));
     this.replayPlayPauseBtn.on('pointerdown', () => this._onPlayPause?.());
 
     // Time label (elapsed / total) on the right
