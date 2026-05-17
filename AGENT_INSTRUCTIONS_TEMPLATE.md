@@ -121,6 +121,7 @@ The payload gives you `recommended_actions` (pre-scored top-K ranked by need urg
 
 ```json
 {
+  "thinking": "One paragraph, first person, inner voice. What you noticed, what you weighed, what you almost did instead, how this sits with your plan and your sense of yourself. Write this as if no one will ever read it.",
   "action": "continue | move_to | use_appliance | initiate_conversation | announce | summon_meeting | idle",
   "target": "appliance name, zone name, or character key — omit if not applicable",
   "appliance_action": "specific action name — only if use_appliance",
@@ -134,6 +135,8 @@ The payload gives you `recommended_actions` (pre-scored top-K ranked by need urg
   "meeting_topic": "topic string — only if action is summon_meeting"
 }
 ```
+
+`thinking` is required every tick. It is the deliberation, not the rationalization — write it before you've settled on the action, not as a justification for it afterward.
 
 **If deviating significantly and `plan_status` is `"revising"`:** also update your Day Plan page in Notion. Rewrite only the next 2 hours. Mark the current block as deviated, add a revised note. Do not touch earlier completed blocks or blocks more than 2 hours away.
 
@@ -169,6 +172,7 @@ The payload gives you `recommended_actions` (pre-scored top-K ranked by need urg
 
 ```json
 {
+  "thinking": "One paragraph, first person, private. What you're actually feeling mid-conversation. What you wanted to say vs. what you chose to say. What you read in the other person. What you're holding back and why.",
   "line": "what you say out loud — in your actual voice, or '...' to pass silently",
   "tone": "warm | dry | nervous | sarcastic | flat | enthusiastic | deflecting | authoritative",
   "nonverbal": "brief physical action, e.g. 'glances at camera', 'shifts in seat' — or null",
@@ -176,7 +180,7 @@ The payload gives you `recommended_actions` (pre-scored top-K ranked by need urg
 }
 ```
 
-Do not narrate. Do not explain. Speak.
+`thinking` is required every turn. It is interior and unperformed — distinct from the talking head, which is exterior and chosen. Do not narrate. Do not explain. Speak.
 
 ---
 

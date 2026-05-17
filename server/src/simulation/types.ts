@@ -27,6 +27,7 @@ export interface ActionLogEntry {
   endMin: number
   followedPlan: boolean
   deviationReason?: string
+  thinking?: string           // interior deliberation from agent — for interpretability display
 }
 
 export interface DialogueLogEntry {
@@ -78,6 +79,7 @@ export interface ConversationTurn {
   line: string
   tone?: string
   nonverbal?: string
+  thinking?: string           // interior state before speaking — not shown to other characters
 }
 
 export interface ConversationRecord {

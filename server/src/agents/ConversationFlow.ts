@@ -61,6 +61,7 @@ export async function runConversation(
       line: parsed.line,
       tone: parsed.tone,
       nonverbal: parsed.nonverbal ?? undefined,
+      thinking: parsed.thinking,
     }
     turns.push(turnRecord)
     history.push({ speaker: CHARACTER_NAMES[speakerKey], line: parsed.line })
@@ -86,7 +87,7 @@ async function callAgentForDialogue(
   agent: ReturnType<NotionAgentsClient["agents"]["agent"]>,
   message: string,
   threadId?: string
-): Promise<{ line: string; tone?: string; nonverbal?: string | null; end: boolean; threadId?: string }> {
+): Promise<{ line: string; tone?: string; nonverbal?: string | null; thinking?: string; end: boolean; threadId?: string }> {
   let fullContent = ""
   let returnedThreadId: string | undefined
 
@@ -112,6 +113,7 @@ async function callAgentForDialogue(
     line: parsed.line ?? fullContent.trim(),
     tone: parsed.tone,
     nonverbal: parsed.nonverbal,
+    thinking: parsed.thinking,
     end: parsed.end === true || parsed.end === "true",
     threadId: returnedThreadId,
   }

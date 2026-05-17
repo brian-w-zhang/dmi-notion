@@ -118,6 +118,7 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
       "Consult your memory and relationship databases for relevant context before deciding.",
       "Respond ONLY with a valid JSON object. No prose, no markdown fences, no explanation.",
       JSON.stringify({
+        thinking: "one paragraph, first person, inner voice — your deliberation before deciding",
         follow_plan: "boolean — true if following current_plan_block",
         action: "continue | move_to | use_appliance | initiate_conversation | announce | summon_meeting | idle",
         target: "zone name, appliance name, or character key — omit if not applicable",

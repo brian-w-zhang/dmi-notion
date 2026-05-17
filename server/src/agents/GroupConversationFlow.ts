@@ -162,5 +162,6 @@ async function callAgentInMeeting(
     line: parsed.line ?? "...",
     tone: parsed.tone,
     nonverbal: parsed.nonverbal ?? undefined,
+    thinking: parsed.thinking,
   }
 }

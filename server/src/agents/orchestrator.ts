@@ -6,6 +6,7 @@ import { runGroupConversation } from "./GroupConversationFlow.js"
 import { CHARACTER_AGENT_IDS, CHARACTER_NAMES } from "./characters.js"
 
 interface AgentDecision {
+  thinking?: string           // interior deliberation — stored in log for interpretability
   follow_plan: boolean
   action: "continue" | "move_to" | "use_appliance" | "initiate_conversation" | "announce" | "summon_meeting" | "idle"
   target?: string
@@ -198,8 +199,12 @@ export function applyDecisions(
       endMin: world.simMinutes + world.secPerStep / 60,
       followedPlan: decision.follow_plan,
       deviationReason: decision.deviation_reason,
+      thinking: decision.thinking,
     })
     console.log(`  ${CHARACTER_NAMES[key]}: ${decision.description} ${decision.emoji}${decision.follow_plan ? "" : " [deviation]"}`)
+    if (decision.thinking) {
+      console.log(`    💭 ${decision.thinking.slice(0, 100)}${decision.thinking.length > 100 ? "…" : ""}`)
+    }
   }
 }
 
