@@ -1,0 +1,297 @@
+{
+  "step": 3,
+  "simTime": "2023-02-13T15:15:00.000Z",
+  "realTimestamp": "2026-05-17T07:11:27.764Z",
+  "characters": {
+    "phyllis": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Excuse myself from the pleasantries and head to the restroom first, then I’ll grab some coffee and properly settle in.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.4718333333333333,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Just got in and I’m stepping away for a quick restroom break before I start my morning."
+    },
+    "kelly": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Head straight to the restroom first, then come back ready to spill the news.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.36583333333333334,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Beelining to the restroom, mentally rehearsing the dramatic entrance for later."
+    },
+    "creed": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Slip away before anyone clocks me and head straight for the restroom.",
+      "emoji": "🚪",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8944444444444444,
+        "social": 0.47702777777777783,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Gone for a minute. Don’t follow me."
+    },
+    "meredith": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Bee-lining to the bathroom first thing, coffee in hand.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8866666666666666,
+        "social": 0.46191666666666664,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Slightly rumpled, large coffee, looking forward to nothing in particular."
+    },
+    "stanley": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Head straight to the restroom before settling in.",
+      "emoji": "🚶",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8844444444444445,
+        "social": 0.4930777777777777,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "At his desk. Crossword is ready. Leave him alone."
+    },
+    "oscar": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Quick bathroom break before settling in with coffee and emails.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.47324999999999995,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Detouring to the restroom before I start on emails and receivables."
+    },
+    "ryan": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Bee-lining to the restroom to handle the most urgent human KPI before doing anything 'strategic.'",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.45813888888888893,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Executing a quick, necessary pit stop like it was on the roadmap all along."
+    },
+    "toby": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Head straight to the restroom to take care of the most pressing physical need before settling in.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.4803333333333334,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Trying to get settled in without making a big deal out of anything."
+    },
+    "dwight": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Heading directly to the restroom before beginning security patrol — bladder urgency is too high to ignore.",
+      "emoji": "🚽",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.4795416666666667,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currentPlanBlock": {
+        "action": "security_patrol",
+        "description": "Patrolling the parking lot and building perimeter",
+        "locationId": "parking_lot",
+        "emoji": "🔒",
+        "startMin": 435,
+        "durationMin": 25
+      },
+      "currently": "Arrived at Dunder Mifflin — addressing urgent biological need before commencing security patrol."
+    },
+    "kevin": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Heading straight to the bathroom before doing anything else.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7600000000000001,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.4690000000000001,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Still proud of the parking spot, now racing the clock."
+    },
+    "angela": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Head straight to the restroom to take care of a pressing need, then return to start desk setup.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.4925111111111112,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Arrived and immediately prioritizing a quick restroom stop before starting the day properly."
+    },
+    "pam": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Heading to the restroom quickly before settling in at reception.",
+      "emoji": "🚻",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.47372222222222227,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Stepping away from reception for a quick restroom break before starting the morning routine."
+    },
+    "michael": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Rushing to the bathroom because nature is SCREAMING right now — even the World's Best Boss has limits",
+      "emoji": "🚽",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.38089444444444437,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Quietly speed-walking to the bathroom before anyone notices, trying to look purposeful and boss-like about it."
+    },
+    "jim": {
+      "tile": [
+        40,
+        20
+      ],
+      "action": "Heading to the kitchen to grab coffee and food before settling in",
+      "emoji": "☕",
+      "animationKey": "walk_front",
+      "facing": "front",
+      "needs": {
+        "hunger": 0.7777777777777778,
+        "thirst": 0.6666666666666667,
+        "energy": 0.8888888888888891,
+        "social": 0.4576666666666666,
+        "bladder": 0.8750000000000001,
+        "stress": 0.2
+      },
+      "state": "idle",
+      "currently": "Making a beeline for the kitchen — Dwight can wait five minutes."
+    }
+  },
+  "conversations": [],
+  "events": []
+}

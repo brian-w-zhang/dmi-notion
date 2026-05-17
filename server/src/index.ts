@@ -63,30 +63,49 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
 
 const app = express()
 app.use(express.json())
-app.use("/", buildRoutes(world, client))
+
+let simulationRunning = false
+
+const router = buildRoutes(world, client)
+
+// POST /simulation/start — trigger the simulation manually
+router.post("/simulation/start", async (req, res) => {
+  if (simulationRunning) {
+    res.status(409).json({ error: "Simulation already running" })
+    return
+  }
+  const totalRounds = Number(req.body?.totalRounds ?? 50)
+  const delayBetweenRoundsMs = Number(req.body?.delayBetweenRoundsMs ?? 0)
+  res.json({ ok: true, totalRounds, delayBetweenRoundsMs, message: "Simulation started" })
+
+  simulationRunning = true
+  const writer = new StepWriter({
+    simCode: `run-${Date.now()}`,
+    startSimTime: SIM_START.toISOString(),
+    secPerStep: SEC_PER_STEP,
+    characters: Object.keys(CHARACTER_NAMES),
+  })
+  try {
+    await runSimulation(world, writer, client, { totalRounds, delayBetweenRoundsMs })
+  } finally {
+    simulationRunning = false
+  }
+})
+
+// GET /simulation/status
+router.get("/simulation/status", (_req, res) => {
+  res.json({
+    running: simulationRunning,
+    step: world.step,
+    simTime: world.simTimeString(),
+  })
+})
+
+app.use("/", router)
 
 const PORT = process.env.PORT ?? 3001
 app.listen(PORT, () => {
   console.log(`[Server] API on http://localhost:${PORT}`)
   console.log(`[Server] Expose with: ngrok http ${PORT}`)
+  console.log(`[Server] POST /simulation/start to begin`)
 })
-
-// ── Step writer ───────────────────────────────────────────────────────────────
-
-const writer = new StepWriter({
-  simCode: `run-${Date.now()}`,
-  startSimTime: SIM_START.toISOString(),
-  secPerStep: SEC_PER_STEP,
-  characters: Object.keys(CHARACTER_NAMES),
-})
-
-// ── Run simulation ────────────────────────────────────────────────────────────
-// 50 rounds × 5 min/step = ~4 sim hours (7 AM → 11 AM)
-// Increase totalRounds to cover more of the day.
-
-await runSimulation(world, writer, client, {
-  totalRounds: 50,
-  delayBetweenRoundsMs: 0,
-})
-
-process.exit(0)

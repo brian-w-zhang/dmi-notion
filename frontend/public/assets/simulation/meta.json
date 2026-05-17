@@ -1,11 +1,22 @@
 {
-  "simCode": "placeholder",
-  "startSimTime": "2023-02-13T09:00:00.000Z",
+  "simCode": "run-1779001871787",
+  "startSimTime": "2023-02-13T15:00:00.000Z",
   "secPerStep": 300,
-  "totalSteps": 0,
   "characters": [
-    "michael", "dwight", "jim", "pam", "angela",
-    "oscar", "kevin", "stanley", "phyllis", "kelly",
-    "ryan", "toby", "creed", "meredith", "darryl"
-  ]
+    "phyllis",
+    "kelly",
+    "creed",
+    "meredith",
+    "stanley",
+    "oscar",
+    "ryan",
+    "toby",
+    "dwight",
+    "kevin",
+    "angela",
+    "pam",
+    "michael",
+    "jim"
+  ],
+  "totalSteps": 6
 }

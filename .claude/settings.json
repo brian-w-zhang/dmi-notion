@@ -5,7 +5,8 @@
       "Edit(/.claude/skills/gen-appliances/**)",
       "Read(//Users/junzhang/Projects/notion-agents-sdk-js/src/**)",
       "Read(//Users/junzhang/Projects/notion-agents-sdk-js/examples/**)",
-      "Read(//Users/junzhang/Projects/notion-agents-sdk-js/examples/cli-tool/components/**)"
+      "Read(//Users/junzhang/Projects/notion-agents-sdk-js/examples/cli-tool/components/**)",
+      "Read(//Users/junzhang/.nvm/versions/node/v22.16.0/lib/node_modules/ntn/**)"
     ]
   }
 }

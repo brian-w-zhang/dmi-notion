@@ -1,6 +1,11 @@
-import type { LiveCharacter, LogEntry } from "../simulation/types.js"
+import type { LogEntry } from "../simulation/types.js"
 import type { WorldState } from "../simulation/WorldState.js"
 import { CHARACTER_NAMES } from "./characters.js"
+import {
+  inferZoneFromTile,
+  getAdvertisedActions,
+  findActionsForNeeds,
+} from "../simulation/WorldData.js"
 
 export function buildTickContext(characterKey: string, world: WorldState): string {
   const c = world.getCharacter(characterKey)
@@ -13,15 +18,35 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
     ? (currentBlock.startMin + currentBlock.durationMin) - world.simMinutes
     : null
 
+  const currentZone = inferZoneFromTile(c.tile)
+  const urgentNeeds = Object.entries(c.needs).filter(([, v]) => v < 0.4).map(([k]) => k)
+
+  const actionsHere = getAdvertisedActions(currentZone).map((a) => ({
+    appliance: a.appliance,
+    action: a.action,
+    emoji: a.emoji,
+    duration_sec: Math.round(a.durationMs / 1000),
+    need_effects: a.needDeltas,
+  }))
+
+  const recommendedActions = urgentNeeds.length > 0
+    ? findActionsForNeeds(urgentNeeds, c.tile, 5, c.needs).map((a) => ({
+        appliance: a.appliance,
+        action: a.action,
+        emoji: a.emoji,
+        zone: a.zone,
+        need_effects: a.needEffects,
+        utility_score: a.utilityScore,
+      }))
+    : []
+
   const payload = {
     character: CHARACTER_NAMES[characterKey],
     sim_time: world.simTimeString(),
     step: world.step,
 
-    // Living status — updated by agent after notable events
     currently: c.currently,
 
-    // What the plan says you should be doing
     current_plan_block: currentBlock
       ? {
           action: currentBlock.action,
@@ -32,53 +57,59 @@ export function buildTickContext(characterKey: string, world: WorldState): strin
         }
       : null,
     next_plan_block: nextBlock
-      ? { action: nextBlock.action, description: nextBlock.description, starts_in_minutes: nextBlock.startMin - world.simMinutes }
+      ? {
+          action: nextBlock.action,
+          description: nextBlock.description,
+          starts_in_minutes: nextBlock.startMin - world.simMinutes,
+        }
       : null,
     plan_adherence: c.planAdherence,
 
-    // What you're actually doing now
     current_action: c.action,
-    current_location: c.tile,
+    current_zone: currentZone,
 
-    // Needs
     needs: {
       raw: c.needs,
+      urgent: urgentNeeds,
       summary: needsToNaturalLanguage(c.needs),
     },
 
-    // What you've done so far today (rolling, prevents repeats)
-    completed_this_hour: c.completedThisHour,
+    // What you can do right here without moving
+    available_actions_here: actionsHere,
 
-    // Last few log entries — prevents amnesia across ticks
+    // Best actions for urgent needs (may require moving to another zone)
+    recommended_for_urgent_needs: recommendedActions,
+
+    completed_this_hour: c.completedThisHour,
     recent_log: formatRecentLog(recentLog, characterKey),
 
-    // Who's around
-    perception: {
-      nearby_characters: nearby.map((n) => ({
-        name: CHARACTER_NAMES[n.name] ?? n.name,
-        action: n.action,
-        tile_distance: tileDist(c.tile, n.tile),
-        on_cooldown: world.isOnCooldown(characterKey, n.name),
-      })),
-    },
+    nearby_characters: nearby.map((n) => ({
+      key: n.name,
+      name: CHARACTER_NAMES[n.name] ?? n.name,
+      action: n.action,
+      tile_distance: tileDist(c.tile, n.tile),
+      on_cooldown: world.isOnCooldown(characterKey, n.name),
+    })),
 
     instructions: [
-      "You are a character in a simulation. Review your current situation.",
-      "Check your plan. Your plan_adherence score reflects how likely you are to follow it.",
-      "Consider your needs — if something is urgent, it may override the plan.",
-      "Check nearby characters — you may initiate conversation if not on cooldown.",
-      "Consult your memory database for any relevant context.",
-      "Respond ONLY with a JSON object in this exact format (no other text):",
+      "You are a character in a simulation. Review your current situation and decide what to do next.",
+      "Check your needs — if urgent (listed in needs.urgent), they may override your plan.",
+      "Use available_actions_here for actions you can take without moving.",
+      "Use recommended_for_urgent_needs if you need to address an urgent need (you may need to move first).",
+      "Check nearby_characters — initiate conversation if not on cooldown and it fits the moment.",
+      "Consult your memory and relationship databases for relevant context before deciding.",
+      "Respond ONLY with a valid JSON object. No prose, no markdown fences, no explanation.",
       JSON.stringify({
-        follow_plan: "true if continuing with current_plan_block, false if deviating",
+        follow_plan: "boolean — true if following current_plan_block",
         action: "continue | move_to | use_appliance | initiate_conversation | idle",
-        target: "zone name, appliance name, or character key depending on action",
-        description: "brief description of what you are doing",
-        emoji: "one emoji representing the action",
-        reasoning: "one sentence — why this action given needs, plan, and memories",
-        deviation_reason: "only if follow_plan is false — why you are deviating",
-        update_currently: "optional — new one-sentence status if something notable just happened, else omit",
-        want_to_talk: "only if action is initiate_conversation — { character_key, opening_topic }",
+        target: "zone name, appliance name, or character key — omit if not applicable",
+        appliance_action: "specific action name on the appliance — only if action is use_appliance",
+        description: "one sentence, third person, what you are doing",
+        emoji: "one emoji",
+        reasoning: "one sentence — why this action given needs, plan, and memory",
+        deviation_reason: "string — only if follow_plan is false",
+        update_currently: "string — only if something notable just changed, else omit",
+        want_to_talk: "{ character_key, opening_topic } — only if action is initiate_conversation",
       }),
     ],
   }

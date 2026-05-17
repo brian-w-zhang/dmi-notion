@@ -8,6 +8,7 @@ interface AgentDecision {
   follow_plan: boolean
   action: "continue" | "move_to" | "use_appliance" | "initiate_conversation" | "idle"
   target?: string
+  appliance_action?: string
   description: string
   emoji: string
   reasoning: string

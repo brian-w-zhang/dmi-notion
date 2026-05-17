@@ -332,7 +332,14 @@ function parseParkingSpots(tiledJSON: TiledMapJson): ParkingSpot[] {
 
 interface CarFrame { x: number; y: number; facing: Facing; anim: CarAnim; desc: string }
 
-function simulateParking(spawn: { x: number; y: number }, spot: ParkingSpot): CarFrame[] {
+// Car horizontal half-width used by Car.canMoveX when facing left/right.
+const CAR_HALF_SHORT = 48
+
+function simulateParking(
+  spawn: { x: number; y: number },
+  spot: ParkingSpot,
+  walkableZones: Polygon[],
+): CarFrame[] {
   const frames: CarFrame[] = []
   let x = spawn.x, y = spawn.y
   const laneX   = spot.pathX
@@ -353,13 +360,17 @@ function simulateParking(spawn: { x: number; y: number }, spot: ParkingSpot): Ca
   }
   y = targetY
 
-  // Phase 3: enter-spot — drive left to spot centroid x
-  while (Math.abs(x - spot.x) > ARRIVE_TOL) {
-    const dx = spot.x - x
-    x = Math.round(x + Math.sign(dx) * Math.min(CAR_PX_STEP, Math.abs(dx)))
-    frames.push({ x, y, facing: dx < 0 ? 'left' : 'right', anim: 'drive', desc: 'Pulling into spot' })
+  // Phase 3: enter-spot — mirror CarAutoParkSystem: drive left until the boundary
+  // hits a wall (left edge leaves walkable zone), not until reaching spot centroid.
+  // This matches Car.canMoveX: checks (pivotX - halfShort, pivotY) in walkableZones.
+  const goLeft = spot.x < laneX
+  while (true) {
+    const nx = x + (goLeft ? -CAR_PX_STEP : CAR_PX_STEP)
+    const edgeX = nx + (goLeft ? -CAR_HALF_SHORT : CAR_HALF_SHORT)
+    if (!isPointInAnyPolygon(edgeX, y, walkableZones)) break
+    x = Math.round(nx)
+    frames.push({ x, y, facing: goLeft ? 'left' : 'right', anim: 'drive', desc: 'Pulling into spot' })
   }
-  x = Math.round(spot.x)
 
   frames.push({ x, y, facing: 'left', anim: 'idle', desc: 'Parked' })
   return frames
@@ -522,7 +533,7 @@ snapshot('🚗', 'Driving to work')
 
 // ── Car parking (CarAutoParkSystem state machine) ─────────────────────────────
 
-const parkFrames = simulateParking(CAR_SPAWN, ps1)
+const parkFrames = simulateParking(CAR_SPAWN, ps1, exteriorWalkable)
 console.log(`Parking frames: ${parkFrames.length}`)
 for (const f of parkFrames) {
   car_x = f.x; car_y = f.y; car_facing = f.facing; car_anim = f.anim
