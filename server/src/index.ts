@@ -11,7 +11,7 @@ import { logDecayRates } from "./simulation/needsDecay.js"
 import initialNeedsJson from "./simulation/initial_needs.json" assert { type: "json" }
 import { getParkedCarState } from "./simulation/CommuteSimulator.js"
 import { getCharDeskPos, getCharDeskFacing } from "./simulation/WorldData.js"
-import { SEC_PER_STEP } from "./simulation/config.js"
+import { SEC_PER_STEP, PERCEPTION_STAGGER } from "./simulation/config.js"
 
 const INITIAL_NEEDS = initialNeedsJson as Record<string, Record<string, number>>
 
@@ -30,10 +30,25 @@ const SIM_START = new Date("2023-02-13T10:00:00")
 logDecayRates()
 const world = new WorldState(SIM_START, SEC_PER_STEP)
 
-for (const [key] of Object.entries(CHARACTER_NAMES)) {
+const characterEntries = Object.entries(CHARACTER_NAMES)
+const totalChars = characterEntries.length
+
+// How far apart to space each character's fallback perception clock.
+// Divides the fallback interval evenly across the cast so at most one or two
+// characters hit the fallback threshold per step.
+const PERCEPTION_FALLBACK_INTERVAL = 30  // must match RoundLoop.ts
+const perceptionSpacing = PERCEPTION_STAGGER
+  ? Math.floor(PERCEPTION_FALLBACK_INTERVAL / totalChars)
+  : 0
+
+for (const [charIndex, [key]] of characterEntries.entries()) {
   const dayPlan = CHARACTER_PLANS[key] ?? []
   const facing = getCharDeskFacing(key) as "front" | "back" | "left" | "right"
   const deskPos = getCharDeskPos(key) ?? [784, 720]
+
+  // Negative offset pushes each character's internal clock back by a unique amount
+  // so their fallback ticks fire at different steps (index 0 fires first, etc.).
+  const perceptionOffset = charIndex * perceptionSpacing
 
   world.characters.set(key, {
     name: key,
@@ -59,7 +74,7 @@ for (const [key] of Object.entries(CHARACTER_NAMES)) {
 
     path: [],
     needsPerception: true,   // perceive immediately on step 1
-    lastPerceptionStep: 0,
+    lastPerceptionStep: -perceptionOffset,
     commuteStartStep: Number.MAX_SAFE_INTEGER,  // never triggers
 
     // Car already parked in designated spot

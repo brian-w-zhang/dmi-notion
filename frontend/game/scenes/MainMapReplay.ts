@@ -84,9 +84,12 @@ const SPRITE_KEY: Record<string, string> = Object.fromEntries(
 
 // ── Controller ────────────────────────────────────────────────────────────────
 
-const CHAR_DEPTH      = 17;
-const INSPECT_WIDTH   = 248;
+const CHAR_DEPTH          = 17;
+const SPEECH_BUBBLE_DEPTH = 10000;
+const INSPECT_WIDTH   = 420;
+const INSPECT_PANEL_H = 460;  // fixed height — panel anchors to bottom-left
 const INSPECT_MARGIN  = 12;
+const POV_WIDTH       = 160;  // camera picker is narrower than the inspect panel
 const POV_H           = 30;   // collapsed POV picker height
 const POV_ITEM_H      = 22;   // each dropdown row height
 const POV_GAP         = 4;    // gap between POV picker and inspect panel
@@ -105,7 +108,7 @@ export class MainMapReplayController {
   // Same pattern as sandbox TalkHeadEmojiOverlay: x+14, y-48, scale 1.5, depth 10000.
   private talkOverlays = new Map<string, Phaser.GameObjects.Sprite>();
   // Dialogue text labels: dark-bg floating text showing last spoken line above talking chars.
-  private speechLabels = new Map<string, { container: Phaser.GameObjects.Container; bg: Phaser.GameObjects.Graphics; text: Phaser.GameObjects.Text; lastLine: string }>();
+  private speechLabels = new Map<string, { container: Phaser.GameObjects.Container; bg: Phaser.GameObjects.Graphics; header: Phaser.GameObjects.Text; text: Phaser.GameObjects.Text; lastLine: string }>();
   // Conversation connector: dashed line drawn between each talking pair each step.
   private convLines!: Phaser.GameObjects.Graphics;
 
@@ -152,6 +155,17 @@ export class MainMapReplayController {
 
   skipSteps(n: number): void { this.seekTo(this.stepIdx + n); }
 
+  private _setSpeed(mult: number): void {
+    if (!this.stepTimer) return;
+    this.stepTimer.remove(false);
+    this.stepTimer = this.scene.time.addEvent({
+      delay:         this.replay.meta.ms_per_step / mult,
+      loop:          true,
+      callback:      this._tick,
+      callbackScope: this,
+    });
+  }
+
   seekTo(idx: number): void {
     const clamped = Phaser.Math.Clamp(idx, 0, this.replay.steps.length - 1);
     this.scene.tweens.killAll();
@@ -176,9 +190,10 @@ export class MainMapReplayController {
     this.stepIdx = 1;
 
     this.hud.enterReplayMode(steps.length - 1, meta.ms_per_step, {
-      onPlayPause: () => this.togglePause(),
-      onSeek:      idx => this.seekTo(idx),
-      onSkip:      n   => this.skipSteps(n),
+      onPlayPause:   () => this.togglePause(),
+      onSeek:        idx => this.seekTo(idx),
+      onSkip:        n   => this.skipSteps(n),
+      onSpeedChange: mult => this._setSpeed(mult),
     });
     const s0 = steps[0];
     this.hud.setReplayStatus(s0.emoji ?? '🏢', s0.sim_time ?? s0.desc ?? '', 0, steps.length - 1, false);
@@ -232,7 +247,7 @@ export class MainMapReplayController {
     for (const [key, label] of this.speechLabels) {
       if (!label.container.visible) continue;
       const sprite = this.sprites.get(key);
-      if (sprite) label.container.setPosition(sprite.x, sprite.y - 92);
+      if (sprite) label.container.setPosition(sprite.x, sprite.y - 104);
     }
   }
 
@@ -281,14 +296,19 @@ export class MainMapReplayController {
       }
 
       // Speech label — floating text bubble showing last dialogue line above talking chars.
-      const labelBg   = this.scene.add.graphics();
-      const labelText = this.scene.add.text(0, 0, '', {
-        fontFamily: 'monospace', fontSize: '8px', color: '#e5e7eb',
+      const labelBg     = this.scene.add.graphics();
+      const labelHeader = this.scene.add.text(0, 0, '', {
+        fontFamily: 'monospace', fontSize: '9px', color: '#64748b',
       }).setOrigin(0.5, 0.5);
-      const labelContainer = this.scene.add.container(c.x, c.y - 92, [labelBg, labelText]);
-      labelContainer.setDepth(CHAR_DEPTH + 3).setVisible(false);
+      const labelText   = this.scene.add.text(0, 0, '', {
+        fontFamily: 'monospace', fontSize: '11px', color: '#e5e7eb',
+        wordWrap: { width: 130, useAdvancedWrap: false },
+        align: 'center',
+      }).setOrigin(0.5, 0.5);
+      const labelContainer = this.scene.add.container(c.x, c.y - 104, [labelBg, labelHeader, labelText]);
+      labelContainer.setDepth(SPEECH_BUBBLE_DEPTH + 10).setVisible(false);
       this.hud.ignoreWorldObjects(labelContainer);
-      this.speechLabels.set(key, { container: labelContainer, bg: labelBg, text: labelText, lastLine: '' });
+      this.speechLabels.set(key, { container: labelContainer, bg: labelBg, header: labelHeader, text: labelText, lastLine: '' });
     }
   }
 
@@ -337,10 +357,10 @@ export class MainMapReplayController {
       const wasVisible = sprite.visible;
       sprite.setVisible(c.visible);
 
-      // Speech bubble — show when character is visible and has a non-empty emoji
+      // Speech bubble — hide during conversation (text label already shows dialogue)
       const bubble = this.emojiBubbles.get(key);
       if (bubble) {
-        const show = c.visible && !!(c.emoji);
+        const show = c.visible && !!(c.emoji) && c.state !== 'in_conversation';
         bubble.root.setVisible(show);
         if (show && c.emoji !== bubble.lastEmoji) {
           bubble.text.setText(c.emoji!);
@@ -373,30 +393,58 @@ export class MainMapReplayController {
       this._applySfx(step);
     }
 
-    // Talk overlays — show for in_conversation characters
-    for (const [key, overlay] of this.talkOverlays) {
-      const c = step.chars[key];
-      const show = !!(c?.visible && c.state === 'in_conversation');
-      overlay.setVisible(show);
+    // Talk overlays — hidden (text label is sufficient)
+    for (const [, overlay] of this.talkOverlays) {
+      overlay.setVisible(false);
     }
 
     // Speech labels — floating dialogue text above talking characters
+    const partnerOf = new Map<string, string>();
+    for (const conv of step.activeConversations ?? []) {
+      const [kA, kB] = conv.participants ?? [];
+      if (kA && kB) { partnerOf.set(kA, kB); partnerOf.set(kB, kA); }
+    }
+
     for (const [key, label] of this.speechLabels) {
       const c = step.chars[key];
       const inConv = !!(c?.visible && c.state === 'in_conversation');
       // c.action is `"preview text"` (quoted) when character is mid-conversation
-      const raw  = inConv && c.action?.startsWith('"') ? c.action.slice(1, -1) : '';
-      const line = raw.length > 36 ? raw.slice(0, 34) + '…' : raw;
-      if (inConv && line && line !== label.lastLine) {
+      const raw    = inConv && c.action?.startsWith('"') ? c.action.slice(1, -1) : '';
+      const line   = raw.length > 90 ? raw.slice(0, 88) + '…' : raw;
+      const partner = partnerOf.get(key) ?? '';
+      const headerStr = partner ? `to: ${partner.charAt(0).toUpperCase() + partner.slice(1)}` : '';
+      const cacheKey  = headerStr + '|' + line;
+
+      if (inConv && line && cacheKey !== label.lastLine) {
+        label.header.setText(headerStr);
         label.text.setText(line);
-        const tw = label.text.width + 10;
-        const th = label.text.height + 6;
+
+        const HPAD = 18;
+        const VPAD_TOP = 6;
+        const VPAD_BOT = 8;
+        const SEP_GAP  = 5;
+        const hh = label.header.height;
+        const th = label.text.height;
+        const totalW = Math.max(label.header.width, label.text.width) + HPAD;
+        const totalH = VPAD_TOP + hh + SEP_GAP + th + VPAD_BOT;
+
+        // Separator Y relative to container centre
+        const topEdge  = -totalH / 2;
+        const headerY  = topEdge + VPAD_TOP + hh / 2;
+        const sepY     = topEdge + VPAD_TOP + hh + SEP_GAP / 2;
+        const textY    = topEdge + VPAD_TOP + hh + SEP_GAP + th / 2;
+
         label.bg.clear();
         label.bg.fillStyle(0x0f172a, 0.92);
-        label.bg.fillRoundedRect(-tw / 2, -th / 2, tw, th, 3);
+        label.bg.fillRoundedRect(-totalW / 2, topEdge, totalW, totalH, 4);
         label.bg.lineStyle(1, 0x3b82f6, 0.65);
-        label.bg.strokeRoundedRect(-tw / 2, -th / 2, tw, th, 3);
-        label.lastLine = line;
+        label.bg.strokeRoundedRect(-totalW / 2, topEdge, totalW, totalH, 4);
+        label.bg.lineStyle(1, 0x334155, 1);
+        label.bg.lineBetween(-totalW / 2 + 6, sepY, totalW / 2 - 6, sepY);
+
+        label.header.setPosition(0, headerY);
+        label.text.setPosition(0, textY);
+        label.lastLine = cacheKey;
       }
       label.container.setVisible(inConv && !!line);
       if (!inConv) label.lastLine = '';
@@ -439,7 +487,7 @@ export class MainMapReplayController {
 
   private _buildPovPicker(): void {
     const { width } = this.scene.scale;
-    const x = width - INSPECT_WIDTH - INSPECT_MARGIN;
+    const x = width - POV_WIDTH - INSPECT_MARGIN;
     this._povContainer = this.scene.add.container(x, INSPECT_MARGIN)
       .setScrollFactor(0).setDepth(10002);
     this.scene.cameras.main.ignore(this._povContainer);
@@ -448,7 +496,7 @@ export class MainMapReplayController {
 
   private _renderPovPicker(): void {
     this._povContainer.removeAll(true);
-    const W = INSPECT_WIDTH;
+    const W = POV_WIDTH;
 
     const characters = this.replay.meta.characters ?? [];
     const totalH     = this._povOpen
@@ -636,10 +684,10 @@ export class MainMapReplayController {
   // ── Inspect panel ─────────────────────────────────────────────────────────────
 
   private _buildInspectPanel(): void {
-    const { width, height } = this.scene.scale;
-    const x      = width - INSPECT_WIDTH - INSPECT_MARGIN;
-    const y      = INSPECT_MARGIN + POV_H + POV_GAP;
-    const panelH = height - y - INSPECT_MARGIN;
+    const { height } = this.scene.scale;
+    const panelH = Math.min(INSPECT_PANEL_H, height - 60);
+    const x      = INSPECT_MARGIN;
+    const y      = height - panelH - INSPECT_MARGIN;
 
     this.inspectPanel = this.scene.add.container(x, y).setScrollFactor(0).setDepth(10000).setVisible(false);
     // Do NOT call cameras.main.ignore(container) — it only snapshots current children.
@@ -680,114 +728,129 @@ export class MainMapReplayController {
     const toRemove = this.inspectPanel.list.slice(2);
     for (const go of toRemove) (go as Phaser.GameObjects.GameObject).destroy();
 
-    const W   = INSPECT_WIDTH;
-    const pad = 14;
-    const innerW = W - pad * 2;
-    let curY  = 14;
+    const W       = INSPECT_WIDTH;
+    const pad     = 14;
+    const COL_GAP = 14;
+    const LEFT_W  = 185;          // left column content width
+    const RIGHT_X = pad + LEFT_W + COL_GAP;   // right column x origin
+    const RIGHT_W = W - RIGHT_X - pad;        // right column content width
 
-    const txt = (x: number, y: number, s: string, style: object) =>
-      this._addToPanel(this.scene.add.text(x, y, s, { fontFamily: 'monospace', fontSize: '10px', color: '#d4d4d8', wordWrap: { width: innerW }, ...style }));
+    let leftY  = 14;
+    let rightY = 14;
 
-    const sectionHeader = (y: number, label: string, accent = '#71717a'): number => {
-      txt(pad, y, label, { fontSize: '9px', color: accent, fontStyle: 'bold' });
+    const txt = (x: number, y: number, s: string, style: object = {}) =>
+      this._addToPanel(this.scene.add.text(x, y, s, { fontFamily: 'monospace', fontSize: '10px', color: '#d4d4d8', ...style }));
+
+    const sectionHeader = (y: number, x1: number, x2: number, label: string, accent = '#71717a'): number => {
+      txt(x1, y, label, { fontSize: '9px', color: accent, fontStyle: 'bold' });
       const line = this.scene.add.graphics();
       line.lineStyle(1, 0x23272f, 1);
-      line.lineBetween(pad, y + 13, W - pad, y + 13);
+      line.lineBetween(x1, y + 13, x2, y + 13);
       this._addToPanel(line);
       return y + 18;
     };
 
-    // ── Header: accent stripe + name ──
+    // ── Header: accent stripe + name (full width) ──
     const accentColor = this._accentForKey(key);
     const stripe = this.scene.add.graphics();
     stripe.fillStyle(accentColor, 1);
-    stripe.fillRoundedRect(pad, curY + 2, 3, 14, 1.5);
+    stripe.fillRoundedRect(pad, leftY + 2, 3, 14, 1.5);
     this._addToPanel(stripe);
 
     const displayName = CHARACTER_ASSETS.find(a => a.owner === key)?.displayName ?? key;
-    txt(pad + 10, curY, displayName.toUpperCase(), { fontSize: '12px', color: '#ffffff', fontStyle: 'bold' });
-    curY += 22;
+    txt(pad + 10, leftY, displayName.toUpperCase(), { fontSize: '12px', color: '#ffffff', fontStyle: 'bold' });
+    leftY += 22;
 
     if (c.currently) {
-      txt(pad, curY, c.currently, { color: '#9ca3af', fontSize: '10px', fontStyle: 'italic', wordWrap: { width: innerW } });
-      const lines = Math.max(1, Math.ceil(c.currently.length / 32));
-      curY += 4 + lines * 13;
+      txt(pad, leftY, c.currently, { color: '#9ca3af', fontSize: '10px', fontStyle: 'italic', wordWrap: { width: W - pad * 2 } });
+      const lines = Math.max(1, Math.ceil(c.currently.length / 58));
+      leftY += lines * 13 + 4;
     }
-    curY += 8;
+    leftY += 8;
+    rightY = leftY;   // both columns start at the same Y after the header
 
-    // ── PAD ──
+    // ── Left column: Emotional state (PAD) ──
     if (c.pad) {
-      curY = sectionHeader(curY, 'EMOTIONAL STATE');
+      leftY = sectionHeader(leftY, pad, pad + LEFT_W, 'EMOTIONAL STATE');
 
+      const labelW = 48;
+      const valW   = 26;
+      const barW   = LEFT_W - labelW - valW;
       const padRows: [string, number, number][] = [
         ['Pleasure',  c.pad.pleasure  ?? 0, 0x4ade80],
         ['Arousal',   c.pad.arousal   ?? 0, 0xfacc15],
         ['Dominance', c.pad.dominance ?? 0, 0x60a5fa],
       ];
-      const labelW = 58;
-      const valW   = 32;
       for (const [label, val, color] of padRows) {
-        txt(pad, curY, label, { fontSize: '9px', color: '#a1a1aa' });
-        this._drawBar(pad + labelW, curY + 3, innerW - labelW - valW, 8, (val + 1) / 2, color, true);
+        txt(pad, leftY, label, { fontSize: '9px', color: '#a1a1aa' });
+        this._drawBar(pad + labelW, leftY + 2, barW, 7, (val + 1) / 2, color, true);
         const valStr = (val >= 0 ? '+' : '') + val.toFixed(2);
-        txt(W - pad - valW + 4, curY, valStr, { fontSize: '9px', color: '#71717a' });
-        curY += 14;
+        txt(pad + labelW + barW + 2, leftY, valStr, { fontSize: '9px', color: '#71717a' });
+        leftY += 13;
       }
-      curY += 8;
+      leftY += 6;
     }
 
-    // ── Needs ──
+    // ── Left column: Needs ──
     if (c.needs && Object.keys(c.needs).length) {
-      curY = sectionHeader(curY, 'NEEDS');
+      leftY = sectionHeader(leftY, pad, pad + LEFT_W, 'NEEDS');
 
       const needOrder = ['hunger','thirst','energy','bladder','stress','social','belonging','esteem','stimulation','productivity'];
-      const labelW = 70;
-      const valW   = 28;
+      const labelW = 60;
+      const valW   = 22;
+      const barW   = LEFT_W - labelW - valW;
       for (const need of needOrder) {
         const val = c.needs[need];
         if (val === undefined) continue;
-        // "stress" is high=bad; others are low=bad. Color accordingly.
         const severity = need === 'stress' ? val : 1 - val;
         const isUrgent = severity > 0.65;
         const isWarn   = severity > 0.4;
-        const barColor = isUrgent ? 0xef4444 : isWarn ? 0xf59e0b : 0x22d3ee;
+        const barColor   = isUrgent ? 0xef4444 : isWarn ? 0xf59e0b : 0x22d3ee;
         const labelColor = isUrgent ? '#f87171' : isWarn ? '#fbbf24' : '#a1a1aa';
-
-        const nameLabel = need.charAt(0).toUpperCase() + need.slice(1);
-        txt(pad, curY, nameLabel, { fontSize: '9px', color: labelColor });
-        this._drawBar(pad + labelW, curY + 3, innerW - labelW - valW, 8, val, barColor, false);
-        txt(W - pad - valW + 4, curY, val.toFixed(2), { fontSize: '9px', color: '#71717a' });
-        curY += 13;
+        const nameLabel  = need.charAt(0).toUpperCase() + need.slice(1);
+        txt(pad, leftY, nameLabel, { fontSize: '9px', color: labelColor });
+        this._drawBar(pad + labelW, leftY + 2, barW, 7, val, barColor, false);
+        txt(pad + labelW + barW + 2, leftY, val.toFixed(2), { fontSize: '9px', color: '#71717a' });
+        leftY += 12;
       }
-      curY += 10;
+      leftY += 8;
     }
 
-    // ── Thinking ──
+    // ── Right column: Last thought ──
     if (c.thinking) {
-      curY = sectionHeader(curY, 'LAST THOUGHT');
-      txt(pad, curY, c.thinking, { color: '#cbd5e1', fontSize: '10px', fontStyle: 'italic', wordWrap: { width: innerW } });
-      const lines = Math.max(1, Math.ceil(c.thinking.length / 32));
-      curY += lines * 13 + 10;
+      rightY = sectionHeader(rightY, RIGHT_X, W - pad, 'LAST THOUGHT');
+      txt(RIGHT_X, rightY, c.thinking, { color: '#cbd5e1', fontSize: '10px', fontStyle: 'italic', wordWrap: { width: RIGHT_W } });
+      const lines = Math.max(1, Math.ceil(c.thinking.length / Math.floor(RIGHT_W / 6)));
+      rightY += lines * 13 + 10;
     }
 
-    // ── Active conversation transcript ──
-    if (activeConv && activeConv.turns.length > 0) {
-      curY = sectionHeader(curY, 'IN CONVERSATION', '#60a5fa');
+    // ── Conversation transcript: full width, below both columns ──
+    let curY = Math.max(leftY, rightY) + 4;
 
-      const otherKey = activeConv.participants?.find(p => p !== key) ?? '';
+    if (activeConv && activeConv.turns.length > 0) {
+      const divider = this.scene.add.graphics();
+      divider.lineStyle(1, 0x23272f, 1);
+      divider.lineBetween(pad, curY, W - pad, curY);
+      this._addToPanel(divider);
+      curY += 10;
+
+      curY = sectionHeader(curY, pad, W - pad, 'IN CONVERSATION', '#60a5fa');
+
+      const otherKey  = activeConv.participants?.find(p => p !== key) ?? '';
       const otherName = CHARACTER_ASSETS.find(a => a.owner === otherKey)?.displayName ?? otherKey;
       txt(pad, curY, `with ${otherName}`, { color: '#94a3b8', fontSize: '9px' });
       curY += 16;
 
+      const fullInnerW = W - pad * 2;
       const turns = activeConv.turns.slice(-6);
       for (const turn of turns) {
-        const isMe = turn.speaker === key;
+        const isMe        = turn.speaker === key;
         const speakerName = CHARACTER_ASSETS.find(a => a.owner === turn.speaker)?.displayName ?? turn.speaker;
         txt(pad, curY, speakerName, { fontSize: '9px', color: isMe ? '#60a5fa' : '#c084fc', fontStyle: 'bold' });
         curY += 12;
         const line = `"${turn.line}"`;
-        txt(pad + 6, curY, line, { color: '#e5e7eb', wordWrap: { width: innerW - 6 }, fontSize: '9px' });
-        const lines = Math.max(1, Math.ceil(line.length / 34));
+        txt(pad + 6, curY, line, { color: '#e5e7eb', wordWrap: { width: fullInnerW - 6 }, fontSize: '9px' });
+        const lines = Math.max(1, Math.ceil(line.length / 54));
         curY += lines * 12 + 4;
       }
     }

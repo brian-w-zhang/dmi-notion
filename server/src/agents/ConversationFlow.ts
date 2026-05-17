@@ -3,6 +3,7 @@ import type { WorldState } from "../simulation/WorldState.js"
 import type { ConversationRecord, ConversationTurn } from "../simulation/types.js"
 import { buildConversationTurnContext } from "./ContextBuilder.js"
 import { CHARACTER_AGENT_IDS, CHARACTER_NAMES } from "./characters.js"
+import { DIALOGUE_TURN_DELAY_STEPS } from "../simulation/config.js"
 
 const MAX_TURNS = 8
 
@@ -70,6 +71,14 @@ export async function runConversation(
     console.log(`  [${CHARACTER_NAMES[speakerKey]}]: "${parsed.line}"`)
 
     if (parsed.end) break
+
+    // Wait for the sim clock to advance before generating the next turn.
+    // This spreads the exchange across real step files so turns appear gradually
+    // in the frontend replay instead of all landing in the same step.
+    if (DIALOGUE_TURN_DELAY_STEPS > 0) {
+      const targetStep = world.step + DIALOGUE_TURN_DELAY_STEPS
+      while (world.step < targetStep) await sleep(50)
+    }
   }
 
   return {
@@ -81,6 +90,10 @@ export async function runConversation(
     startStep,
     endStep: world.step,
   }
+}
+
+function sleep(ms: number) {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms))
 }
 
 async function callAgentForDialogue(

@@ -44,15 +44,19 @@ export class MainMapHud {
   private readonly replayBar:           Phaser.GameObjects.Container;
   private readonly replayStatusLine:    Phaser.GameObjects.Text;
   private readonly replayPlayPauseBtn:  Phaser.GameObjects.Text;
+  private          replaySpeedBtn!:     Phaser.GameObjects.Text;
   private readonly replayTrackFill:     Phaser.GameObjects.Graphics;
   private readonly replayPlayhead:      Phaser.GameObjects.Graphics;
   private readonly replayTimeLabel:     Phaser.GameObjects.Text;
   private readonly simClock:            Phaser.GameObjects.Text;
   // Playback state
-  private _onPlayPause: (() => void) | null = null;
-  private _onSeek:      ((idx: number) => void) | null = null;
-  private _onSkip:      ((steps: number) => void) | null = null;
-  private _replaySkipSteps  = 188;
+  private _onPlayPause:    (() => void) | null = null;
+  private _onSeek:         ((idx: number) => void) | null = null;
+  private _onSkip:         ((steps: number) => void) | null = null;
+  private _onSpeedChange:  ((mult: number) => void) | null = null;
+  private _speedSteps      = [1, 2, 0.5];
+  private _speedIdx        = 0;
+  private _replaySkipSteps = 188;
   private _replayTotalSteps = 1;
   private _replayMsPerStep  = 53;
   private _trackX = 0;
@@ -141,27 +145,24 @@ export class MainMapHud {
     ).setOrigin(0.5, 1).setVisible(true).setLineSpacing(3);
 
     // ── Playback bar layout ──────────────────────────────────────────────────────
-    const BAR_W  = Math.min(600, sceneW - 32);
-    const BAR_H  = 70;
-    const BAR_X  = (sceneW - BAR_W) / 2;
-    const BAR_Y  = sceneH - BAR_H - 10;
-    const PAD_W  = 16;
-    const PAD_H  = 12;
-    const BTN_W  = 34;
+    const BAR_W   = Math.min(600, sceneW - 32);
+    const BAR_H   = 42;
+    const BAR_X   = (sceneW - BAR_W) / 2;
+    const BAR_Y   = sceneH - BAR_H - 10;
+    const PAD_W   = 16;
     const BTN_GAP = 8;
-    const TIME_W = 76;
+    const TIME_W  = 84;
 
-    const statusY  = BAR_Y + PAD_H;
-    const ctrlY    = BAR_Y + BAR_H - PAD_H - 4;
+    const ctrlY     = BAR_Y + BAR_H / 2;
 
-    const btnBackX = BAR_X + PAD_W + BTN_W / 2;
-    const btnPlayX = btnBackX + BTN_W + BTN_GAP;
-    const btnFwdX  = btnPlayX + BTN_W + BTN_GAP;
-    const trackX   = btnFwdX + BTN_W / 2 + 12;
-    const trackEndX = BAR_X + BAR_W - PAD_W - TIME_W - 6;
-    const trackW   = trackEndX - trackX;
-    const TRACK_H  = 3;
-    const timeX    = BAR_X + BAR_W - PAD_W;
+    // Left controls: [speed] [play/pause]
+    const speedBtnX = BAR_X + PAD_W + 16;           // ~32px wide pill
+    const btnPlayX  = speedBtnX + 20 + BTN_GAP + 14;
+    const trackX    = btnPlayX + 20 + 12;
+    const trackEndX = BAR_X + BAR_W - PAD_W - TIME_W - 8;
+    const trackW    = trackEndX - trackX;
+    const TRACK_H   = 3;
+    const timeX     = BAR_X + BAR_W - PAD_W;
 
     this._trackX    = trackX;
     this._trackW    = trackW;
@@ -185,8 +186,8 @@ export class MainMapHud {
     // Dynamic playhead circle (updated by updatePlayback)
     this.replayPlayhead = scene.add.graphics();
 
-    // Status text (emoji + description)
-    this.replayStatusLine = scene.add.text(sceneW / 2, statusY, '', {
+    // Status text — kept as an off-screen object so setText calls remain valid, not shown in bar
+    this.replayStatusLine = scene.add.text(-9999, -9999, '', {
       fontFamily: 'monospace',
       fontSize: '11px',
       color: '#94a3b8',
@@ -201,19 +202,23 @@ export class MainMapHud {
       padding: { x: 7, y: 4 },
     };
 
-    const skipBack = scene.add.text(btnBackX, ctrlY, '◀ 10s', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    // Speed cycle button: 1x → 2x → 0.5x → 1x …
+    this.replaySpeedBtn = scene.add.text(speedBtnX, ctrlY, '1x', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    this.replaySpeedBtn.on('pointerover', () => this.replaySpeedBtn.setColor('#e2e8f0'));
+    this.replaySpeedBtn.on('pointerout',  () => this.replaySpeedBtn.setColor('#94a3b8'));
+    this.replaySpeedBtn.on('pointerdown', () => {
+      this._speedIdx = (this._speedIdx + 1) % this._speedSteps.length;
+      const mult = this._speedSteps[this._speedIdx];
+      this.replaySpeedBtn.setText(mult === 0.5 ? '0.5x' : `${mult}x`);
+      this._onSpeedChange?.(mult);
+    });
+
     this.replayPlayPauseBtn = scene.add.text(btnPlayX, ctrlY, '⏸', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    const skipFwd  = scene.add.text(btnFwdX,  ctrlY, '10s ▶', btnStyle).setOrigin(0.5).setInteractive({ useHandCursor: true });
-
-    for (const btn of [skipBack, this.replayPlayPauseBtn, skipFwd]) {
-      btn.on('pointerover', () => btn.setColor('#e2e8f0'));
-      btn.on('pointerout',  () => btn.setColor('#94a3b8'));
-    }
-    skipBack.on('pointerdown', () => this._onSkip?.(-this._replaySkipSteps));
+    this.replayPlayPauseBtn.on('pointerover', () => this.replayPlayPauseBtn.setColor('#e2e8f0'));
+    this.replayPlayPauseBtn.on('pointerout',  () => this.replayPlayPauseBtn.setColor('#94a3b8'));
     this.replayPlayPauseBtn.on('pointerdown', () => this._onPlayPause?.());
-    skipFwd.on('pointerdown',  () => this._onSkip?.(this._replaySkipSteps));
 
-    // Time label
+    // Time label (elapsed / total) on the right
     this.replayTimeLabel = scene.add.text(timeX, ctrlY, '0:00 / 0:00', {
       fontFamily: 'monospace',
       fontSize: '10px',
@@ -234,7 +239,7 @@ export class MainMapHud {
     // Assemble replayBar container (hidden until enterReplayMode)
     this.replayBar = scene.add.container(0, 0, [
       barBg, trackBg, this.replayTrackFill, this.replayPlayhead,
-      this.replayStatusLine, skipBack, this.replayPlayPauseBtn, skipFwd,
+      this.replayStatusLine, this.replaySpeedBtn, this.replayPlayPauseBtn,
       this.replayTimeLabel, trackZone,
     ]).setVisible(false);
 
@@ -455,14 +460,18 @@ export class MainMapHud {
   enterReplayMode(
     totalSteps: number,
     msPerStep: number,
-    callbacks: { onPlayPause: () => void; onSeek: (idx: number) => void; onSkip: (steps: number) => void },
+    callbacks: { onPlayPause: () => void; onSeek: (idx: number) => void; onSkip: (steps: number) => void; onSpeedChange: (mult: number) => void },
   ): void {
     this._onPlayPause        = callbacks.onPlayPause;
     this._onSeek             = callbacks.onSeek;
     this._onSkip             = callbacks.onSkip;
+    this._onSpeedChange      = callbacks.onSpeedChange;
     this._replayTotalSteps   = totalSteps;
     this._replayMsPerStep    = msPerStep;
     this._replaySkipSteps    = Math.round(10000 / msPerStep); // 10 real seconds of steps
+    // Reset speed to 1x on each entry
+    this._speedIdx = 0;
+    this.replaySpeedBtn.setText('1x');
 
     this.positionText.setVisible(false);
     this.cameraModeToggle.setVisible(false);
@@ -489,9 +498,10 @@ export class MainMapHud {
   exitReplayMode(): void {
     this.replayBar.setVisible(false);
     this.simClock.setVisible(false);
-    this._onPlayPause = null;
-    this._onSeek = null;
-    this._onSkip = null;
+    this._onPlayPause   = null;
+    this._onSeek        = null;
+    this._onSkip        = null;
+    this._onSpeedChange = null;
     this.hideReplayPicker();
     this.positionText.setVisible(true);
     this.cameraModeToggle.setVisible(true);

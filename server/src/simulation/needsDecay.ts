@@ -58,6 +58,9 @@ function oceanDecayRate(need: string, p: Personality): number | null {
   }
 }
 
+// ── Global multiplier — scale all decay rates uniformly ──────────────────────
+const GLOBAL_DECAY_MULTIPLIER = 2.0
+
 // ── Pre-compute per-character, per-need decay rates ───────────────────────────
 // Computed once at startup. Shape: characterKey → needKey → decayPerTick.
 
@@ -70,20 +73,20 @@ for (const [charKey, p] of Object.entries(PERSONALITIES)) {
   // Biological needs
   for (const [need, base] of Object.entries(BIOLOGICAL_BASE)) {
     const km = overrides[need]?.decay?.kMultiplier ?? 1.0
-    rates[need] = (base / TICKS_PER_DAY) * km
+    rates[need] = (base / TICKS_PER_DAY) * km * GLOBAL_DECAY_MULTIPLIER
   }
 
   // OCEAN-derived psychological needs
   for (const need of ["social", "productivity", "stimulation"]) {
     const base = oceanDecayRate(need, p)!
     const km = overrides[need]?.decay?.kMultiplier ?? 1.0
-    rates[need] = (base / TICKS_PER_DAY) * km
+    rates[need] = (base / TICKS_PER_DAY) * km * GLOBAL_DECAY_MULTIPLIER
   }
 
   // Fixed-base psychological needs (kMultiplier provides differentiation)
   for (const [need, base] of Object.entries(PSYCH_BASE)) {
     const km = overrides[need]?.decay?.kMultiplier ?? 1.0
-    rates[need] = (base / TICKS_PER_DAY) * km
+    rates[need] = (base / TICKS_PER_DAY) * km * GLOBAL_DECAY_MULTIPLIER
   }
 
   // Event-driven — no time decay (per needs-model.md)

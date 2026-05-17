@@ -222,12 +222,11 @@ const CHAR_DESK_FACING: Record<string, string> = {}
     for (const entity of zone.entities ?? []) {
       if (!entity.owner) continue
       const sp = entity.sitPoints?.[0]
-      const pos = sp?.position ?? entity.actionPoints?.[0]?.position ?? entity.center
-      if (pos) {
-        // Use exact pixel from sit point — no tile rounding
-        CHAR_DESK_POS[entity.owner] = [Math.round(pos.x), Math.round(pos.y)]
-        if (sp?.facing) CHAR_DESK_FACING[entity.owner] = sp.facing
-      }
+      // Only chairs (entities with sit points) set the desk position.
+      // Desks/tables have no sit points and must not overwrite the chair's sit point.
+      if (!sp?.position) continue
+      CHAR_DESK_POS[entity.owner] = [Math.round(sp.position.x), Math.round(sp.position.y)]
+      if (sp.facing) CHAR_DESK_FACING[entity.owner] = sp.facing
     }
   }
 })()
